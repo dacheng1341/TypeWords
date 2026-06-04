@@ -299,17 +299,13 @@ let mobileMenuOpen = $ref(false)
           <!-- GitHub -->
           <a
             class="flex gap-2 relative text-[var(--hw-text-2)] no-underline"
-            :href="GITHUB"
+            href="https://github.com/dacheng1341/TypeWords"
             target="_blank"
             aria-label="Github project address"
           >
             <BaseIcon class="z-1" title="Github" noBg>
               <IconSimpleIconsGithub />
             </BaseIcon>
-            <NuxtImg
-              class="z-0 shrink-0 h-8 -ml-4"
-              :src="`https://img.shields.io/github/stars/zyronon/typing-word?style=flat-square&label=%20&color=${theme === 'light' ? 'white' : 'black'}`"
-            />
           </a>
           <!-- Mobile menu button -->
           <button
@@ -457,7 +453,7 @@ let mobileMenuOpen = $ref(false)
               </button>
               <a
                 class="inline-flex items-center justify-center px-7 h-11 rounded-lg font-semibold text-[.95rem] text-[var(--hw-text)] bg-transparent border border-solid border-[var(--hw-border)] no-underline hover:bg-[rgba(124,58,237,.06)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-150 sm:w-auto"
-                :href="GITHUB"
+                href="https://github.com/dacheng1341/TypeWords"
                 target="_blank"
                 >查看源码</a
               >
@@ -479,7 +475,7 @@ let mobileMenuOpen = $ref(false)
                 <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
                 <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
                 <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
-                <span class="ml-3 text-[.78rem] text-[var(--hw-text-3)] font-mono">TypeWords — 单词练习</span>
+                <span class="ml-3 text-[.78rem] text-[var(--hw-text-3)] font-mono">敲敲背单词 — 单词练习</span>
               </div>
               <!-- 卡片内容 -->
               <div
@@ -648,7 +644,7 @@ let mobileMenuOpen = $ref(false)
           <div class="text-center mb-12">
             <div class="section-label">核心特性</div>
             <h2 class="section-h2">一切，都是为了让你真正记住</h2>
-            <p class="section-desc">TypeWords 不是又一个单词 App，而是一套以「打字输入」为核心的英语记忆系统。</p>
+            <p class="section-desc">敲敲背单词不是又一个单词 App，而是一套以「打字输入」为核心的英语记忆系统。</p>
           </div>
           <!-- Feature cards grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -829,7 +825,7 @@ let mobileMenuOpen = $ref(false)
             </button>
             <a
               class="inline-flex items-center justify-center px-8 h-12 rounded-lg font-semibold text-[1rem] text-[var(--hw-text)] bg-transparent border border-solid border-[var(--hw-border)] no-underline hover:bg-[rgba(124,58,237,.06)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-150 sm:w-auto"
-              :href="GITHUB"
+              href="https://github.com/dacheng1341/TypeWords"
               target="_blank"
               >查看源码 →</a
             >
@@ -904,7 +900,7 @@ let mobileMenuOpen = $ref(false)
           </div>
           <div class="flex flex-col gap-2.5">
             <div class="text-[.8rem] font-bold tracking-[.06em] uppercase text-[var(--hw-text-3)] mb-1">项目</div>
-            <a :href="GITHUB" target="_blank" class="footer-link">GitHub</a>
+            <a href="https://dacbbox.com" target="_blank" class="footer-link">大程开源百宝箱</a>
             <NuxtLink to="/setting" class="footer-link">设置</NuxtLink>
           </div>
         </div>

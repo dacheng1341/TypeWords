@@ -13,7 +13,7 @@ function goHome() {
   if (IS_DEV) {
     router.push('/')
   } else {
-    location.href = window.atob('aHR0cHM6Ly90eXBld29yZHMuY2M=')
+    location.href = window.atob('aHR0cHM6Ly90eXBlLmRhY2Jib3guY29t')
   }
 }
 </script>

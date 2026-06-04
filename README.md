@@ -1,3 +1,5 @@
+> 本项目基于开源项目 zyronon/TypeWords 深度定制，专属服务于大程开源百宝箱。
+
 <h1 align=center>
   <img src="https://github.com/user-attachments/assets/9d626e0f-0601-4640-8981-ad66d8ac4853" alt="TypeWords" style="width: 500px;"/>
 </h1>

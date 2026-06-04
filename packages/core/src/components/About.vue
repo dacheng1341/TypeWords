@@ -11,7 +11,7 @@ import WeChat from '../components/channel-icons/WeChat.vue'
       {{ $t('about_thanks') }}
     </p>
     <p>
-      {{ $t('github_address') }}<a :href="GITHUB" target="_blank">{{ GITHUB }}</a>
+      官网：<a href="https://dacbbox.com" target="_blank">大程开源百宝箱</a>
     </p>
     <div class="flex flex-col gap-2 mt-20">
       <div class="">常见问题： <RouterLink to="/help">常见问题解答</RouterLink></div>

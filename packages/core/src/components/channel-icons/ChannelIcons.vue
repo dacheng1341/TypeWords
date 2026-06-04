@@ -3,7 +3,6 @@ import { BaseIcon } from '@typewords/base'
 import { defineAsyncComponent } from 'vue'
 import ShareIcon from './ShareIcon.vue'
 import WeChat from './WeChat.vue'
-import Github from './Github.vue'
 import { withAppBaseURL } from '../../utils/base-url'
 
 withDefaults(
@@ -31,8 +30,6 @@ const qqQrSrc = withAppBaseURL('/imgs/channel/qq.jpg')
 
 <template>
   <div class="center" :class="type === 'vertical' ? 'flex-col gap-1' : 'gap-4'">
-    <Github v-if="github" />
-
     <WeChat v-if="wechat" />
 
     <BaseIcon :title="$t('qq_group')" @click="showQQDialog = true">
@@ -50,17 +47,6 @@ const qqQrSrc = withAppBaseURL('/imgs/channel/qq.jpg')
     >
       <BaseIcon :title="$t('twitter')">
         <IconRiTwitterFill class="color-blue" />
-      </BaseIcon>
-    </a>
-
-    <a
-      href="mailto:zyronon@163.com"
-      target="_blank"
-      rel="noreferrer"
-      :aria-label="$t('send_email', { email: 'zyronon@163.com' })"
-    >
-      <BaseIcon :title="$t('email')">
-        <IconMaterialSymbolsMail class="color-blue" />
       </BaseIcon>
     </a>
 
