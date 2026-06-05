@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { APP_NAME, GITHUB, Origin } from '@typewords/core/config/env.ts'
-import { BaseIcon } from '@typewords/base'
+import { BaseIcon, Toast } from '@typewords/base'
 import { getSystemTheme, listenToSystemThemeChange, setTheme, swapTheme } from '@typewords/core/hooks/theme.ts'
 import { usePlayBeep, usePlayCorrect, usePlayKeyboardAudio } from '@typewords/core/hooks/sound.ts'
 import { useUserStore } from '@typewords/core/stores/user.ts'
@@ -233,6 +233,36 @@ const stats = [
 ]
 
 let mobileMenuOpen = $ref(false)
+
+// ── 登录弹窗状态 ──
+let showLoginModal = $ref(false)
+let loginUsername = $ref('')
+let loginPassword = $ref('')
+let loginLoading = $ref(false)
+
+async function handleLogin() {
+  if (!loginUsername.trim() || !loginPassword.trim()) {
+    Toast.warning('请填写用户名和密码')
+    return
+  }
+  loginLoading = true
+  try {
+    const res = await $fetch<{ token: string; user_display_name: string; user_email: string }>(
+      'https://dacbbox.com/wp-json/jwt-auth/v1/token',
+      { method: 'POST', body: { username: loginUsername, password: loginPassword } }
+    )
+    userStore.loginWithDacbbox(res.token, res.user_display_name, res.user_email)
+    showLoginModal = false
+    Toast.success('登录成功 🎉')
+    void userStore.syncLocalRecordsToCloud()
+    loginUsername = ''
+    loginPassword = ''
+  } catch {
+    Toast.error('登录失败，请检查用户名或密码')
+  } finally {
+    loginLoading = false
+  }
+}
 </script>
 
 <template>
@@ -303,15 +333,21 @@ let mobileMenuOpen = $ref(false)
             <span class="text-[.78rem] text-[var(--hw-text-3)] whitespace-nowrap">
               🟢 游客模式 <span class="hidden lg:inline">(记录暂存本地)</span>
             </span>
-            <a
-              href="https://dacbbox.com/wp-login.php?redirect_to=https://type.dacbbox.com"
-              target="_blank"
-              class="inline-flex items-center justify-center px-3 h-7 rounded-lg text-[.78rem] font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-[#2563eb] no-underline hover:opacity-90 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
-            >登录 / 注册</a>
+            <button
+              id="btn-open-login-modal"
+              @click="showLoginModal = true"
+              class="inline-flex items-center justify-center px-3 h-7 rounded-lg text-[.78rem] font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-[#2563eb] border-none cursor-pointer hover:opacity-90 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
+            >登录 / 注册</button>
           </div>
           <div v-else class="hidden md:flex items-center gap-1.5 text-[.82rem] text-[var(--hw-text-2)]">
             <span class="text-[#7c3aed] text-[.6rem]">●</span>
             <span class="max-w-[80px] truncate">{{ userStore.user?.username || userStore.user?.email || '已登录' }}</span>
+            <button
+              id="btn-sync-cloud"
+              @click="userStore.syncLocalRecordsToCloud()"
+              title="将本地打字记录同步到云端"
+              class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#7c3aed] transition-colors duration-150 whitespace-nowrap shrink-0"
+            >☁️ 同步数据</button>
           </div>
           <!-- 大程开源百宝箱 -->
           <a
@@ -841,6 +877,99 @@ let mobileMenuOpen = $ref(false)
         <span class="text-[.8rem] text-[var(--hw-text-3)] ml-auto">© 2026 {{ APP_NAME }}. All rights reserved.</span>
       </div>
     </footer>
+
+    <!-- ── 登录弹窗 ── -->
+    <Teleport to="body">
+      <Transition name="login-modal">
+        <div
+          v-if="showLoginModal"
+          id="login-modal-overlay"
+          class="login-modal-overlay"
+          @click.self="showLoginModal = false"
+        >
+          <div class="login-modal-card" :class="theme">
+            <!-- 关闭按钮 -->
+            <button class="login-modal-close" @click="showLoginModal = false" title="关闭">×</button>
+
+            <!-- 标题区 -->
+            <div class="login-modal-header">
+              <div class="login-modal-logo">🔑</div>
+              <h2 class="login-modal-title">欢迎回来</h2>
+              <p class="login-modal-sub">登录你的大程开源百宝箱账号</p>
+            </div>
+
+            <!-- 表单区 -->
+            <div class="login-modal-form">
+              <div class="login-field">
+                <label class="login-label" for="login-username">用户名</label>
+                <input
+                  id="login-username"
+                  v-model="loginUsername"
+                  type="text"
+                  class="login-input"
+                  placeholder="请输入用户名"
+                  autocomplete="username"
+                  @keydown.enter="handleLogin"
+                />
+              </div>
+              <div class="login-field">
+                <label class="login-label" for="login-password">密码</label>
+                <input
+                  id="login-password"
+                  v-model="loginPassword"
+                  type="password"
+                  class="login-input"
+                  placeholder="请输入密码"
+                  autocomplete="current-password"
+                  @keydown.enter="handleLogin"
+                />
+              </div>
+
+              <button
+                id="btn-confirm-login"
+                class="login-submit-btn"
+                :class="{ 'loading': loginLoading }"
+                :disabled="loginLoading"
+                @click="handleLogin"
+              >
+                <span v-if="loginLoading" class="login-spinner"></span>
+                <span>{{ loginLoading ? '登录中…' : '确认登录' }}</span>
+              </button>
+
+              <!-- 分隔线 -->
+              <div class="login-divider">
+                <span class="login-divider-line"></span>
+                <span class="login-divider-text">或</span>
+                <span class="login-divider-line"></span>
+              </div>
+
+              <!-- 第三方登录入口 -->
+              <a
+                id="btn-third-party-login"
+                href="https://dacbbox.com/wp-login.php?redirect_to=https://type.dacbbox.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="login-oauth-btn"
+              >
+                <!-- Google 图标 SVG -->
+                <svg width="18" height="18" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.4-.2-2.7-.5-4z" fill="#FFC107"/>
+                  <path d="M6.3 14.7l7 5.1C15 16.1 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.6 0-14.2 4.2-17.7 10.4-.5.7-.7 1.5-1 2.3z" fill="#FF3D00"/>
+                  <path d="M24 45c5.5 0 10.4-1.9 14.3-5l-6.6-5.6C29.6 36 26.9 37 24 37c-6.1 0-10.7-3.1-11.8-7.5l-7 5.4C8.3 41.2 15.6 45 24 45z" fill="#4CAF50"/>
+                  <path d="M44.5 20H24v8.5h11.8c-.8 2.4-2.3 4.5-4.3 6l6.6 5.6C42 36.8 45 31 45 24c0-1.4-.2-2.7-.5-4z" fill="#1976D2"/>
+                </svg>
+                使用 Google 或其他方式登录
+              </a>
+
+              <p class="login-modal-tip">
+                没有账号？
+                <a href="https://dacbbox.com/register" target="_blank" class="login-link">前往注册</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -972,5 +1101,289 @@ let mobileMenuOpen = $ref(false)
   max-height: 14rem;
   padding-bottom: 1.25rem;
   opacity: 1;
+}
+
+/* ── 登录弹窗样式 ── */
+.login-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 1rem;
+}
+
+.login-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.18), 0 4px 20px rgba(124, 58, 237, 0.12);
+  border: 1px solid #e2e4e8;
+  overflow: hidden;
+  padding: 2rem 2rem 1.75rem;
+}
+.login-modal-card.dark {
+  background: #171d26;
+  border-color: #2a3140;
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.55), 0 4px 20px rgba(124, 58, 237, 0.2);
+}
+
+/* 顶部渐变装饰条 */
+.login-modal-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #bd34fe, #7c3aed, #41d1ff);
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #8a93a8;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.login-modal-close:hover {
+  background: rgba(124, 58, 237, 0.1);
+  color: #7c3aed;
+}
+
+.login-modal-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+.login-modal-logo {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+.login-modal-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.login-modal-card.dark .login-modal-title {
+  background: linear-gradient(135deg, #bd34fe, #41d1ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.login-modal-sub {
+  font-size: 0.82rem;
+  color: #8a93a8;
+  margin: 0;
+}
+
+.login-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.login-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #555e6e;
+}
+.login-modal-card.dark .login-label {
+  color: #8a93a8;
+}
+
+.login-input {
+  width: 100%;
+  height: 2.6rem;
+  padding: 0 0.875rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid #e2e4e8;
+  background: #f4f5f7;
+  font-size: 0.9rem;
+  color: #0d0d0d;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.login-modal-card.dark .login-input {
+  background: #0e1217;
+  border-color: #2a3140;
+  color: #e8eaf0;
+}
+.login-input:focus {
+  border-color: #7c3aed;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.14);
+}
+.login-modal-card.dark .login-input:focus {
+  background: #131820;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.22);
+}
+.login-input::placeholder {
+  color: #aab0bc;
+}
+
+.login-submit-btn {
+  margin-top: 0.25rem;
+  width: 100%;
+  height: 2.75rem;
+  border: none;
+  border-radius: 0.7rem;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+  transition: opacity 0.15s, transform 0.15s;
+}
+.login-submit-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+.login-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* 加载 spinner */
+.login-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: login-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes login-spin {
+  to { transform: rotate(360deg); }
+}
+
+.login-modal-tip {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #8a93a8;
+  margin: 0;
+}
+.login-link {
+  color: #7c3aed;
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+.login-link:hover { opacity: 0.8; }
+
+/* Vue Transition 动画 */
+.login-modal-enter-active,
+.login-modal-leave-active {
+  transition: opacity 0.22s ease;
+}
+.login-modal-enter-active .login-modal-card,
+.login-modal-leave-active .login-modal-card {
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s ease;
+}
+.login-modal-enter-from,
+.login-modal-leave-to {
+  opacity: 0;
+}
+.login-modal-enter-from .login-modal-card {
+  transform: translateY(24px) scale(0.96);
+  opacity: 0;
+}
+.login-modal-leave-to .login-modal-card {
+  transform: translateY(12px) scale(0.97);
+  opacity: 0;
+}
+
+/* 分隔线 */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.15rem 0;
+}
+.login-divider-line {
+  flex: 1;
+  height: 1px;
+  background: #e2e4e8;
+}
+.login-modal-card.dark .login-divider-line {
+  background: #2a3140;
+}
+.login-divider-text {
+  font-size: 0.78rem;
+  color: #aab0bc;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* 第三方登录按鈕 */
+.login-oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  height: 2.6rem;
+  border-radius: 0.7rem;
+  border: 1.5px solid #e2e4e8;
+  background: #ffffff;
+  color: #555e6e;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.15s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  letter-spacing: 0.01em;
+}
+.login-modal-card.dark .login-oauth-btn {
+  background: #0e1217;
+  border-color: #2a3140;
+  color: #8a93a8;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.login-oauth-btn:hover {
+  border-color: #7c3aed;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.04);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  transform: translateY(-1px);
+}
+.login-modal-card.dark .login-oauth-btn:hover {
+  background: rgba(124, 58, 237, 0.08);
+}
+.login-oauth-btn svg {
+  flex-shrink: 0;
 }
 </style>
