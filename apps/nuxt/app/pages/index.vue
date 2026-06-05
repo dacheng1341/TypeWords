@@ -14,6 +14,10 @@ const userStore = useUserStore()
 let theme = $ref('light')
 
 onMounted(() => {
+  // ── 静默恢复 dacbbox 登录态（解决刷新后掉线）──
+  // 仅还原 Pinia 状态和 AppEnv 运行时环境，不弹 Toast，不触发数据防覆盖检查
+  userStore.restoreLoginState()
+
   listenToSystemThemeChange(val => {
     if (theme === val) return
     theme = val
@@ -1002,7 +1006,7 @@ async function handleLogin() {
 
               <p class="login-modal-tip">
                 没有账号？
-                <a href="https://dacbbox.com/register" target="_blank" class="login-link">前往注册</a>
+                <a href="https://dacbbox.com/wp-login.php?action=register" target="_blank" class="login-link">前往注册</a>
               </p>
             </div>
           </div>

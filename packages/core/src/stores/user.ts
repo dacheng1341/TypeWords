@@ -48,10 +48,12 @@ export const useUserStore = defineStore('user', () => {
     // router.push('/')
   }
 
-  // 使用 dacbbox WordPress JWT 登录
+  // 使用 dacbbox WordPress JWT 登录（主动登录，允许后续触发 Toast 和数据检查）
   function loginWithDacbbox(token: string, displayName: string, email: string) {
     // 按需求将 token 存入指定键名
     localStorage.setItem('dacbbox_token', token)
+    // 同步持久化用户信息，供刷新后 restoreLoginState 读取
+    localStorage.setItem('dacbbox_user', JSON.stringify({ displayName, email }))
     // 同步更新运行时环境
     AppEnv.TOKEN = token
     AppEnv.IS_LOGIN = true
@@ -71,6 +73,41 @@ export const useUserStore = defineStore('user', () => {
         planDesc: '',
       },
     })
+  }
+
+  // 静默恢复登录态（仅用于页面刷新时从 localStorage 还原状态）
+  // 不触发任何 Toast，不触发数据防覆盖检查，不做任何网络请求
+  function restoreLoginState(): boolean {
+    const token = localStorage.getItem('dacbbox_token')
+    if (!token) return false
+    let displayName = ''
+    let email = ''
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('dacbbox_user') ?? '{}')
+      displayName = userInfo.displayName ?? ''
+      email = userInfo.email ?? ''
+    } catch {
+      // dacbbox_user 解析失败时容错，继续用空字符串
+    }
+    // 仅恢复运行时环境和 Pinia 响应式状态，无任何副作用
+    AppEnv.TOKEN = token
+    AppEnv.IS_LOGIN = true
+    AppEnv.CAN_REQUEST = AppEnv.IS_OFFICIAL
+    setUser({
+      id: email,
+      email,
+      username: displayName,
+      member: {
+        levelDesc: '',
+        status: '',
+        active: false,
+        endDate: 0,
+        autoRenew: false,
+        plan: '',
+        planDesc: '',
+      },
+    })
+    return true
   }
 
   // 同步全量学习数据到云端（WordPress 后端）
@@ -213,5 +250,6 @@ export const useUserStore = defineStore('user', () => {
     fetchAndRestoreDataFromCloud,
     hasLocalLearningData,
     loginWithDacbbox,
+    restoreLoginState,
   }
 })
