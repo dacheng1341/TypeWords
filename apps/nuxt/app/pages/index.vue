@@ -295,17 +295,12 @@ let mobileMenuOpen = $ref(false)
             <IconFluentWeatherMoon16Regular v-if="theme === 'light'" />
             <IconFluentWeatherSunny16Regular v-else />
           </BaseIcon>
-          <!-- GitHub -->
+          <!-- 大程开源百宝笱 -->
           <a
-            class="flex gap-2 relative text-[var(--hw-text-2)] no-underline"
-            href="https://github.com/dacheng1341/TypeWords"
+            class="hidden md:inline-flex items-center text-[.82rem] font-semibold text-[var(--hw-text-2)] no-underline px-3 py-1.5 rounded-lg border border-[var(--hw-border)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-150 whitespace-nowrap"
+            href="https://dacbbox.com"
             target="_blank"
-            aria-label="Github project address"
-          >
-            <BaseIcon class="z-1" title="Github" noBg>
-              <IconSimpleIconsGithub />
-            </BaseIcon>
-          </a>
+          >大程开源百宝笱</a>
           <!-- Mobile menu button -->
           <button
             class="flex md:hidden items-center justify-center w-8 h-8 rounded-lg bg-transparent text-[var(--hw-text-2)] cursor-pointer"
@@ -749,12 +744,7 @@ let mobileMenuOpen = $ref(false)
             >
               开始单词练习
             </button>
-            <a
-              class="inline-flex items-center justify-center px-8 h-12 rounded-lg font-semibold text-[1rem] text-[var(--hw-text)] bg-transparent border border-solid border-[var(--hw-border)] no-underline hover:bg-[rgba(124,58,237,.06)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-150 sm:w-auto"
-              href="https://github.com/dacheng1341/TypeWords"
-              target="_blank"
-              >查看源码 →</a
-            >
+
           </div>
         </div>
       </section>
