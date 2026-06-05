@@ -70,7 +70,10 @@ export const useUserStore = defineStore('user', () => {
   async function syncLocalRecordsToCloud() {
     // 1. 读取并解析本地缓存
     const raw = localStorage.getItem('dacbbox_guest_records')
-    if (!raw) return
+    if (!raw) {
+      Toast.warning('本地暂无需要同步的打字记录')
+      return
+    }
 
     let records: unknown[]
     try {
@@ -78,7 +81,10 @@ export const useUserStore = defineStore('user', () => {
     } catch {
       return // 数据格式损坏，静默退出
     }
-    if (!Array.isArray(records) || records.length === 0) return
+    if (!Array.isArray(records) || records.length === 0) {
+      Toast.warning('本地暂无需要同步的打字记录')
+      return
+    }
 
     // 2. 读取登录 token
     const token = localStorage.getItem('dacbbox_token')
