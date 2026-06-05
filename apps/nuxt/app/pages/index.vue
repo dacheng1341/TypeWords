@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { APP_NAME, GITHUB, Origin } from '@typewords/core/config/env.ts'
+import { SAVE_DICT_KEY } from '@typewords/core/config/env.ts'
 import { BaseIcon, Toast } from '@typewords/base'
 import { getSystemTheme, listenToSystemThemeChange, setTheme, swapTheme } from '@typewords/core/hooks/theme.ts'
 import { usePlayBeep, usePlayCorrect, usePlayKeyboardAudio } from '@typewords/core/hooks/sound.ts'
 import { useUserStore } from '@typewords/core/stores/user.ts'
+import { get } from 'idb-keyval'
 
 definePageMeta({ layout: 'empty' })
 
@@ -240,6 +242,25 @@ let loginUsername = $ref('')
 let loginPassword = $ref('')
 let loginLoading = $ref(false)
 
+// 判断本地是否有实质学习进度（直接读 IndexedDB 原始 key，避免 Pinia 时序问题）
+async function hasLocalLearningData(): Promise<boolean> {
+  const raw = await get(SAVE_DICT_KEY.key)
+  if (!raw) return false
+  try {
+    const parsed = JSON.parse(raw as string)
+    const state = parsed?.val
+    if (!state) return false
+    return (
+      (state.word?.studyIndex ?? -1) >= 0 ||
+      (state.article?.studyIndex ?? -1) >= 0 ||
+      Object.keys(state.fsrsData ?? {}).length > 0 ||
+      (state.word?.bookList ?? []).some((b: any) => b.words?.length > 0)
+    )
+  } catch {
+    return false
+  }
+}
+
 async function handleLogin() {
   if (!loginUsername.trim() || !loginPassword.trim()) {
     Toast.warning('请填写用户名和密码')
@@ -254,9 +275,21 @@ async function handleLogin() {
     userStore.loginWithDacbbox(res.token, res.user_display_name, res.user_email)
     showLoginModal = false
     Toast.success('登录成功 🎉')
-    void userStore.syncAllDataToCloud()
     loginUsername = ''
     loginPassword = ''
+
+    // ── 智能判断：防止新旧设备数据互相覆盖 ──
+    const localHasData = await hasLocalLearningData()
+    if (!localHasData) {
+      // 新设备 / 空设备 → 自动从云端拉取恢复
+      void userStore.fetchAndRestoreDataFromCloud()
+    } else {
+      // 本地有进度 → 不自动操作，提示用户手动决策
+      Toast.info(
+        '检测到本地存在学习记录，请点击右上角手动选择「☁️ 同步」或「⬇️ 从云端恢复」',
+        { duration: 5000 }
+      )
+    }
   } catch {
     Toast.error('登录失败，请检查用户名或密码')
   } finally {
@@ -348,6 +381,12 @@ async function handleLogin() {
               title="将全量学习数据（进度/FSRS/设置）同步到云端"
               class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#7c3aed] transition-colors duration-150 whitespace-nowrap shrink-0"
             >☁️ 同步数据</button>
+            <button
+              id="btn-restore-cloud"
+              @click="userStore.fetchAndRestoreDataFromCloud()"
+              title="从云端拉取并覆盖本地全量数据（慢用！）"
+              class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#2563eb] transition-colors duration-150 whitespace-nowrap shrink-0"
+            >⬇️ 从云端恢复</button>
           </div>
           <!-- 大程开源百宝箱 -->
           <a

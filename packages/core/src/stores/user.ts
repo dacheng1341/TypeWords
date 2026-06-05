@@ -2,9 +2,15 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getUserInfo } from '../apis/user'
 import type { User } from '../apis/user'
-import { AppEnv } from '../config/env'
+import { AppEnv, SAVE_DICT_KEY } from '../config/env'
 import { Toast } from '@typewords/base'
 import { useExport } from '../hooks/export'
+import { get } from 'idb-keyval'
+import { checkAndUpgradeSaveDict, checkAndUpgradeSaveSetting } from '../utils'
+import { useDataSyncPersistence } from '../composables/useDataSyncPersistence'
+import { useBaseStore } from './base'
+import { useSettingStore } from './setting'
+import type { BackupData } from '../types'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
@@ -103,6 +109,73 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // ── 私有辅助：判断本地是否存在有效学习进度（直接读 IndexedDB，避免 Pinia 时序问题）──
+  async function hasLocalLearningData(): Promise<boolean> {
+    // ① 连 dict key 都没有 = 纯新设备，从未运行过 TypeWords
+    const raw = await get(SAVE_DICT_KEY.key)
+    if (!raw) return false
+    // ② 解析确认有实质进度（排除打开过但什么都没做的初始化空状态）
+    try {
+      const parsed = JSON.parse(raw as string)
+      const state = parsed?.val
+      if (!state) return false
+      return (
+        (state.word?.studyIndex ?? -1) >= 0 ||
+        (state.article?.studyIndex ?? -1) >= 0 ||
+        Object.keys(state.fsrsData ?? {}).length > 0 ||
+        (state.word?.bookList ?? []).some((b: any) => b.words?.length > 0)
+      )
+    } catch {
+      return false
+    }
+  }
+
+  // 从云端拉取全量数据并恢复至本地（复现 setting.vue importJson 管线）
+  async function fetchAndRestoreDataFromCloud() {
+    try {
+      // 1. 读取 WordPress JWT Token
+      const token = localStorage.getItem('dacbbox_token')
+      if (!token) {
+        Toast.warning('请先登录后再拉取数据')
+        return
+      }
+
+      // 2. GET 云端数据
+      const res = await $fetch<{ backup_data: BackupData }>(
+        'https://dacbbox.com/wp-json/dacbbox/v1/get-learning-data',
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      const backupData = res?.backup_data
+      if (!backupData?.val?.dict) {
+        Toast.warning('云端暂无学习数据，请先在其他设备同步一次')
+        return
+      }
+
+      // 3. 版本升级兼容处理（importJson 管线的步骤 ②③）
+      const data = backupData.val
+      data.dict.val    = await checkAndUpgradeSaveDict(data.dict)
+      data.setting.val = await checkAndUpgradeSaveSetting(data.setting)
+
+      // 4. 写入 IndexedDB 四类数据（importJson 管线的步骤 ④）
+      const dataSyncPersistence = useDataSyncPersistence()
+      await dataSyncPersistence.forcePushLocalDataToRemote(data)
+
+      // 5. 更新 Pinia 内存状态，界面立即响应（importJson 管线的步骤 ⑤⑥）
+      const baseStore = useBaseStore()
+      const settingStore = useSettingStore()
+      data.setting.val.load = true
+      settingStore.setState(data.setting.val)
+      data.dict.val.load = true
+      baseStore.setState(data.dict.val)
+
+      Toast.success('云端数据已成功恢复至本地 ✓')
+    } catch (error: any) {
+      console.error('[fetchAndRestoreDataFromCloud] 拉取失败', error)
+      Toast.error(`拉取失败：${error?.message ?? '网络错误，请稍后重试'}`)
+    }
+  }
+
   // 获取用户信息
   async function fetchUserInfo() {
     if (!AppEnv.CAN_REQUEST) return false
@@ -137,6 +210,8 @@ export const useUserStore = defineStore('user', () => {
     fetchUserInfo,
     init,
     syncAllDataToCloud,
+    fetchAndRestoreDataFromCloud,
+    hasLocalLearningData,
     loginWithDacbbox,
   }
 })
