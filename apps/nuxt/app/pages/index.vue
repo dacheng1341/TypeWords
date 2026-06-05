@@ -254,7 +254,7 @@ async function handleLogin() {
     userStore.loginWithDacbbox(res.token, res.user_display_name, res.user_email)
     showLoginModal = false
     Toast.success('登录成功 🎉')
-    void userStore.syncLocalRecordsToCloud()
+    void userStore.syncAllDataToCloud()
     loginUsername = ''
     loginPassword = ''
   } catch {
@@ -344,8 +344,8 @@ async function handleLogin() {
             <span class="max-w-[80px] truncate">{{ userStore.user?.username || userStore.user?.email || '已登录' }}</span>
             <button
               id="btn-sync-cloud"
-              @click="userStore.syncLocalRecordsToCloud()"
-              title="将本地打字记录同步到云端"
+              @click="userStore.syncAllDataToCloud()"
+              title="将全量学习数据（进度/FSRS/设置）同步到云端"
               class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#7c3aed] transition-colors duration-150 whitespace-nowrap shrink-0"
             >☁️ 同步数据</button>
           </div>

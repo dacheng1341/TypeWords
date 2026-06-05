@@ -4,6 +4,7 @@ import { getUserInfo } from '../apis/user'
 import type { User } from '../apis/user'
 import { AppEnv } from '../config/env'
 import { Toast } from '@typewords/base'
+import { useExport } from '../hooks/export'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
@@ -66,44 +67,39 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-  // 同步游客本地记录到云端
-  async function syncLocalRecordsToCloud() {
-    // 1. 读取并解析本地缓存
-    const raw = localStorage.getItem('dacbbox_guest_records')
-    if (!raw) {
-      Toast.warning('本地暂无需要同步的打字记录')
-      return
-    }
-
-    let records: unknown[]
+  // 同步全量学习数据到云端（WordPress 后端）
+  async function syncAllDataToCloud() {
     try {
-      records = JSON.parse(raw)
-    } catch {
-      return // 数据格式损坏，静默退出
-    }
-    if (!Array.isArray(records) || records.length === 0) {
-      Toast.warning('本地暂无需要同步的打字记录')
-      return
-    }
+      // 1. 打包全量数据（设置 + 词书/进度/FSRS遗忘曲线 + 单词练习缓存 + 文章练习缓存）
+      const { getExportedData } = useExport()
+      const backupData = await getExportedData()
 
-    // 2. 读取登录 token
-    const token = localStorage.getItem('dacbbox_token')
-    if (!token) return
+      // 2. 空数据校验：dict 未初始化说明用户还未开始使用
+      if (!backupData?.val?.dict?.val) {
+        Toast.warning('暂无可同步的数据，请先开始练习')
+        return
+      }
 
-    // 3. 发起 POST 请求，Header 携带 Bearer Token
-    try {
-      await $fetch('https://dacbbox.com/wp-json/dacbbox/v1/save-typing-record', {
+      // 3. 读取 WordPress JWT Token
+      const token = localStorage.getItem('dacbbox_token')
+      if (!token) {
+        Toast.warning('请先登录后再同步')
+        return
+      }
+
+      // 4. POST 全量数据到 WordPress 新端点
+      await $fetch('https://dacbbox.com/wp-json/dacbbox/v1/save-learning-data', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
-        body: { records },
+        body: { backup_data: backupData },
       })
-      // 4. 成功：清除本地缓存并提示
+
+      // 5. 成功：清理废弃的游客记录垃圾数据（不动 Pinia 和 IndexedDB 真实数据）
       localStorage.removeItem('dacbbox_guest_records')
-      Toast.success('本地打字数据已安全同步至云端')
-    } catch (error) {
-      // 5. 失败：保留本地缓存，提示用户，下次登录或手动重试
-      console.error('[syncLocalRecordsToCloud] 同步失败，本地数据保留，下次登录时重试', error)
-      Toast.warning('同步云端失败，成绩已保留在本地待重试')
+      Toast.success('全量学习数据已成功同步至云端 ✓')
+    } catch (error: any) {
+      console.error('[syncAllDataToCloud] 同步失败', error)
+      Toast.error(`同步失败：${error?.message ?? '网络错误，请稍后重试'}`)
     }
   }
 
@@ -140,7 +136,7 @@ export const useUserStore = defineStore('user', () => {
     logout,
     fetchUserInfo,
     init,
-    syncLocalRecordsToCloud,
+    syncAllDataToCloud,
     loginWithDacbbox,
   }
 })
