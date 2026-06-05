@@ -535,6 +535,7 @@ async function complete() {
     }
 
     if (AppEnv.CAN_REQUEST) {
+      // 已登录：走原有 API 上传成绩
       let res = await addStat({
         ...data,
         type: 'word',
@@ -544,6 +545,30 @@ async function complete() {
       })
       if (!res.success) {
         Toast.error(res.msg)
+      }
+    } else {
+      // 未登录（游客模式）：将此次记录追加保存到 localStorage
+      // Key 统一为 'dacbbox_guest_records'，登录后由 syncLocalRecordsToCloud 批量同步
+      const guestRecord = {
+        savedAt: Date.now(),
+        type: 'word',
+        dictName: store.sdict.name,
+        spend: statStore.spend,
+        total: statStore.total,
+        newWordNumber: statStore.newWordNumber,
+        reviewWordNumber: statStore.reviewWordNumber,
+        wrong: statStore.wrong,
+        wrongTimesMap: { ...data.wrongTimesMap },
+        lastLearnIndex: store.sdict.lastLearnIndex,
+        complete: store.sdict.complete,
+        perDayStudyNumber: store.sdict.perDayStudyNumber,
+      }
+      try {
+        const existing = JSON.parse(localStorage.getItem('dacbbox_guest_records') || '[]')
+        existing.push(guestRecord)
+        localStorage.setItem('dacbbox_guest_records', JSON.stringify(existing))
+      } catch (e) {
+        console.warn('[Guest] 保存游客记录失败', e)
       }
     }
 

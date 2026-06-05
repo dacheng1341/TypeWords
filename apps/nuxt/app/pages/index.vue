@@ -3,8 +3,11 @@ import { APP_NAME, GITHUB, Origin } from '@typewords/core/config/env.ts'
 import { BaseIcon } from '@typewords/base'
 import { getSystemTheme, listenToSystemThemeChange, setTheme, swapTheme } from '@typewords/core/hooks/theme.ts'
 import { usePlayBeep, usePlayCorrect, usePlayKeyboardAudio } from '@typewords/core/hooks/sound.ts'
+import { useUserStore } from '@typewords/core/stores/user.ts'
 
 definePageMeta({ layout: 'empty' })
+
+const userStore = useUserStore()
 
 let theme = $ref('light')
 
@@ -295,12 +298,27 @@ let mobileMenuOpen = $ref(false)
             <IconFluentWeatherMoon16Regular v-if="theme === 'light'" />
             <IconFluentWeatherSunny16Regular v-else />
           </BaseIcon>
-          <!-- 大程开源百宝笱 -->
+          <!-- 登录引流 UI -->
+          <div v-if="!userStore.isLogin" class="hidden md:flex items-center gap-2">
+            <span class="text-[.78rem] text-[var(--hw-text-3)] whitespace-nowrap">
+              🟢 游客模式 <span class="hidden lg:inline">(记录暂存本地)</span>
+            </span>
+            <a
+              href="https://dacbbox.com/wp-login.php?redirect_to=https://type.dacbbox.com"
+              target="_blank"
+              class="inline-flex items-center justify-center px-3 h-7 rounded-lg text-[.78rem] font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-[#2563eb] no-underline hover:opacity-90 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
+            >登录 / 注册</a>
+          </div>
+          <div v-else class="hidden md:flex items-center gap-1.5 text-[.82rem] text-[var(--hw-text-2)]">
+            <span class="text-[#7c3aed] text-[.6rem]">●</span>
+            <span class="max-w-[80px] truncate">{{ userStore.user?.username || userStore.user?.email || '已登录' }}</span>
+          </div>
+          <!-- 大程开源百宝箱 -->
           <a
             class="hidden md:inline-flex items-center text-[.82rem] font-semibold text-[var(--hw-text-2)] no-underline px-3 py-1.5 rounded-lg border border-[var(--hw-border)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-150 whitespace-nowrap"
             href="https://dacbbox.com"
             target="_blank"
-          >大程开源百宝笱</a>
+          >大程开源百宝箱</a>
           <!-- Mobile menu button -->
           <button
             class="flex md:hidden items-center justify-center w-8 h-8 rounded-lg bg-transparent text-[var(--hw-text-2)] cursor-pointer"

@@ -41,6 +41,18 @@ export const useUserStore = defineStore('user', () => {
     // router.push('/')
   }
 
+  // 同步游客本地记录到云端（预留，待后续完善）
+  async function syncLocalRecordsToCloud() {
+    // TODO: 待后续完善。
+    // 触发时机：用户登录成功后调用此函数。
+    // 实现思路：
+    //   1. 读取 localStorage.getItem('dacbbox_guest_records')，解析为数组
+    //   2. 若数组为空或不存在，直接 return
+    //   3. 批量调用后端 API（如 addStat）将记录逐条/批量上传
+    //   4. 上传全部成功后，执行 localStorage.removeItem('dacbbox_guest_records') 清空本地缓存
+    //   5. 上传失败时，保留本地缓存，下次登录时重试
+  }
+
   // 获取用户信息
   async function fetchUserInfo() {
     if (!AppEnv.CAN_REQUEST) return false
@@ -74,5 +86,6 @@ export const useUserStore = defineStore('user', () => {
     logout,
     fetchUserInfo,
     init,
+    syncLocalRecordsToCloud,
   }
 })
