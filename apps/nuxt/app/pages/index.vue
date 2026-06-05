@@ -300,6 +300,12 @@ async function handleLogin() {
     loginLoading = false
   }
 }
+
+// 退出登录：清除 dacbbox 登录态后刷新页面
+function handleLogout() {
+  userStore.logout()
+  window.location.reload()
+}
 </script>
 
 <template>
@@ -388,9 +394,15 @@ async function handleLogin() {
             <button
               id="btn-restore-cloud"
               @click="userStore.fetchAndRestoreDataFromCloud()"
-              title="从云端拉取并覆盖本地全量数据（慢用！）"
+              title="从云端拉取并覆盖本地全量数据（慎用！）"
               class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#2563eb] transition-colors duration-150 whitespace-nowrap shrink-0"
             >⬇️ 从云端恢复</button>
+            <button
+              id="btn-logout"
+              @click="handleLogout"
+              title="退出登录"
+              class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#ef4444] transition-colors duration-150 whitespace-nowrap shrink-0"
+            >退出</button>
           </div>
           <!-- 大程开源百宝箱 -->
           <a

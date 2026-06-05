@@ -40,12 +40,14 @@ export const useUserStore = defineStore('user', () => {
     isLogin.value = true
   }
 
-  // 登出
+  // 登出（同时清理 dacbbox 登录态和用户信息）
   function logout() {
     clearToken()
+    localStorage.removeItem('dacbbox_token')
+    localStorage.removeItem('dacbbox_user')
+    isLogin.value = false
+    user.value = null
     Toast.success('已退出登录')
-    //这行会引起hrm失效
-    // router.push('/')
   }
 
   // 使用 dacbbox WordPress JWT 登录（主动登录，允许后续触发 Toast 和数据检查）
@@ -178,33 +180,53 @@ export const useUserStore = defineStore('user', () => {
       }
 
       // 2. GET 云端数据
-      const res = await $fetch<{ backup_data: BackupData }>(
+      // 后端实际返回: { success: true, backup_data: { version, val: { dict: SaveData, setting: SaveData } } }
+      const res = await $fetch<{ success: boolean; backup_data: BackupData }>(
         'https://dacbbox.com/wp-json/dacbbox/v1/get-learning-data',
         { headers: { Authorization: `Bearer ${token}` } }
       )
 
+      // 3. 严格校验响应层级，防止后端结构异常时解析到 undefined 后覆盖本地数据
       const backupData = res?.backup_data
-      if (!backupData?.val?.dict) {
+      const dictSaveData = backupData?.val?.dict
+      const settingSaveData = backupData?.val?.setting
+
+      if (!dictSaveData?.val) {
         Toast.warning('云端暂无学习数据，请先在其他设备同步一次')
         return
       }
+      if (!settingSaveData?.val) {
+        throw new Error('云端数据结构解析失败：setting 层级缺失')
+      }
 
-      // 3. 版本升级兼容处理（importJson 管线的步骤 ②③）
-      const data = backupData.val
-      data.dict.val    = await checkAndUpgradeSaveDict(data.dict)
-      data.setting.val = await checkAndUpgradeSaveSetting(data.setting)
+      // 4. 版本升级兼容处理（importJson 管线的步骤 ②③）
+      const dictState    = await checkAndUpgradeSaveDict(dictSaveData)
+      const settingState = await checkAndUpgradeSaveSetting(settingSaveData)
 
-      // 4. 写入 IndexedDB 四类数据（importJson 管线的步骤 ④）
+      // ── 强制防御：upgrade 失败时返回的空对象不得写入 IndexedDB ──
+      if (!dictState) {
+        throw new Error('云端数据结构解析失败：dict checkAndUpgrade 返回空值')
+      }
+      if (!settingState) {
+        throw new Error('云端数据结构解析失败：setting checkAndUpgrade 返回空值')
+      }
+
+      // 5. 构造 BackupData['val'] 结构，写入 IndexedDB（importJson 管线的步骤 ④）
+      //    注意：forcePushLocalDataToRemote 内部会取 data.dict.val / data.setting.val
+      const dataToRestore: BackupData['val'] = {
+        ...backupData.val,
+        dict:    { ...dictSaveData,    val: dictState },
+        setting: { ...settingSaveData, val: settingState },
+      }
+
       const dataSyncPersistence = useDataSyncPersistence()
-      await dataSyncPersistence.forcePushLocalDataToRemote(data)
+      await dataSyncPersistence.forcePushLocalDataToRemote(dataToRestore)
 
-      // 5. 更新 Pinia 内存状态，界面立即响应（importJson 管线的步骤 ⑤⑥）
-      const baseStore = useBaseStore()
+      // 6. 更新 Pinia 内存状态，界面立即响应（importJson 管线的步骤 ⑤⑥）
+      const baseStore    = useBaseStore()
       const settingStore = useSettingStore()
-      data.setting.val.load = true
-      settingStore.setState(data.setting.val)
-      data.dict.val.load = true
-      baseStore.setState(data.dict.val)
+      settingStore.setState({ ...settingState, load: true })
+      baseStore.setState({ ...dictState, load: true })
 
       Toast.success('云端数据已成功恢复至本地 ✓')
     } catch (error: any) {
