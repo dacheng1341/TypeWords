@@ -2,7 +2,6 @@
 import { APP_NAME, GITHUB, Origin } from '@typewords/core/config/env.ts'
 import { BaseIcon } from '@typewords/base'
 import { getSystemTheme, listenToSystemThemeChange, setTheme, swapTheme } from '@typewords/core/hooks/theme.ts'
-import ChannelIcons from '@typewords/core/components/channel-icons/ChannelIcons.vue'
 import { usePlayBeep, usePlayCorrect, usePlayKeyboardAudio } from '@typewords/core/hooks/sound.ts'
 
 definePageMeta({ layout: 'empty' })
@@ -429,18 +428,7 @@ let mobileMenuOpen = $ref(false)
                 <span class="text-[#7c3aed] text-[.7rem]">✦</span>开源可审查，永久免费
               </div>
             </div>
-            <!-- 手机端不支持提示 Banner（仅手机端可见，显示在按钮上方） -->
-            <div class="block sm:hidden mb-4">
-              <div
-                class="flex text-align-start items-center gap-2.5 bg-[rgba(234,179,8,.1)] border border-[rgba(234,179,8,.4)] text-[#92400e] rounded-xl px-4 py-3 leading-[1.6]"
-              >
-                <span
-                  >⚠️ 网站专为<strong>键盘输入</strong>设计，手机使用体验不佳。手机建议扫描右侧
-                  <strong>小程序二维码</strong> 使用，体验完整功能。</span
-                >
-                <NuxtImg src="/imgs/mini.png" alt="小程序二维码" class="w-30 h-30 rounded-lg" />
-              </div>
-            </div>
+
             <!-- CTA buttons -->
             <div
               class="flex gap-3 justify-center lg:justify-start flex-col sm:flex-row items-stretch sm:items-center flex-wrap"
@@ -451,13 +439,6 @@ let mobileMenuOpen = $ref(false)
               >
                 立即开始练习
               </button>
-              <a
-                class="inline-flex items-center justify-center px-7 h-11 rounded-lg font-semibold text-[.95rem] text-[var(--hw-text)] bg-transparent border border-solid border-[var(--hw-border)] no-underline hover:bg-[rgba(124,58,237,.06)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-150 sm:w-auto"
-                href="https://github.com/dacheng1341/TypeWords"
-                target="_blank"
-                >查看源码</a
-              >
-              <NuxtImg src="/imgs/mini.png" alt="小程序二维码" class="hidden sm:block w-30 h-30 rounded-lg" />
             </div>
           </div>
           <!-- Right: 打字 Demo 卡片（PC 端可见） -->
@@ -752,62 +733,7 @@ let mobileMenuOpen = $ref(false)
         </div>
       </section>
 
-      <!-- HONORS -->
-      <section class="py-20 px-4 sm:px-8">
-        <div class="max-w-[1100px] mx-auto">
-          <!-- Section header -->
-          <div class="text-center mb-12">
-            <div class="section-label">备受认可</div>
-            <h2 class="section-h2">开源社区与用户的选择</h2>
-            <p class="section-desc">获得全球开发者持续关注，成为越来越多英语学习者的首选工具</p>
-          </div>
-          <!-- Honor cards -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
-            <div
-              v-for="item in honors"
-              :key="item.label"
-              class="bg-[var(--hw-bg-card)] border border-[var(--hw-border)] rounded-2xl p-7 text-center hover:-translate-y-1 hover:shadow-[var(--hw-shadow-md)] transition-all duration-200 cursor-default"
-            >
-              <div class="text-[2rem] mb-3">{{ item.icon }}</div>
-              <div
-                class="text-[2rem] font-black leading-[1.1] mb-1 bg-gradient-to-r from-[#bd34fe] to-[#41d1ff] bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]"
-              >
-                {{ item.num }}
-              </div>
-              <div class="text-[.95rem] font-bold text-[var(--hw-text)] mb-1">{{ item.label }}</div>
-              <div class="text-[.82rem] text-[var(--hw-text-3)] leading-[1.5]">{{ item.sub }}</div>
-            </div>
-          </div>
-          <!-- Media badges -->
-          <div class="text-center">
-            <div class="text-[.78rem] font-semibold tracking-[.06em] uppercase text-[var(--hw-text-3)] mb-4">
-              曾获推荐 / 上榜
-            </div>
-            <div class="flex gap-3 justify-center flex-wrap">
-              <span
-                class="inline-flex items-center gap-1.5 text-[.85rem] font-semibold text-[var(--hw-text-2)] px-4 py-2 rounded-full border border-[var(--hw-border)] bg-[var(--hw-bg-card)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors duration-150 cursor-default"
-                ><span>🐙</span> GitHub 趋势榜</span
-              >
-              <span
-                class="inline-flex items-center gap-1.5 text-[.85rem] font-semibold text-[var(--hw-text-2)] px-4 py-2 rounded-full border border-[var(--hw-border)] bg-[var(--hw-bg-card)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors duration-150 cursor-default"
-                ><span>💬</span> V2EX 热搜</span
-              >
-              <span
-                class="inline-flex items-center gap-1.5 text-[.85rem] font-semibold text-[var(--hw-text-2)] px-4 py-2 rounded-full border border-[var(--hw-border)] bg-[var(--hw-bg-card)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors duration-150 cursor-default"
-                ><span>🏆</span> Gitee GVP</span
-              >
-              <span
-                class="inline-flex items-center gap-1.5 text-[.85rem] font-semibold text-[var(--hw-text-2)] px-4 py-2 rounded-full border border-[var(--hw-border)] bg-[var(--hw-bg-card)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors duration-150 cursor-default"
-                ><span>📰</span> 少数派推荐</span
-              >
-              <span
-                class="inline-flex items-center gap-1.5 text-[.85rem] font-semibold text-[var(--hw-text-2)] px-4 py-2 rounded-full border border-[var(--hw-border)] bg-[var(--hw-bg-card)] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors duration-150 cursor-default"
-                ><span>⭐</span> GitCode G-Star</span
-              >
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       <!-- CTA -->
       <section class="py-20 px-4 sm:px-8 text-center bg-[var(--hw-bg-card)] border-t border-[var(--hw-border)]">
@@ -882,7 +808,6 @@ let mobileMenuOpen = $ref(false)
             >{{ APP_NAME }}</span
           >
           <p class="text-[.88rem] text-[var(--hw-text-3)] mb-5 leading-[1.6]">打字练英语，一次敲击，一点进步。</p>
-          <ChannelIcons type="horizontal" :share="false" />
         </div>
         <!-- Nav columns -->
         <div class="flex gap-12 flex-wrap">
@@ -894,8 +819,6 @@ let mobileMenuOpen = $ref(false)
           </div>
           <div class="flex flex-col gap-2.5">
             <div class="text-[.8rem] font-bold tracking-[.06em] uppercase text-[var(--hw-text-3)] mb-1">支持</div>
-            <NuxtLink to="/help" class="footer-link">帮助文档</NuxtLink>
-            <NuxtLink to="/feedback" class="footer-link">反馈问题</NuxtLink>
             <NuxtLink to="/doc" class="footer-link">学习资料</NuxtLink>
           </div>
           <div class="flex flex-col gap-2.5">
@@ -907,20 +830,6 @@ let mobileMenuOpen = $ref(false)
       </div>
       <!-- Footer bottom -->
       <div class="max-w-[1100px] mx-auto py-5 flex items-center gap-4 flex-wrap">
-        <template v-if="locale === 'zh'">
-          <a
-            href="https://beian.mps.gov.cn/#/query/webSearch?code=51015602001426"
-            target="_blank"
-            class="text-[.8rem] text-[var(--hw-text-3)] no-underline hover:text-[var(--hw-text-2)] transition-colors duration-150"
-            >川公网安备51015602001426号</a
-          >
-          <a
-            href="https://beian.miit.gov.cn/"
-            class="text-[.8rem] text-[var(--hw-text-3)] no-underline hover:text-[var(--hw-text-2)] transition-colors duration-150"
-            target="_blank"
-            >蜀ICP备2025157466号-2</a
-          >
-        </template>
         <span class="text-[.8rem] text-[var(--hw-text-3)] ml-auto">© 2026 {{ APP_NAME }}. All rights reserved.</span>
       </div>
     </footer>
