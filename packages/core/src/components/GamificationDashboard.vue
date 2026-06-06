@@ -120,7 +120,7 @@ const heatmapGrid = computed(() => {
   }
 
   // 将一维数组转换为按列(周)排列的二维数组
-  const cols: { date: string; words: number; level: number }[][] = []
+  const cols = [] as any[]
   for (let i = 0; i < grid.length; i += 7) {
     cols.push(grid.slice(i, i + 7))
   }
