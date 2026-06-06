@@ -73,8 +73,8 @@ onMounted(() => {
 <template>
   <div class="layout anim">
     <!--    第一个aside 占位用-->
-    <div class="aside space"></div>
-    <div class="aside anim fixed">
+    <div class="aside space" v-show="!settingStore.zenMode"></div>
+    <div class="aside anim fixed" v-show="!settingStore.zenMode">
       <div class="top" :class="!expand && 'hidden-span'">
         <Logo v-if="expand" />
         <NuxtLink to="/words" class="row">
@@ -106,10 +106,6 @@ onMounted(() => {
           <IconFluentQuestionCircle20Regular />
           <span>{{ $t('help') }}</span>
         </NuxtLink>
-        <!--        <div class="row" @click="router.push('/user')">-->
-        <!--          <IconFluentPerson20Regular/>-->
-        <!--          <span >用户</span>-->
-        <!--        </div>-->
       </div>
       <div class="bottom flex justify-evenly">
         <BaseIcon @click="settingStore.sideExpand = !settingStore.sideExpand">
@@ -120,7 +116,7 @@ onMounted(() => {
     </div>
 
     <!-- 移动端顶部菜单栏 -->
-    <div class="mobile-top-nav" :class="{ collapsed: settingStore.mobileNavCollapsed }">
+    <div class="mobile-top-nav" :class="{ collapsed: settingStore.mobileNavCollapsed }" v-show="!settingStore.zenMode">
       <div class="nav-items">
         <div class="nav-item" @click="router.push('/')" :class="{ active: route.path === '/' }">
           <IconFluentHome20Regular />
@@ -161,7 +157,7 @@ onMounted(() => {
       <!--      <slot></slot>-->
       <router-view></router-view>
 
-      <div class="absolute right-4 top-4 flex z-1 gap-2" v-if="showIcon">
+      <div class="absolute right-4 top-4 flex z-1 gap-2" v-if="showIcon && !settingStore.zenMode">
         <div class="relative group">
           <BaseIcon>
             <IconPhTranslate />
@@ -178,11 +174,32 @@ onMounted(() => {
         </div>
 
         <BaseIcon
+          :title="`禅定模式(${settingStore.shortcutKeyMap[ShortcutKey.ToggleZenMode]})`"
+          @click="settingStore.zenMode = true"
+        >
+          <IconFluentFullScreenMaximize16Regular />
+        </BaseIcon>
+
+        <BaseIcon
           :title="`${$t('toggle_theme')}(${settingStore.shortcutKeyMap[ShortcutKey.ToggleTheme]})`"
           @click="toggleTheme"
         >
           <IconFluentWeatherMoon16Regular v-if="getTheme() === 'light'" />
           <IconFluentWeatherSunny16Regular v-else />
+        </BaseIcon>
+      </div>
+
+      <!-- 退出禅定模式的悬浮按钮 -->
+      <div 
+        v-if="settingStore.zenMode" 
+        class="fixed right-4 bottom-24 md:bottom-12 z-[9999] opacity-30 hover:opacity-100 transition-opacity duration-300"
+      >
+        <BaseIcon 
+          class="bg-black/20 dark:bg-white/20 backdrop-blur rounded-full p-2"
+          :title="`退出禅定模式(${settingStore.shortcutKeyMap[ShortcutKey.ToggleZenMode]})`"
+          @click="settingStore.zenMode = false"
+        >
+          <IconFluentFullScreenMinimize16Regular />
         </BaseIcon>
       </div>
     </div>

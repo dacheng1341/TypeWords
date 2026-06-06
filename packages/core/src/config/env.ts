@@ -130,6 +130,7 @@ export const DefaultShortcutKeyMap = {
   [ShortcutKey.ToggleConciseMode]: 'Ctrl+M',
   [ShortcutKey.ToggleToolbar]: 'Ctrl+B',
   [ShortcutKey.TogglePanel]: 'Ctrl+L',
+  [ShortcutKey.ToggleZenMode]: 'F11',
   [ShortcutKey.RandomWrite]: 'Ctrl+R',
   [ShortcutKey.KnowWord]: '1',
   [ShortcutKey.UnknownWord]: '2',

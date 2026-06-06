@@ -1010,6 +1010,7 @@ useEvents([
   [ShortcutKey.ToggleConciseMode, toggleConciseMode],
   [ShortcutKey.ToggleToolbar, () => (settingStore.showToolbar = !settingStore.showToolbar)],
   [ShortcutKey.TogglePanel, () => (settingStore.showPanel = !settingStore.showPanel)],
+  [ShortcutKey.ToggleZenMode, () => (settingStore.zenMode = !settingStore.zenMode)],
   [ShortcutKey.RandomWrite, randomWrite],
 ])
 </script>

@@ -58,6 +58,7 @@ export interface SettingState {
   autoNextWord: boolean // 自动切换下一个单词
   inputWrongClear: boolean // 单词输入错误，清空已输入内容
   mobileNavCollapsed: boolean // 移动端底部导航栏收缩状态
+  zenMode: boolean // 禅定模式/无干扰模式
   ignoreSymbol: boolean // 过滤符号
   practiceSentence: boolean // 练习例句
 
@@ -123,6 +124,7 @@ export const getDefaultSettingState = (): SettingState => ({
   autoNextWord: true,
   inputWrongClear: false,
   mobileNavCollapsed: false,
+  zenMode: false,
   ignoreSymbol: true,
   practiceSentence: false,
 

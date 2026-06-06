@@ -455,6 +455,7 @@ useEvents([
   [ShortcutKey.ToggleTheme, toggleTheme],
   [ShortcutKey.ToggleConciseMode, toggleConciseMode],
   [ShortcutKey.TogglePanel, togglePanel],
+  [ShortcutKey.ToggleZenMode, () => (settingStore.zenMode = !settingStore.zenMode)],
   [ShortcutKey.NextChapter, next],
   [ShortcutKey.PlayWordPronunciation, play],
   [ShortcutKey.ShowWord, show],

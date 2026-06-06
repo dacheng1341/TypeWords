@@ -42,6 +42,7 @@ export enum ShortcutKey {
   ToggleToolbar = 'ToggleToolbar',
   ToggleConciseMode = 'ToggleConciseMode',
   TogglePanel = 'TogglePanel',
+  ToggleZenMode = 'ToggleZenMode',
   RandomWrite = 'RandomWrite',
   KnowWord = 'KnowWord',
   UnknownWord = 'UnknownWord',
