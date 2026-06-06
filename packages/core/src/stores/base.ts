@@ -178,8 +178,20 @@ export const useBaseStore = defineStore('base', {
       return new Promise(async resolve => {
         try {
           let jsonStr: string = await get(SAVE_DICT_KEY.key)
+          console.log('[DEBUG] 1. 从 IndexedDB 成功读取数据。字符串长度:', jsonStr ? jsonStr.length : '无数据')
           if (jsonStr) {
             let result = await parseJsonStr(jsonStr, checkAndUpgradeSaveDict)
+            
+            // 加入诊断日志：检查读取后内存中是否包含 statistics
+            let wordStatsCount = 0
+            let wordBookCount = result?.val?.word?.bookList?.length || 0
+            if (result?.val?.word?.bookList) {
+              result.val.word.bookList.forEach(b => {
+                if (b.statistics && b.statistics.length > 0) wordStatsCount += b.statistics.length
+              })
+            }
+            console.log(`[DEBUG] 2. parseJsonStr 完毕。词典数量: ${wordBookCount}, 找到的统计数据条数: ${wordStatsCount}`)
+
             if (AppEnv.IS_OFFICIAL) {
               let r = await dictListVersion()
               if (r.success) {
@@ -188,8 +200,9 @@ export const useBaseStore = defineStore('base', {
             }
             // 遗留逻辑已删除：不再调用 myDictList 覆盖本地数据
             // IndexedDB 及其对应的 ZIP 云同步已经是 Absolute Source of Truth
-            // console.log('data', data)
+            
             this.setState(result.val)
+            console.log('[DEBUG] 3. setState 完成')
             resolve(result)
           }
           resolve(null)
