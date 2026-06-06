@@ -385,18 +385,7 @@ function handleLogout() {
           <div v-else class="hidden md:flex items-center gap-1.5 text-[.82rem] text-[var(--hw-text-2)]">
             <span class="text-[#7c3aed] text-[.6rem]">●</span>
             <span class="max-w-[80px] truncate">{{ userStore.user?.username || userStore.user?.email || '已登录' }}</span>
-            <button
-              id="btn-sync-cloud"
-              @click="userStore.syncAllDataToCloud()"
-              title="将全量学习数据（进度/FSRS/设置）同步到云端"
-              class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#7c3aed] transition-colors duration-150 whitespace-nowrap shrink-0"
-            >☁️ 同步数据</button>
-            <button
-              id="btn-restore-cloud"
-              @click="userStore.fetchAndRestoreDataFromCloud()"
-              title="从云端拉取并覆盖本地全量数据（慎用！）"
-              class="text-[.72rem] text-[var(--hw-text-3)] bg-transparent border-none cursor-pointer px-1.5 py-0.5 rounded hover:text-[#2563eb] transition-colors duration-150 whitespace-nowrap shrink-0"
-            >⬇️ 从云端恢复</button>
+
             <button
               id="btn-logout"
               @click="handleLogout"

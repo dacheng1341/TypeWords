@@ -21,6 +21,7 @@ import {
   UploadButton,
 } from '@typewords/base'
 import { getDefaultBaseState, useBaseStore } from '@typewords/core/stores/base'
+import { useUserStore } from '@typewords/core/stores/user.ts'
 import {
   APP_NAME,
   APP_VERSION,
@@ -81,6 +82,7 @@ const tabIndex = $ref(Number(route?.query?.index ?? 0))
 const settingStore = useSettingStore()
 const runtimeStore = useRuntimeStore()
 const store = useBaseStore()
+const userStore = useUserStore()
 const dataSyncPersistence = useDataSyncPersistence()
 
 const config = useRuntimeConfig()
@@ -677,54 +679,27 @@ function removeSbConfig() {
           </div>
 
           <div v-if="tabIndex === 6">
-            <!--          Supabase 设置  -->
-            <SettingItem title="Supabase 配置" desc="网站不会上传您的 url 和 key，只保存在浏览器本地(Local storage)">
-              <div v-if="sbStatus.status !== 'idle'" class="mt-2 text-sm">
-                <span v-if="sbStatus.status === 'success'" class="text-green"
-                  >状态：同步正常运行中，数据已同步到云端</span
-                >
-                <span v-else-if="sbStatus.status === 'error'" class="text-red">
-                  同步状态：失败{{ sbStatus.statusMessage ? `（${sbStatus.statusMessage}）` : '' }}
-                </span>
-                <span v-else-if="sbStatus.status === 'syncing'">同步状态：同步中…</span>
+            <SettingItem
+              title="网站云端同步"
+              desc="将全量学习数据（词典进度、文章进度、打字记录、FSRS状态、偏好设置等）同步至您的账户云端，实现多设备无缝学习。"
+            >
+              <div class="flex gap-space mt-2">
+                <BaseButton @click="userStore.syncAllDataToCloud()" class="!bg-[#7c3aed] !text-white hover:opacity-90">☁️ 同步数据到云端</BaseButton>
+                <BaseButton @click="userStore.fetchAndRestoreDataFromCloud()" class="!bg-[#2563eb] !text-white hover:opacity-90">⬇️ 从云端恢复</BaseButton>
               </div>
             </SettingItem>
 
-            <div class="mb-6">
-              <div>
-                Supbase 官网：
-                <a href="https://supabase.com/" target="_blank">https://supabase.com/</a>
+            <div class="mt-4 p-3 rounded-lg bg-[var(--hw-bg-card)] border border-[var(--hw-border)]">
+              <div class="text-[.85rem] text-[var(--hw-text-2)] mb-2 flex items-center gap-2">
+                <span v-if="userStore.user?.username || userStore.user?.email">
+                  <span class="text-[#7c3aed]">●</span> 当前登录账户：<b>{{ userStore.user?.username || userStore.user?.email }}</b>
+                </span>
+                <span v-else class="text-red">
+                  ⚠️ 您尚未登录，无法使用云端同步功能。请先在右上角登录。
+                </span>
               </div>
-              <div>
-                Supbase 使用教程：
-                <a href="https://www.kdocs.cn/l/cduLx52XXXgw" target="_blank">https://www.kdocs.cn/l/cduLx52XXXgw</a>
-              </div>
-              <div>
-                Supbase 是一个（免费版 500 MB数据库）在线数据库工具，可以用来保存/同步
-                {{ APP_NAME }} 的数据，免费版额度个人已够使用
-              </div>
-            </div>
-
-            <div class="relative">
-              <Form ref="sbFormRef" :rules="sbFormRules" :model="sbForm">
-                <FormItem label="Url" prop="url">
-                  <BaseInput v-model="sbForm.url" />
-                </FormItem>
-                <FormItem label="Key" prop="key">
-                  <BaseInput v-model="sbForm.key" />
-                </FormItem>
-              </Form>
-              <div class="flex justify-end">
-                <BaseButton @click="removeSbConfig" :disabled="!canSyncToServe">删除配置</BaseButton>
-                <BaseButton @click="openSupabaseSaveGate" :loading="configLoading" :disabled="!canSyncToServe">{{
-                  runtimeStore.isError ? '重试' : '保存配置'
-                }}</BaseButton>
-              </div>
-              <div
-                class="absolute top-0 left-0 w-full h-full bg-white opacity-80 cursor-not-allowed z-10 center rounded-md"
-                v-if="!canSyncToServe"
-              >
-                <div class="text-red">检测到自定义文章里面有自定义音频，无法使用同步功能</div>
+              <div class="text-[.8rem] text-gray mt-1">
+                <span class="text-red font-bold">【警告】</span> 从云端恢复数据将 <b>完全覆盖</b> 您当前浏览器中的所有本地学习进度，请谨慎操作。
               </div>
             </div>
           </div>
