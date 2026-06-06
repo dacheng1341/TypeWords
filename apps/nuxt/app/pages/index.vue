@@ -17,7 +17,8 @@ const baseStore = useBaseStore()
 let theme = $ref('light')
 
 // 判断用户是否有学习记录
-const hasGamificationData = $computed(() => {
+const hasGamificationData = computed(() => {
+  if (!baseStore.load) return false
   const wordStats = baseStore.word.bookList.flatMap(b => b.statistics ?? [])
   const articleStats = baseStore.article.bookList.flatMap(b => b.statistics ?? [])
   return wordStats.length > 0 || articleStats.length > 0
@@ -505,93 +506,97 @@ function handleLogout() {
           </div>
           <!-- Right: 动态展示区 (数据看板 或 Demo 卡片，PC端可见) -->
           <div class="hidden lg:flex flex-col w-[440px] shrink-0">
-            <GamificationDashboard v-if="hasGamificationData" />
-            
-            <div
-              v-else
-              class="bg-[var(--hw-bg-card)] border border-[var(--hw-border)] rounded-2xl shadow-[var(--hw-shadow-lg)] overflow-hidden outline-none"
-              tabindex="0"
-              @focus="demoFocused = true"
-              @blur="demoFocused = false"
-              @keydown="onDemoKey"
-              @keydown.backspace="onDemoBackspace"
-            >
-              <!-- 卡片顶栏 -->
-              <div class="flex items-center gap-1.5 px-4 py-3 border-b border-[var(--hw-border)] bg-[var(--hw-bg)]">
-                <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
-                <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
-                <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
-                <span class="ml-3 text-[.78rem] text-[var(--hw-text-3)] font-mono">敲敲背单词 — 单词练习</span>
-              </div>
-              <!-- 卡片内容 -->
+            <ClientOnly>
+              <GamificationDashboard v-if="hasGamificationData" />
+              
               <div
-                class="px-8 py-4 flex flex-col items-center gap-1 cursor-text"
-                @click="($el as HTMLElement)?.closest<HTMLElement>('[tabindex]')?.focus()"
+                v-else
+                class="bg-[var(--hw-bg-card)] border border-[var(--hw-border)] rounded-2xl shadow-[var(--hw-shadow-lg)] overflow-hidden outline-none"
+                tabindex="0"
+                @focus="demoFocused = true"
+                @blur="demoFocused = false"
+                @keydown="onDemoKey"
+                @keydown.backspace="onDemoBackspace"
               >
-                <!-- 音标 -->
-                <div class="text-[1rem] text-[var(--hw-text-3)] tracking-widest">{{ demoWord.phonetic }}</div>
-                <!-- 单词打字区 -->
+                <!-- 卡片顶栏 -->
+                <div class="flex items-center gap-1.5 px-4 py-3 border-b border-[var(--hw-border)] bg-[var(--hw-bg)]">
+                  <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+                  <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
+                  <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
+                  <span class="ml-3 text-[.78rem] text-[var(--hw-text-3)] font-mono">敲敲背单词 — 单词练习</span>
+                </div>
+                <!-- 卡片内容 -->
                 <div
-                  class="text-[2.8rem] leading-none tracking-widest min-h-[3.5rem] flex items-center en-article-family"
-                  :class="{ 'demo-shake': demoShake }"
+                  class="px-8 py-4 flex flex-col items-center gap-1 cursor-text"
+                  @click="($el as HTMLElement)?.closest<HTMLElement>('[tabindex]')?.focus()"
                 >
-                  <span class="text-[#16a34a]">{{ demoInput }}</span>
-                  <span class="text-[rgba(239,68,68,.85)]">{{ demoWrong }}</span>
-                  <span class="text-[var(--hw-text-3)]">{{ demoRemain }}</span>
-                </div>
-                <!-- 释义 -->
-                <div class="text-[.9rem] text-[var(--hw-text-2)] mt-1">{{ demoWord.trans }}</div>
-                <!-- 例句 -->
-                <div class="w-full mt-3 border-t border-[var(--hw-border)] pt-3 flex flex-col gap-1.5">
-                  <div class="text-[.72rem] font-bold tracking-[.06em] uppercase text-[var(--hw-text-3)]">例句</div>
+                  <!-- 音标 -->
+                  <div class="text-[1rem] text-[var(--hw-text-3)] tracking-widest">{{ demoWord.phonetic }}</div>
+                  <!-- 单词打字区 -->
                   <div
-                    v-for="(ex, ei) in demoWord.examples"
-                    :key="ei"
-                    class="text-[.82rem] leading-[1.6] flex flex-col gap-0.5"
+                    class="text-[2.8rem] leading-none tracking-widest min-h-[3.5rem] flex items-center en-article-family"
+                    :class="{ 'demo-shake': demoShake }"
                   >
-                    <div class="italic text-[var(--hw-text-2)]">
-                      <span class="text-[#7c3aed] font-bold not-italic mr-1">{{ ei + 1 }}.</span>{{ ex.en }}
+                    <span class="text-[#16a34a]">{{ demoInput }}</span>
+                    <span class="text-[rgba(239,68,68,.85)]">{{ demoWrong }}</span>
+                    <span class="text-[var(--hw-text-3)]">{{ demoRemain }}</span>
+                  </div>
+                  <!-- 释义 -->
+                  <div class="text-[.9rem] text-[var(--hw-text-2)] mt-1">{{ demoWord.trans }}</div>
+                  <!-- 例句 -->
+                  <div class="w-full mt-3 border-t border-[var(--hw-border)] pt-3 flex flex-col gap-1.5">
+                    <div class="text-[.72rem] font-bold tracking-[.06em] uppercase text-[var(--hw-text-3)]">例句</div>
+                    <div
+                      v-for="(ex, ei) in demoWord.examples"
+                      :key="ei"
+                      class="text-[.82rem] leading-[1.6] flex flex-col gap-0.5"
+                    >
+                      <div class="italic text-[var(--hw-text-2)]">
+                        <span class="text-[#7c3aed] font-bold not-italic mr-1">{{ ei + 1 }}.</span>{{ ex.en }}
+                      </div>
+                      <div class="text-[.78rem] text-[var(--hw-text-3)] not-italic pl-3.5">{{ ex.zh }}</div>
                     </div>
-                    <div class="text-[.78rem] text-[var(--hw-text-3)] not-italic pl-3.5">{{ ex.zh }}</div>
                   </div>
-                </div>
-                <!-- 完成提示 / 提示文字 -->
-                <div class="h-14 flex justify-end flex-col">
-                  <div v-if="demoDone" class="mt-3 flex flex-col items-center gap-1">
-                    <div class="text-[1.2rem] text-[#16a34a] font-bold">✓ 完成！</div>
-                    <div class="text-sm text-blue-5">
-                      按
-                      <kbd
-                        class="inline-flex items-center justify-center px-1.5 h-5 bg-[var(--hw-bg)] border border-[var(--hw-border)] rounded text-[.72rem] font-mono"
-                        >Space</kbd
-                      >
-                      切换下一个
+                  <!-- 完成提示 / 提示文字 -->
+                  <div class="h-14 flex justify-end flex-col">
+                    <div v-if="demoDone" class="mt-3 flex flex-col items-center gap-1">
+                      <div class="text-[1.2rem] text-[#16a34a] font-bold">✓ 完成！</div>
+                      <div class="text-sm text-blue-5">
+                        按
+                        <kbd
+                          class="inline-flex items-center justify-center px-1.5 h-5 bg-[var(--hw-bg)] border border-[var(--hw-border)] rounded text-[.72rem] font-mono"
+                          >Space</kbd
+                        >
+                        切换下一个
+                      </div>
                     </div>
+                    <div v-else-if="!demoFocused" class="mt-3 text-sm text-blue-5 flex items-center gap-1">
+                      <span>点击此处或按任意键开始打字</span>
+                    </div>
+                    <div v-else class="mt-3 text-sm text-blue-5">逐字输入单词，输错会标红</div>
                   </div>
-                  <div v-else-if="!demoFocused" class="mt-3 text-sm text-blue-5 flex items-center gap-1">
-                    <span>点击此处或按任意键开始打字</span>
+                  <!-- 进度点 -->
+                  <div class="flex gap-1.5 mt-auto pt-2">
+                    <span
+                      v-for="(_, i) in demoWords"
+                      :key="i"
+                      class="w-1.5 h-1.5 rounded-full transition-colors duration-200"
+                      :class="i === demoIdx ? 'bg-[#7c3aed]' : 'bg-[var(--hw-border)]'"
+                    ></span>
                   </div>
-                  <div v-else class="mt-3 text-sm text-blue-5">逐字输入单词，输错会标红</div>
-                </div>
-                <!-- 进度点 -->
-                <div class="flex gap-1.5 mt-auto pt-2">
-                  <span
-                    v-for="(_, i) in demoWords"
-                    :key="i"
-                    class="w-1.5 h-1.5 rounded-full transition-colors duration-200"
-                    :class="i === demoIdx ? 'bg-[#7c3aed]' : 'bg-[var(--hw-border)]'"
-                  ></span>
                 </div>
               </div>
-            </div>
-            <p v-if="!hasGamificationData" class="text-center text-sm text-blue-5 mt-3">↑ 点击并用键盘输入，体验核心打字功能</p>
+              <p v-if="!hasGamificationData" class="text-center text-sm text-blue-5 mt-3">↑ 点击并用键盘输入，体验核心打字功能</p>
+            </ClientOnly>
           </div>
         </div>
 
         <!-- Mobile 端独立落位: 数据看板 (仅在有数据且在小屏幕显示) -->
-        <div v-if="hasGamificationData" class="lg:hidden relative z-1 max-w-[1200px] mx-auto w-full mt-12 px-2">
-           <GamificationDashboard />
-        </div>
+        <ClientOnly>
+          <div v-if="hasGamificationData" class="lg:hidden relative z-1 max-w-[1200px] mx-auto w-full mt-12 px-2">
+            <GamificationDashboard />
+          </div>
+        </ClientOnly>
         </div>
       </section>
 

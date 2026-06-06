@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useBaseStore } from '@typewords/core/stores/base.ts'
+import { useBaseStore } from '../stores/base.ts'
 import dayjs from 'dayjs'
 
 const store = useBaseStore()
