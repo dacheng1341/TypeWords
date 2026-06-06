@@ -187,43 +187,33 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  // 从云端拉取全量数据并恢复至本地
+
   // 从云端拉取全量数据并恢复至本地
   async function fetchAndRestoreDataFromCloud() {
     try {
-      // 1. 读取 WordPress JWT Token
       const token = localStorage.getItem('dacbbox_token')
-      if (!token) {
-        Toast.warning('请先登录后再拉取数据')
-        return
-      }
+      if (!token) return Toast.warning('请先登录')
 
-      // 2. 请求云端数据
+      // 1. 获取云端数据
       const res = await $fetch<{ success: boolean; backup_data: string }>(
         'https://dacbbox.com/wp-json/dacbbox/v1/get-learning-data',
         { headers: { Authorization: 'Bearer ' + token } }
       )
 
-      if (!res?.backup_data) {
-        Toast.warning('云端暂无学习数据，请先在其他设备同步一次')
-        return
-      }
+      if (!res?.backup_data) return Toast.warning('云端暂无数据')
 
-      // 3. Base64 字符串 → ZIP Blob
+      // 2. 关键修复：这里的 backup_data 是 Base64 字符串，必须还原成二进制 ZIP
+      // 使用你在 export.ts 里定义的 base64ToBlob 函数
       const zipBlob = base64ToBlob(res.backup_data, 'application/zip')
 
-      // 4. 使用我们新封装的稳妥导入逻辑
-      // 确保调用的是 export.ts 中新加的 safeImportBlob
+      // 3. 调用我们验证通过的 safeImportBlob (它会自动执行解压、入库、刷新)
       await safeImportBlob(zipBlob)
 
-      // 5. 提示并延迟刷新
-      // 这里的 1500ms 延迟是为了确保 IndexedDB 的写入动作已彻底完成
-      Toast.success('云端数据已成功恢复至本地 ✓ 即将刷新…')
+      Toast.success('云端数据已成功恢复至本地 ✓')
       setTimeout(() => window.location.reload(), 1500)
-
     } catch (error: any) {
-      console.error('[fetchAndRestoreDataFromCloud] 恢复失败详情:', error)
-      Toast.error(`拉取失败：${error?.message ?? '数据解析错误'}`)
+      console.error('恢复失败:', error)
+      Toast.error(`拉取失败：${error.message}`)
     }
   }
 
