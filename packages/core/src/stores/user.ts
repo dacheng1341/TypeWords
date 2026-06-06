@@ -6,7 +6,7 @@ import { AppEnv, SAVE_DICT_KEY } from '../config/env'
 import { Toast } from '@typewords/base'
 
 import { get } from 'idb-keyval'
-import { getZipBlobForCloud, importDataFromZipBlob, safeImportBlob } from '../hooks/export'
+import { getZipBlobForCloud, importDataFromZipBlob } from '../hooks/export'
 import { useDataSyncPersistence } from '../composables/useDataSyncPersistence'
 import { getDefaultSettingState, useBaseStore } from './base'
 import { useSettingStore } from './setting'
@@ -192,28 +192,33 @@ export const useUserStore = defineStore('user', () => {
   async function fetchAndRestoreDataFromCloud() {
     try {
       const token = localStorage.getItem('dacbbox_token')
-      if (!token) return Toast.warning('请先登录')
-
-      // 1. 获取云端数据
+      if (!token) {
+        Toast.warning('请先登录后再拉取数据')
+        return
+      }
+      // 1. 携带 Bearer Token，请求云端数据
       const res = await $fetch<{ success: boolean; backup_data: string }>(
         'https://dacbbox.com/wp-json/dacbbox/v1/get-learning-data',
-        { headers: { Authorization: 'Bearer ' + token } }
+        { headers: { Authorization: `Bearer ${token}` } }
       )
-
-      if (!res?.backup_data) return Toast.warning('云端暂无数据')
-
-      // 2. 关键修复：这里的 backup_data 是 Base64 字符串，必须还原成二进制 ZIP
-      // 使用你在 export.ts 里定义的 base64ToBlob 函数
+      // 2. 校验：云端必须有数据
+      if (!res?.backup_data) {
+        Toast.warning('云端暂无学习数据，请先在其他设备同步一次')
+        return
+      }
+      console.log('[恢复] Base64长度:', res.backup_data.length)
+      // 3. Base64 → ZIP Blob
       const zipBlob = base64ToBlob(res.backup_data, 'application/zip')
-
-      // 3. 调用我们验证通过的 safeImportBlob (它会自动执行解压、入库、刷新)
-      await safeImportBlob(zipBlob)
-
-      Toast.success('云端数据已成功恢复至本地 ✓')
-      setTimeout(() => window.location.reload(), 1500)
+      console.log('[恢复] ZIP大小:', zipBlob.size, 'bytes')
+      // 4. 解包 ZIP，写入 IndexedDB，更新 Pinia（所有逻辑都在这个函数里）
+      await importDataFromZipBlob(zipBlob)
+      console.log('[恢复] IndexedDB写入完成，准备刷新页面')
+      // 5. 刷新页面，确保 UI 完全基于新数据重新初始化
+      Toast.success('云端数据已成功恢复 ✓ 即将刷新页面…')
+      setTimeout(() => window.location.reload(), 2000)
     } catch (error: any) {
-      console.error('恢复失败:', error)
-      Toast.error(`拉取失败：${error.message}`)
+      console.error('[恢复] 失败详情:', error)
+      Toast.error(`拉取失败：${error?.message ?? '数据解析错误'}`)
     }
   }
 

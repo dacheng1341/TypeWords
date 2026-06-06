@@ -103,16 +103,16 @@ export function useExport() {
  * 【云端专用】将全量数据打包为轻量级 ZIP Blob。
  * 仅包含 data.json，坚决不打包任何音频/媒体文件，确保传输体积安全。
  */
+/**
+ * 【云端专用】将全量数据打包为轻量级 ZIP Blob。
+ * 仅包含 data.json，绝不包含任何音频/媒体文件。
+ */
 export async function getZipBlobForCloud(): Promise<Blob> {
   const { getExportedData } = useExport()
   const data = await getExportedData()
-
-  // 【取证】打印出来看看，上传前数据到底有没有！
-  console.log("【上传取证】准备打包的数据:", data);
-
+  console.log('[上传] dict.studyIndex:', data.val.dict.val?.word?.studyIndex, '| article.studyIndex:', data.val.dict.val?.article?.studyIndex)
   const JSZip = await loadJsLib('JSZip', LIB_JS_URL.JSZIP)
   const zip = new JSZip()
-  // 仅打包纯文本数据，绝不包含 mp3/ 目录
   zip.file('data.json', JSON.stringify(data))
   return await zip.generateAsync({ type: 'blob' })
 }
@@ -134,73 +134,41 @@ export async function importDataFromZipBlob(zipBlob: Blob): Promise<void> {
   const JSZip = await loadJsLib('JSZip', LIB_JS_URL.JSZIP)
   const zip = await JSZip.loadAsync(zipBlob)
 
-  // 1. 读取 data.json（云端 ZIP 不含 mp3，无需处理音频）
   const dataFile = zip.file('data.json')
   if (!dataFile) {
     throw new Error('ZIP 中缺少 data.json，数据可能已损坏')
   }
   const str = await dataFile.async('string')
 
-  // 2. 解析 BackupData 对象（唯一的 JSON.parse 调用点）
   const obj: BackupData = JSON.parse(str)
   const data = obj.val
 
-  // 3. 版本升级兼容处理
   data.dict.val = await checkAndUpgradeSaveDict(data.dict)
   data.setting.val = await checkAndUpgradeSaveSetting(data.setting)
 
-  // 4. 老版本 v4 兼容：将顶层 APP_VERSION.key 字段合并进 setting.val
   if (obj.version === 4) {
     if (!isEmpty(data?.[APP_VERSION.key])) {
       data.setting.val.webAppVersion = data?.[APP_VERSION.key]
     }
   }
 
-  // 5. 在调用同步方法前先检查 Supabase 状态（同步方法可能报错，需提前记录）
   const hasRemote = Supabase.check()
 
-  // 6. 写入 IndexedDB + 推送 Supabase（若已配置）
   const runtimeStore = useRuntimeStore()
   const dataSyncPersistence = useDataSyncPersistence()
   runtimeStore.globalLoading = true
   await dataSyncPersistence.forcePushLocalDataToRemote(data)
   runtimeStore.globalLoading = false
 
-  // 7. 更新 runtimeStore.isNew：当前版本 > 备份中记录的版本时，提示有更新内容
+  // ↓ 新增：确认写入结果
+  console.log('[importDataFromZipBlob] IndexedDB写入完成 | studyIndex(word):', data.dict.val?.word?.studyIndex, '| studyIndex(article):', data.dict.val?.article?.studyIndex, '| PracticeWord有数据:', !!data?.[PRACTICE_WORD_CACHE.key]?.val, '| PracticeArticle有数据:', !!data?.[PRACTICE_ARTICLE_CACHE.key]?.val)
+
   runtimeStore.isNew = APP_VERSION.version > Number(data.setting?.val?.webAppVersion ?? APP_VERSION.version)
 
-  // 8. 更新 Pinia 内存状态，确保 UI 立即响应（setState 后 Promise resolve，
-  //    外部调用方可安全执行 reload，此时 IndexedDB 已持久化完毕）
   const settingStore = useSettingStore()
   const baseStore = useBaseStore()
   data.setting.val.load = true
   settingStore.setState(data.setting.val)
   data.dict.val.load = true
   baseStore.setState(data.dict.val)
-}
-// 临时测试开关，仅供验证使用
-if (typeof window !== 'undefined') {
-  (window as any).testImport = importDataFromZipBlob;
-}
-
-/**
- * 稳妥的导入函数：直接接收 Blob，完全模拟手工导入行为
- */
-export async function safeImportBlob(blob: Blob): Promise<void> {
-  // 【取证】看看下载下来的 blob 是不是空的，或者能不能被 JSZip 读取
-  console.log("【下载取证】接收到的 Blob 大小:", blob.size);
-
-  const JSZip = await loadJsLib('JSZip', LIB_JS_URL.JSZIP)
-  const zip = await JSZip.loadAsync(blob)
-
-  const dataFile = zip.file('data.json')
-  const str = await dataFile?.async('string')
-
-  // 【取证】看看解压出来的 JSON 字符串到底长什么样！
-  console.log("【下载取证】解压出的 JSON 内容:", str);
-
-  if (!str) throw new Error("无法读取 data.json");
-
-  await importDataFromZipBlob(blob);
-  await new Promise(resolve => setTimeout(resolve, 500));
 }
