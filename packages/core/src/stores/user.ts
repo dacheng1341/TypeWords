@@ -219,7 +219,12 @@ export const useUserStore = defineStore('user', () => {
       setTimeout(() => window.location.reload(), 2000)
     } catch (error: any) {
       console.error('[恢复] 失败详情:', error)
-      Toast.error(`拉取失败：${error?.message ?? '数据解析错误'}`)
+      const is404 = error?.response?.status === 404 || error?.status === 404 || String(error?.message).includes('404')
+      if (is404) {
+        Toast.info('云端暂无历史记录，欢迎开启学习之旅！')
+      } else {
+        Toast.error(`拉取失败：${error?.message ?? '数据解析错误'}`)
+      }
     }
   }
 

@@ -315,7 +315,7 @@ function handleLogout() {
             </span>
             <button
               id="btn-open-login-modal"
-              @click="showLoginModal = true"
+              @click="userStore.showGlobalLoginModal = true"
               class="inline-flex items-center justify-center px-3 h-7 rounded-lg text-[.78rem] font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-[#2563eb] border-none cursor-pointer hover:opacity-90 hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
             >登录 / 注册</button>
           </div>

@@ -134,34 +134,11 @@ async function handleLogin() {
               <span>{{ loginLoading ? '登录中…' : '确认登录' }}</span>
             </button>
 
-            <!-- 分隔线 -->
-            <div class="login-divider">
-              <span class="login-divider-line"></span>
-              <span class="login-divider-text">或</span>
-              <span class="login-divider-line"></span>
-            </div>
-
-            <!-- 第三方登录入口 -->
-            <a
-              id="btn-third-party-login"
-              href="https://dacbbox.com/wp-login.php?redirect_to=https://type.dacbbox.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="login-oauth-btn"
-            >
-              <!-- Google 图标 SVG -->
-              <svg width="18" height="18" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.4-.2-2.7-.5-4z" fill="#FFC107"/>
-                <path d="M6.3 14.7l7 5.1C15 16.1 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.6 0-14.2 4.2-17.7 10.4-.5.7-.7 1.5-1 2.3z" fill="#FF3D00"/>
-                <path d="M24 45c5.5 0 10.4-1.9 14.3-5l-6.6-5.6C29.6 36 26.9 37 24 37c-6.1 0-10.7-3.1-11.8-7.5l-7 5.4C8.3 41.2 15.6 45 24 45z" fill="#4CAF50"/>
-                <path d="M44.5 20H24v8.5h11.8c-.8 2.4-2.3 4.5-4.3 6l6.6 5.6C42 36.8 45 31 45 24c0-1.4-.2-2.7-.5-4z" fill="#1976D2"/>
-              </svg>
-              使用 Google 或其他方式登录
-            </a>
-
-            <p class="login-modal-tip">
+            <p class="login-modal-tip mt-4">
               没有账号？
               <a href="https://dacbbox.com/wp-login.php?action=register" target="_blank" class="login-link">前往注册</a>
+              <br>
+              <span class="text-[.75rem] text-[#8a93a8] mt-1 inline-block">注册完成后，请返回此处输入账密登录</span>
             </p>
           </div>
         </div>
@@ -366,68 +343,7 @@ async function handleLogin() {
   to { transform: rotate(360deg); }
 }
 
-/* 分隔线 */
-.login-divider {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0.15rem 0;
-}
-.login-divider-line {
-  flex: 1;
-  height: 1px;
-  background: #e2e4e8;
-}
-.login-modal-card.dark .login-divider-line {
-  background: #2a3140;
-}
-.login-divider-text {
-  font-size: 0.78rem;
-  color: #aab0bc;
-  white-space: nowrap;
-  user-select: none;
-}
 
-/* 第三方登录按钮 */
-.login-oauth-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  width: 100%;
-  height: 2.6rem;
-  border-radius: 0.7rem;
-  border: 1.5px solid #e2e4e8;
-  background: #ffffff;
-  color: #555e6e;
-  font-size: 0.88rem;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: border-color 0.18s, background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.15s;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  letter-spacing: 0.01em;
-  box-sizing: border-box;
-}
-.login-modal-card.dark .login-oauth-btn {
-  background: #0e1217;
-  border-color: #2a3140;
-  color: #8a93a8;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-}
-.login-oauth-btn:hover {
-  border-color: #7c3aed;
-  color: #7c3aed;
-  background: rgba(124, 58, 237, 0.04);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-  transform: translateY(-1px);
-}
-.login-modal-card.dark .login-oauth-btn:hover {
-  background: rgba(124, 58, 237, 0.08);
-}
-.login-oauth-btn svg {
-  flex-shrink: 0;
-}
 
 /* 底部提示 */
 .login-modal-tip {
