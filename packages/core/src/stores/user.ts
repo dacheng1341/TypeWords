@@ -178,96 +178,107 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  // 从云端拉取全量数据并恢复至本地（复现 setting.vue importJson 管线）
   // 从云端拉取全量数据并恢复至本地
   async function fetchAndRestoreDataFromCloud() {
+    // ── 递归深度解包：剥除所有嵌套字符串包裹 ──────────────────────────────
+    function deepUnwrap(val: any): any {
+      if (typeof val === 'string') {
+        const trimmed = val.trim()
+        if (
+          (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+          (trimmed.startsWith('[') && trimmed.endsWith(']'))
+        ) {
+          try {
+            return deepUnwrap(JSON.parse(trimmed))
+          } catch {
+            return val
+          }
+        }
+        return val
+      }
+      if (Array.isArray(val)) return val.map((item) => deepUnwrap(item))
+      if (val !== null && typeof val === 'object') {
+        const result: Record<string, any> = {}
+        for (const key of Object.keys(val)) {
+          result[key] = deepUnwrap(val[key])
+        }
+        return result
+      }
+      return val
+    }
+    // ──────────────────────────────────────────────────────────────────────
     try {
-      // 1. 读取 WordPress JWT Token
+      // 1. 读取 WordPress JWT Token（强制鉴权）
       const token = localStorage.getItem('dacbbox_token')
       if (!token) {
         Toast.warning('请先登录后再拉取数据')
         return
       }
-
-      // 2. GET 云端数据
+      // 2. GET 云端数据，显式注入 Bearer Token
       const res = await $fetch<{ success: boolean; backup_data: any }>(
         'https://dacbbox.com/wp-json/dacbbox/v1/get-learning-data',
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: 'Bearer ' + token },
+        }
       )
-
-      // 3. 容错解析：WordPress 后端可能对 backup_data 做了双重 json_encode
-      let rawBackup = res?.backup_data
-      if (typeof rawBackup === 'string') {
-        rawBackup = JSON.parse(rawBackup)
-      }
-      let backupVal = rawBackup?.val
-      if (typeof backupVal === 'string') {
-        backupVal = JSON.parse(backupVal)
-      }
-
-      console.log('[云端恢复] 解析后数据结构:', {
-        version: rawBackup?.version,
-        hasDictVal: !!backupVal?.dict?.val,
-        hasSettingVal: !!backupVal?.setting?.val,
-        keys: backupVal ? Object.keys(backupVal) : [],
-      })
-
+      console.group('%c[DIAG] fetchAndRestoreDataFromCloud - HTTP 原始响应', 'color:#0af;font-weight:bold')
+      console.log('res (完整):', JSON.parse(JSON.stringify(res ?? null)))
+      console.log('typeof res.backup_data:', typeof res?.backup_data)
+      console.groupEnd()
+      // 3. 用 deepUnwrap 对整个响应做彻底递归清洗，一次搞定所有嵌套
+      const cleanedRes = deepUnwrap(res)
+      const rawBackup = cleanedRes?.backup_data
+      console.group('%c[DIAG] deepUnwrap 清洗后 rawBackup 结构', 'color:#0f9;font-weight:bold')
+      console.log('rawBackup:', rawBackup)
+      console.log('rawBackup.val keys:', rawBackup?.val ? Object.keys(rawBackup.val) : 'null')
+      console.groupEnd()
       // 4. 校验：dict 是核心数据，必须存在
+      const backupVal = rawBackup?.val
       const dictSaveData = backupVal?.dict
       const settingSaveData = backupVal?.setting
-
       if (!dictSaveData?.val) {
         Toast.warning('云端暂无学习数据，请先在其他设备同步一次')
         return
       }
-
-      // 5. 版本升级兼容处理
+      // 5. 版本升级兼容处理（数据已是纯净对象，直接传入）
       const dictState = await checkAndUpgradeSaveDict(dictSaveData)
       const settingState = settingSaveData?.val
         ? await checkAndUpgradeSaveSetting(settingSaveData)
         : getDefaultSettingState()
-
-      // 【🔥核心修复 3：深度拆包】WordPress 把内层的 Practice 缓存也压成了字符串，必须手动解开！
-      let parsedArticleCache = backupVal?.PracticeSaveArticle
-      if (typeof parsedArticleCache === 'string') {
-        parsedArticleCache = JSON.parse(parsedArticleCache)
-      }
-
-      let parsedWordCache = backupVal?.PracticeSaveWord
-      if (typeof parsedWordCache === 'string') {
-        parsedWordCache = JSON.parse(parsedWordCache)
-      }
-
-      // 6. 构造完整 BackupData['val']，全量 4 模块一并写入 IndexedDB
+      // 6. 构造完整恢复对象，直接使用 deepUnwrap 清洗后的数据，无需任何额外猜测
       const dataToRestore = {
         ...backupVal,
-        PracticeSaveArticle: parsedArticleCache, // 存入拆包后的真实对象
-        PracticeSaveWord: parsedWordCache,       // 存入拆包后的真实对象
+        PracticeSaveArticle: backupVal?.PracticeSaveArticle,
+        PracticeSaveWord: backupVal?.PracticeSaveWord,
         dict: { ...dictSaveData, val: dictState },
         setting: { ...(settingSaveData ?? {}), val: settingState },
       }
-
+      console.group('%c[DIAG] dataToRestore - 即将写入 IndexedDB', 'color:#f55;font-weight:bold')
+      console.log('dataToRestore keys:', Object.keys(dataToRestore))
+      console.log('PracticeSaveArticle:', dataToRestore.PracticeSaveArticle)
+      console.log('PracticeSaveWord:', dataToRestore.PracticeSaveWord)
+      console.log(
+        'PracticeSaveArticle?.val:',
+        (dataToRestore as any)?.PracticeSaveArticle?.val ?? '⚠️ undefined'
+      )
+      console.groupEnd()
+      // 7. 写入 IndexedDB（通过 dataSyncPersistence）
       const dataSyncPersistence = useDataSyncPersistence()
       await dataSyncPersistence.forcePushLocalDataToRemote(dataToRestore as any)
-
-      // 7. 更新 Pinia 内存状态，界面立即响应
+      // 8. 更新 Pinia 内存状态
       const baseStore = useBaseStore()
       const settingStore = useSettingStore()
-
-      // 【🔥核心修复 2】：防御性合并，防止云端的 -1 清空本地已选中的书本
+      // 防御性合并：防止云端 -1 清空本地已选中的书本
       const localWordIndex = baseStore.word?.studyIndex ?? -1
       const localArticleIndex = baseStore.article?.studyIndex ?? -1
-
       if (dictState.word && dictState.word.studyIndex === -1 && localWordIndex !== -1) {
         dictState.word.studyIndex = localWordIndex
       }
       if (dictState.article && dictState.article.studyIndex === -1 && localArticleIndex !== -1) {
         dictState.article.studyIndex = localArticleIndex
       }
-
       settingStore.setState({ ...settingState, load: true })
       baseStore.setState({ ...dictState, load: true })
-
       Toast.success('云端数据已成功恢复至本地 ✓ 即将刷新…')
       // 延迟 1 秒刷新，确保底层数据覆盖完成
       setTimeout(() => window.location.reload(), 1000)
