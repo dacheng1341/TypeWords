@@ -1,4 +1,4 @@
-import { checkAndUpgradeSaveDict, checkAndUpgradeSaveSetting, loadJsLib, shakeCommonDict } from '../utils'
+import { checkAndUpgradeSaveDict, checkAndUpgradeSaveSetting, isEmpty, loadJsLib, shakeCommonDict } from '../utils'
 import { useDataSyncPersistence } from '../composables/useDataSyncPersistence'
 import {
   APP_NAME,
@@ -15,9 +15,11 @@ import dayjs from 'dayjs'
 import { Toast } from '@typewords/base'
 import { useBaseStore } from '../stores/base'
 import { useSettingStore } from '../stores/setting'
+import { useRuntimeStore } from '../stores/runtime'
 import { ref } from 'vue'
 import { PRACTICE_ARTICLE_CACHE, PRACTICE_WORD_CACHE } from '../utils/cache'
 import { usePracticeArticlePersistence, usePracticeWordPersistence } from '../composables/usePracticePersistence.ts'
+import { Supabase } from '../utils/supabase'
 import type { BackupData } from '../types'
 
 export function useExport() {
@@ -114,8 +116,14 @@ export async function getZipBlobForCloud(): Promise<Blob> {
 
 /**
  * 【云端专用】将 ZIP Blob 解包并恢复数据到本地。
- * 这是从 setting.vue importData 中提取出来的共享核心逻辑，
- * 不依赖任何 UI 组件或文件输入事件，可在任何模块中安全调用。
+ * 完整复刻 setting.vue importJson 的核心逻辑：
+ *   - 版本升级（checkAndUpgrade*）
+ *   - v4 老版本兼容 shim
+ *   - Supabase.check() 在 forcePush 之前调用（push 可能报错）
+ *   - runtimeStore.globalLoading 开关
+ *   - runtimeStore.isNew 判断
+ *   - settingStore / baseStore 的 setState（load: true）
+ * 不含任何 UI 绑定变量（importLoading / showBackupGate 等）。
  *
  * @param zipBlob - 由云端 Base64 转回的原始 ZIP Blob
  */
@@ -130,7 +138,7 @@ export async function importDataFromZipBlob(zipBlob: Blob): Promise<void> {
   }
   const str = await dataFile.async('string')
 
-  // 2. 解析 BackupData 对象（唯一的 JSON.parse 调用点，由此函数统一负责）
+  // 2. 解析 BackupData 对象（唯一的 JSON.parse 调用点）
   const obj: BackupData = JSON.parse(str)
   const data = obj.val
 
@@ -138,13 +146,32 @@ export async function importDataFromZipBlob(zipBlob: Blob): Promise<void> {
   data.dict.val = await checkAndUpgradeSaveDict(data.dict)
   data.setting.val = await checkAndUpgradeSaveSetting(data.setting)
 
-  // 4. 写入 IndexedDB（通过 dataSyncPersistence，同时兼容 Supabase 回写）
-  const dataSyncPersistence = useDataSyncPersistence()
-  await dataSyncPersistence.forcePushLocalDataToRemote(data)
+  // 4. 老版本 v4 兼容：将顶层 APP_VERSION.key 字段合并进 setting.val
+  if (obj.version === 4) {
+    if (!isEmpty(data?.[APP_VERSION.key])) {
+      data.setting.val.webAppVersion = data?.[APP_VERSION.key]
+    }
+  }
 
-  // 5. 更新 Pinia 内存状态，确保 UI 立即响应
-  const baseStore = useBaseStore()
+  // 5. 在调用同步方法前先检查 Supabase 状态（同步方法可能报错，需提前记录）
+  const hasRemote = Supabase.check()
+
+  // 6. 写入 IndexedDB + 推送 Supabase（若已配置）
+  const runtimeStore = useRuntimeStore()
+  const dataSyncPersistence = useDataSyncPersistence()
+  runtimeStore.globalLoading = true
+  await dataSyncPersistence.forcePushLocalDataToRemote(data)
+  runtimeStore.globalLoading = false
+
+  // 7. 更新 runtimeStore.isNew：当前版本 > 备份中记录的版本时，提示有更新内容
+  runtimeStore.isNew = APP_VERSION.version > Number(data.setting?.val?.webAppVersion ?? APP_VERSION.version)
+
+  // 8. 更新 Pinia 内存状态，确保 UI 立即响应（setState 后 Promise resolve，
+  //    外部调用方可安全执行 reload，此时 IndexedDB 已持久化完毕）
   const settingStore = useSettingStore()
-  settingStore.setState({ ...data.setting.val, load: true })
-  baseStore.setState({ ...data.dict.val, load: true })
+  const baseStore = useBaseStore()
+  data.setting.val.load = true
+  settingStore.setState(data.setting.val)
+  data.dict.val.load = true
+  baseStore.setState(data.dict.val)
 }
