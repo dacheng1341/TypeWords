@@ -178,7 +178,7 @@ watch(
 onActivated(() => {
   console.log('onActivated')
 })
-onMounted(() => {
+onMounted(async () => {
   document.removeEventListener('visibilitychange', onvisibilitychange)
   document.addEventListener('visibilitychange', onvisibilitychange)
 
@@ -186,6 +186,14 @@ onMounted(() => {
   if (store.sbook?.articles?.length) {
     articleData.list = cloneDeep(store.sbook.articles)
     getCurrentPractice()
+    // 初始化后从 IndexedDB 恢复练习进度（sectionIndex / sentenceIndex / wordIndex）
+    _nextTick(async () => {
+      const cache = await articlePersistence.load()
+      if (cache) {
+        console.log('[practice-articles] 恢复缓存进度', cache.practiceData)
+        typingArticleRef?.applyPracticeCache?.(cache)
+      }
+    })
   } else {
     loading = true
   }
