@@ -227,9 +227,22 @@ export const useUserStore = defineStore('user', () => {
         ? await checkAndUpgradeSaveSetting(settingSaveData)
         : getDefaultSettingState()
 
+      // 【🔥核心修复 3：深度拆包】WordPress 把内层的 Practice 缓存也压成了字符串，必须手动解开！
+      let parsedArticleCache = backupVal?.PracticeSaveArticle
+      if (typeof parsedArticleCache === 'string') {
+        parsedArticleCache = JSON.parse(parsedArticleCache)
+      }
+
+      let parsedWordCache = backupVal?.PracticeSaveWord
+      if (typeof parsedWordCache === 'string') {
+        parsedWordCache = JSON.parse(parsedWordCache)
+      }
+
       // 6. 构造完整 BackupData['val']，全量 4 模块一并写入 IndexedDB
       const dataToRestore = {
         ...backupVal,
+        PracticeSaveArticle: parsedArticleCache, // 存入拆包后的真实对象
+        PracticeSaveWord: parsedWordCache,       // 存入拆包后的真实对象
         dict: { ...dictSaveData, val: dictState },
         setting: { ...(settingSaveData ?? {}), val: settingState },
       }
