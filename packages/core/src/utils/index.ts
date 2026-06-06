@@ -79,7 +79,8 @@ export async function checkAndUpgradeSaveDict(val: any) {
       let version = Number(data.version)
       // console.log('state', state)
       if (version === SAVE_DICT_KEY.version) {
-        checkRiskKey(defaultState, state)
+        let safeState = cloneDeep(state)
+        checkRiskKey(defaultState, safeState)
         defaultState.article.bookList = defaultState.article.bookList.map(v => {
           return getDefaultDict(checkRiskKey(getDefaultDict(), v))
         })
@@ -91,15 +92,16 @@ export async function checkAndUpgradeSaveDict(val: any) {
         // 版本不匹配时，尽量保留数据而不是直接返回默认状态
         console.warn(`数据版本不匹配: 当前版本 ${version}, 期望版本 ${SAVE_DICT_KEY.version}，尝试保留数据`)
         try {
-          checkRiskKey(defaultState, state)
+          let safeState = cloneDeep(state)
+          checkRiskKey(defaultState, safeState)
           // 尝试保留 bookList 数据
-          if (state.word && state.word.bookList && Array.isArray(state.word.bookList)) {
-            defaultState.word.bookList = state.word.bookList.map((v: any) => {
+          if (safeState.word && safeState.word.bookList && Array.isArray(safeState.word.bookList)) {
+            defaultState.word.bookList = safeState.word.bookList.map((v: any) => {
               return getDefaultDict(checkRiskKey(getDefaultDict(), v))
             })
           }
-          if (state.article && state.article.bookList && Array.isArray(state.article.bookList)) {
-            defaultState.article.bookList = state.article.bookList.map((v: any) => {
+          if (safeState.article && safeState.article.bookList && Array.isArray(safeState.article.bookList)) {
+            defaultState.article.bookList = safeState.article.bookList.map((v: any) => {
               return getDefaultDict(checkRiskKey(getDefaultDict(), v))
             })
           }

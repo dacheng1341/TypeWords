@@ -171,11 +171,7 @@ export const useBaseStore = defineStore('base', {
       //必须先 reset, 只 $patch 无法将 state 恢复到默认值
       this.$reset()
       console.time('$patch')
-      if (IS_DEV) {
-        this.$state = obj
-      } else {
-        this.$patch(obj)
-      }
+      this.$state = obj
       console.timeEnd('$patch')
     },
     async init(): Promise<SaveData | null> {
