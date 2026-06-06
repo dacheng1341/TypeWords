@@ -392,7 +392,7 @@ const openLink = (url: string) => {
           <ul class="space-y-2 text-gray-600 dark:text-gray-300">
             <li>所有资源均来自互联网收集，仅供学习交流使用</li>
             <li>
-              如果链接失效，请及时<a :href="`https://v.wjx.cn/vm/ev0W7fv.aspx#`" target="_blank">告知</a>，我会尽快更新
+              如果链接失效，请及时<a href="https://dacbbox.com" target="_blank">告知</a>，我会尽快更新
             </li>
           </ul>
         </div>
