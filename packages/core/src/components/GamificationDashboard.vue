@@ -200,7 +200,11 @@ const svgPath = computed(() => {
 <template>
   <div class="gamification-card">
     <div class="header">
-      <h3 class="title">数据看板</h3>
+      <h3 class="title">
+        <span class="bg-gradient-to-r from-[#bd34fe] to-[#41d1ff] bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">学习统计</span>
+        <span class="text-[var(--hw-text-3)] font-normal mx-2">·</span>
+        <span class="text-[var(--hw-text-2)] font-medium">数据看板</span>
+      </h3>
       <div class="range-selector">
         <button :class="{ active: selectedRange === '30d' }" @click="selectedRange = '30d'">近 30 天</button>
         <button :class="{ active: selectedRange === '180d' }" @click="selectedRange = '180d'">近半年</button>
@@ -257,13 +261,24 @@ const svgPath = computed(() => {
     <div class="chart-section wpm-section">
       <h4 class="sub-title">打字速度变化趋势 (WPM)</h4>
       <div class="svg-container">
-        <svg viewBox="0 -10 1000 170" preserveAspectRatio="none" class="wpm-svg">
+        <svg viewBox="0 -20 1000 190" preserveAspectRatio="none" class="wpm-svg">
+          <defs>
+            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#bd34fe" stop-opacity="0.3" />
+              <stop offset="100%" stop-color="#bd34fe" stop-opacity="0.01" />
+            </linearGradient>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#bd34fe" />
+              <stop offset="100%" stop-color="#41d1ff" />
+            </linearGradient>
+          </defs>
           <!-- 背景网格线 -->
-          <line x1="0" y1="150" x2="1000" y2="150" stroke="var(--hw-border)" stroke-dasharray="4" />
-          <line x1="0" y1="75" x2="1000" y2="75" stroke="var(--hw-border)" stroke-dasharray="4" />
-          <line x1="0" y1="0" x2="1000" y2="0" stroke="var(--hw-border)" stroke-dasharray="4" />
+          <line x1="0" y1="150" x2="1000" y2="150" stroke="var(--hw-border)" stroke-dasharray="4 4" opacity="0.6" />
+          <line x1="0" y1="75" x2="1000" y2="75" stroke="var(--hw-border)" stroke-dasharray="4 4" opacity="0.6" />
+          <line x1="0" y1="0" x2="1000" y2="0" stroke="var(--hw-border)" stroke-dasharray="4 4" opacity="0.6" />
           
-          <path :d="svgPath" fill="none" stroke="#7c3aed" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          <path :d="svgPath + ` L 1000 150 L 0 150 Z`" fill="url(#areaGradient)" />
+          <path :d="svgPath" fill="none" stroke="url(#lineGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="chart-line" />
           
           <!-- 画布上的最高和中间刻度 -->
           <text x="0" y="5" fill="var(--hw-text-3)" font-size="12">{{ maxWpm }} WPM</text>
@@ -275,9 +290,10 @@ const svgPath = computed(() => {
               :cx="i * (filteredData.length > 1 ? 1000 / (filteredData.length - 1) : 1000)" 
               :cy="150 - (point.wpm / maxWpm) * 150" 
               r="4" 
-              fill="#fff" 
-              stroke="#7c3aed" 
-              stroke-width="2" 
+              fill="var(--hw-bg-card)" 
+              stroke="#bd34fe" 
+              stroke-width="2.5" 
+              class="chart-point"
             >
               <title>{{ point.date }} - {{ point.wpm }} WPM</title>
             </circle>
@@ -291,15 +307,13 @@ const svgPath = computed(() => {
 <style scoped>
 .gamification-card {
   background: var(--hw-bg-card);
-  border: 1px solid var(--hw-border);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: var(--hw-shadow-lg);
+  padding: 1.8rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.8rem;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 
 .header {
@@ -335,19 +349,19 @@ const svgPath = computed(() => {
 .range-selector button {
   background: transparent;
   border: none;
-  padding: 0.3rem 0.8rem;
+  padding: 0.4rem 1rem;
   border-radius: 0.4rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--hw-text-2);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .range-selector button.active {
   background: var(--hw-bg-card);
-  color: #7c3aed;
+  color: #bd34fe;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: var(--hw-shadow);
 }
 
 .stats-overview {
@@ -375,9 +389,9 @@ const svgPath = computed(() => {
 }
 
 .stat-item .value {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #7c3aed;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--hw-text);
 }
 
 .stat-item .unit {
@@ -431,19 +445,26 @@ const svgPath = computed(() => {
 }
 
 .cell {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
   background-color: var(--hw-bg);
   border: 1px solid var(--hw-border);
   box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+.cell:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 5px rgba(189, 52, 254, 0.4);
+  z-index: 10;
+  border-color: rgba(189, 52, 254, 0.8);
 }
 
-.cell.level-0 { background-color: rgba(124, 58, 237, 0.03); border-color: rgba(124, 58, 237, 0.08); }
-.cell.level-1 { background-color: rgba(124, 58, 237, 0.3); border-color: rgba(124, 58, 237, 0.1); }
-.cell.level-2 { background-color: rgba(124, 58, 237, 0.5); border-color: rgba(124, 58, 237, 0.1); }
-.cell.level-3 { background-color: rgba(124, 58, 237, 0.75); border-color: rgba(124, 58, 237, 0.1); }
-.cell.level-4 { background-color: rgba(124, 58, 237, 1); border-color: rgba(124, 58, 237, 0.1); }
+.cell.level-0 { background-color: rgba(189, 52, 254, 0.03); border-color: rgba(189, 52, 254, 0.08); }
+.cell.level-1 { background-color: rgba(189, 52, 254, 0.3); border-color: rgba(189, 52, 254, 0.1); }
+.cell.level-2 { background-color: rgba(189, 52, 254, 0.55); border-color: rgba(189, 52, 254, 0.1); }
+.cell.level-3 { background-color: rgba(189, 52, 254, 0.8); border-color: rgba(189, 52, 254, 0.15); }
+.cell.level-4 { background-color: rgba(189, 52, 254, 1); border-color: rgba(189, 52, 254, 0.2); box-shadow: 0 0 8px rgba(189, 52, 254, 0.3); }
 
 .heatmap-legend {
   display: flex;
@@ -467,6 +488,23 @@ const svgPath = computed(() => {
   width: 100%;
   height: 100%;
   overflow: visible;
+}
+
+.chart-line {
+  transition: d 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chart-point {
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.chart-point:hover {
+  r: 6;
+  fill: #bd34fe;
+  stroke: #fff;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px rgba(189, 52, 254, 0.5));
 }
 
 @media (max-width: 768px) {

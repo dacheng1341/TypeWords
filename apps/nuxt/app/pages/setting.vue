@@ -79,7 +79,7 @@ useSeoMeta({
   twitterDescription: title,
 })
 
-const tabIndex = $ref(Number(route?.query?.index ?? 0))
+const tabIndex = $ref(Number(route?.query?.index ?? 6))
 const settingStore = useSettingStore()
 const runtimeStore = useRuntimeStore()
 const store = useBaseStore()
@@ -568,6 +568,21 @@ function removeSbConfig() {
       <div class="flex flex-col lg:flex-row flex-1 overflow-hidden gap-4">
         <div class="left shrink-0">
           <div class="tabs">
+            <div
+              class="tab"
+              :class="tabIndex === 6 && 'active'"
+              @click="
+                () => {
+                  tabIndex = 6
+                  runtimeStore.isNew = false
+                  settingStore.webAppVersion = APP_VERSION.version
+                }
+              "
+            >
+              <IconFluentCloudSync20Regular />
+              <span>数据同步</span>
+              <div class="red-point" v-if="runtimeStore.isError || runtimeStore.isNew"></div>
+            </div>
             <div class="tab" :class="tabIndex === 0 && 'active'" @click="tabIndex = 0">
               <IconFluentSettings20Regular />
               <span>{{ $t('general_settings') }}</span>
@@ -591,21 +606,6 @@ function removeSbConfig() {
             <div class="tab" :class="tabIndex === 5 && 'active'" @click="tabIndex = 5">
               <IconFluentDatabasePerson20Regular />
               <span>{{ $t('data_management') }}</span>
-            </div>
-            <div
-              class="tab"
-              :class="tabIndex === 6 && 'active'"
-              @click="
-                () => {
-                  tabIndex = 6
-                  runtimeStore.isNew = false
-                  settingStore.webAppVersion = APP_VERSION.version
-                }
-              "
-            >
-              <IconFluentCloudSync20Regular />
-              <span>数据同步</span>
-              <div class="red-point" v-if="runtimeStore.isError || runtimeStore.isNew"></div>
             </div>
             <div class="tab" :class="tabIndex === 7 && 'active'" @click="tabIndex = 7">
               <IconFluentKeyboardLayoutFloat20Regular />
@@ -711,13 +711,11 @@ function removeSbConfig() {
             </div>
 
             <div class="mt-8">
-              <SettingItem title="学习统计" desc="您在此设备上的学习打卡记录热力图。">
-                <ClientOnly>
-                  <div class="w-full mt-4 bg-[var(--hw-bg-card)] rounded-xl border border-[var(--hw-border)] overflow-hidden">
-                    <GamificationDashboard />
-                  </div>
-                </ClientOnly>
-              </SettingItem>
+              <ClientOnly>
+                <div class="w-full bg-[var(--hw-bg-card)] rounded-xl border border-[var(--hw-border)] overflow-hidden">
+                  <GamificationDashboard />
+                </div>
+              </ClientOnly>
             </div>
           </div>
 
