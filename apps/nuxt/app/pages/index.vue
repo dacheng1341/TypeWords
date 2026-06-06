@@ -19,8 +19,10 @@ let theme = $ref('light')
 // 判断用户是否有学习记录
 const hasGamificationData = $computed(() => {
   if (!baseStore.load) return false
-  const wordStats = baseStore.word.bookList.flatMap(b => (b as any).statistics ?? [])
-  const articleStats = baseStore.article.bookList.flatMap(b => (b as any).statistics ?? [])
+  // @ts-ignore
+  const wordStats = baseStore.word.bookList.flatMap(b => b.statistics ?? [])
+  // @ts-ignore
+  const articleStats = baseStore.article.bookList.flatMap(b => b.statistics ?? [])
   return wordStats.length > 0 || articleStats.length > 0
 })
 

@@ -7,8 +7,10 @@ const store = useBaseStore()
 
 // 1. 抽取和聚合历史数据
 const aggregatedData = computed(() => {
-  const allWordStats = store.word.bookList.flatMap(b => (b as any).statistics ?? [])
-  const allArticleStats = store.article.bookList.flatMap(b => (b as any).statistics ?? [])
+  // @ts-ignore
+  const allWordStats = store.word.bookList.flatMap(b => b.statistics ?? [])
+  // @ts-ignore
+  const allArticleStats = store.article.bookList.flatMap(b => b.statistics ?? [])
   const allStats = [...allWordStats, ...allArticleStats]
 
   const dayMap = new Map<string, { totalSpend: number; totalWords: number }>()
