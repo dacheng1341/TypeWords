@@ -179,3 +179,15 @@ export async function importDataFromZipBlob(zipBlob: Blob): Promise<void> {
 if (typeof window !== 'undefined') {
   (window as any).testImport = importDataFromZipBlob;
 }
+
+/**
+ * 稳妥的导入函数：直接接收 Blob，完全模拟手工导入行为
+ */
+export async function safeImportBlob(blob: Blob): Promise<void> {
+  // 这里直接复用你已经跑通的那个 importDataFromZipBlob 逻辑
+  // 确保它执行完所有的 Pinia setState 和 IndexedDB 写入
+  await importDataFromZipBlob(blob);
+  console.log("✅ 逻辑执行成功，等待数据库写入...");
+  // 增加一个微小的延迟，给 IndexedDB 留出写入时间
+  await new Promise(resolve => setTimeout(resolve, 500));
+}
