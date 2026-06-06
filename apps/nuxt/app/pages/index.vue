@@ -7,7 +7,6 @@ import { getSystemTheme, listenToSystemThemeChange, setTheme, swapTheme } from '
 import { usePlayBeep, usePlayCorrect, usePlayKeyboardAudio } from '@typewords/core/hooks/sound.ts'
 import { useUserStore } from '@typewords/core/stores/user.ts'
 import { useBaseStore } from '@typewords/core/stores/base.ts'
-import GamificationDashboard from '@typewords/core/components/GamificationDashboard.vue'
 import { get } from 'idb-keyval'
 
 definePageMeta({ layout: 'empty' })
@@ -17,15 +16,7 @@ const baseStore = useBaseStore()
 
 let theme = $ref('light')
 
-// 判断用户是否有学习记录
-const hasGamificationData = computed(() => {
-  if (!baseStore.load) return false
-  // @ts-ignore
-  const hasWord = baseStore.word.bookList.some(b => b.statistics && b.statistics.length > 0)
-  // @ts-ignore
-  const hasArticle = baseStore.article.bookList.some(b => b.statistics && b.statistics.length > 0)
-  return hasWord || hasArticle
-})
+// (Removed GamificationData logic)
 
 onMounted(() => {
   listenToSystemThemeChange(val => {
@@ -592,14 +583,7 @@ function handleLogout() {
         </div>
       </section>
 
-      <!-- 独立数据看板 (PC 与 Mobile 通用全宽横条) -->
-      <ClientOnly>
-        <section v-if="hasGamificationData" class="py-12 sm:py-16 px-4 sm:px-8 bg-[var(--hw-bg)]">
-          <div class="max-w-[1200px] mx-auto w-full">
-            <GamificationDashboard />
-          </div>
-        </section>
-      </ClientOnly>
+      <!-- (Removed GamificationDashboard from Home page per user request) -->
 
       <!-- SHOWCASE -->
       <section class="py-20 sm:py-24 px-4 sm:px-8 bg-[var(--hw-bg-card)] border-t border-b border-[var(--hw-border)]">

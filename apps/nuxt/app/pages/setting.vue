@@ -49,6 +49,7 @@ import { useDataSyncPersistence } from '@typewords/core/composables/useDataSyncP
 import SettingItem from '@typewords/core/components/setting/SettingItem.vue'
 import { Supabase } from '@typewords/core/utils/supabase.ts'
 import BackupGateDialog from '@typewords/core/components/dialog/BackupGateDialog.vue'
+import GamificationDashboard from '@typewords/core/components/GamificationDashboard.vue'
 
 import { createClient } from '@supabase/supabase-js'
 import { useRoute } from 'vue-router'
@@ -707,6 +708,16 @@ function removeSbConfig() {
               <div class="text-[.8rem] text-gray mt-1">
                 <span class="text-red font-bold">【警告】</span> 从云端恢复数据将 <b>完全覆盖</b> 您当前浏览器中的所有本地学习进度，请谨慎操作。
               </div>
+            </div>
+
+            <div class="mt-8">
+              <SettingItem title="学习统计" desc="您在此设备上的学习打卡记录热力图。">
+                <ClientOnly>
+                  <div class="w-full mt-4 bg-[var(--hw-bg-card)] rounded-xl border border-[var(--hw-border)] overflow-hidden">
+                    <GamificationDashboard />
+                  </div>
+                </ClientOnly>
+              </SettingItem>
             </div>
           </div>
 
