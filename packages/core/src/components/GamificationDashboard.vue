@@ -1,9 +1,25 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useBaseStore } from '../stores/base.ts'
-import dayjs from 'dayjs'
+import { useBaseStore } from '../stores/base'
 
 const store = useBaseStore()
+
+// Native Date Helpers to replace dayjs
+const formatDate = (d: Date) => {
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+const addDays = (d: Date, days: number) => {
+  const nd = new Date(d.getTime())
+  nd.setDate(nd.getDate() + days)
+  return nd
+}
+const getMonthShortName = (d: Date) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  return months[d.getMonth()]
+}
 
 // 1. 抽取和聚合历史数据
 const aggregatedData = computed(() => {
@@ -17,7 +33,7 @@ const aggregatedData = computed(() => {
 
   for (const s of allStats) {
     if (!s.startDate || !s.spend) continue
-    const dateStr = dayjs(s.startDate).format('YYYY-MM-DD')
+    const dateStr = formatDate(new Date(s.startDate))
     
     let spendMs = s.spend
     let words = s.total || 0
@@ -25,7 +41,7 @@ const aggregatedData = computed(() => {
     // 如果有 segment 数据，精确到分片（可选处理，为了简单这里直接按 startDate 归类整条记录）
     if (s.segments && s.segments.length > 0) {
       for (const [segStart, segEnd] of s.segments) {
-         const segDateStr = dayjs(segStart).format('YYYY-MM-DD')
+         const segDateStr = formatDate(new Date(segStart))
          const ms = segEnd - segStart
          const prev = dayMap.get(segDateStr) || { totalSpend: 0, totalWords: 0 }
          dayMap.set(segDateStr, {
@@ -53,7 +69,7 @@ const aggregatedData = computed(() => {
   })
 
   // 按日期排序
-  result.sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
+  result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   return result
 })
 
@@ -66,41 +82,40 @@ const filteredData = computed(() => {
   const data = aggregatedData.value
   if (!data.length || selectedRange.value === 'all') return data
 
-  const now = dayjs()
   let daysLimit = 30
   if (selectedRange.value === '180d') daysLimit = 180
   if (selectedRange.value === '365d') daysLimit = 365
 
-  const cutoffDate = now.subtract(daysLimit, 'day')
-  return data.filter(d => dayjs(d.date).isAfter(cutoffDate))
+  const cutoffDate = addDays(new Date(), -daysLimit).getTime()
+  return data.filter(d => new Date(d.date).getTime() > cutoffDate)
 })
 
 // 生成热力图的网格数据 (计算 startDate 和 endDate，补齐空白前导格子)
 const heatmapGrid = computed(() => {
   const data = filteredData.value
-  let startDate = dayjs()
-  let endDate = dayjs()
+  let startDate = new Date()
+  let endDate = new Date()
 
   if (selectedRange.value === 'all') {
     if (data.length) {
-      startDate = dayjs(data[0].date)
+      startDate = new Date(data[0].date)
     } else {
-      startDate = dayjs().subtract(30, 'day')
+      startDate = addDays(new Date(), -30)
     }
   } else {
     let daysLimit = 30
     if (selectedRange.value === '180d') daysLimit = 180
     if (selectedRange.value === '365d') daysLimit = 365
-    startDate = dayjs().subtract(daysLimit, 'day')
+    startDate = addDays(new Date(), -daysLimit)
   }
 
   // 使得开头对齐星期一 (1)
-  while (startDate.day() !== 1) {
-    startDate = startDate.subtract(1, 'day')
+  while (startDate.getDay() !== 1) {
+    startDate = addDays(startDate, -1)
   }
   // 使得结尾对齐星期日 (0)
-  while (endDate.day() !== 0) {
-    endDate = endDate.add(1, 'day')
+  while (endDate.getDay() !== 0) {
+    endDate = addDays(endDate, 1)
   }
 
   const map = new Map<string, number>()
@@ -108,8 +123,8 @@ const heatmapGrid = computed(() => {
 
   const grid: { date: string; words: number; level: number }[] = []
   let curr = startDate
-  while (curr.isBefore(endDate) || curr.isSame(endDate, 'day')) {
-    const ds = curr.format('YYYY-MM-DD')
+  while (curr.getTime() < endDate.getTime() || formatDate(curr) === formatDate(endDate)) {
+    const ds = formatDate(curr)
     const words = map.get(ds) || 0
     let level = 0
     if (words > 0 && words <= 50) level = 1
@@ -118,7 +133,7 @@ const heatmapGrid = computed(() => {
     else if (words > 300) level = 4
 
     grid.push({ date: ds, words, level })
-    curr = curr.add(1, 'day')
+    curr = addDays(curr, 1)
   }
 
   // 将一维数组转换为按列(周)排列的二维数组
@@ -134,10 +149,10 @@ const getMonthLabels = (cols: any[]) => {
   const labels: { text: string; colIndex: number }[] = []
   let lastMonth = -1
   cols.forEach((col, index) => {
-    const firstDay = dayjs(col[0].date)
-    if (firstDay.date() <= 7 && firstDay.month() !== lastMonth) {
-      labels.push({ text: firstDay.format('MMM'), colIndex: index })
-      lastMonth = firstDay.month()
+    const firstDay = new Date(col[0].date)
+    if (firstDay.getDate() <= 7 && firstDay.getMonth() !== lastMonth) {
+      labels.push({ text: getMonthShortName(firstDay), colIndex: index })
+      lastMonth = firstDay.getMonth()
     }
   })
   return labels

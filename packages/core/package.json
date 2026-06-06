@@ -16,8 +16,7 @@
   "author": "",
   "dependencies": {
     "@typewords/base": "workspace:*",
-    "@typewords/libs": "workspace:*",
-    "dayjs": "^1.11.13"
+    "@typewords/libs": "workspace:*"
   },
   "devDependencies": {
     "unplugin-vue-macros": "^2.14.5",
