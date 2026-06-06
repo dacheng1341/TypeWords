@@ -186,16 +186,8 @@ export const useBaseStore = defineStore('base', {
                 result.val.dictListVersion = r.data
               }
             }
-            if (AppEnv.CAN_REQUEST) {
-              let res = await myDictList()
-              if (res.success) {
-                //只保留未同步的
-                result.val.word.bookList = result.val.word.bookList.filter(v => !v.sync)
-                result.val.article.bookList = result.val.article.bookList.filter(v => !v.sync)
-                //这里看看是否要 shallowReactive
-                Object.assign(result.val, res.data)
-              }
-            }
+            // 遗留逻辑已删除：不再调用 myDictList 覆盖本地数据
+            // IndexedDB 及其对应的 ZIP 云同步已经是 Absolute Source of Truth
             // console.log('data', data)
             this.setState(result.val)
             resolve(result)
