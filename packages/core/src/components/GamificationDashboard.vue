@@ -7,8 +7,8 @@ const store = useBaseStore()
 
 // 1. 抽取和聚合历史数据
 const aggregatedData = computed(() => {
-  const allWordStats = store.word.bookList.flatMap(b => b.statistics ?? [])
-  const allArticleStats = store.article.bookList.flatMap(b => b.statistics ?? [])
+  const allWordStats = store.word.bookList.flatMap(b => (b as any).statistics ?? [])
+  const allArticleStats = store.article.bookList.flatMap(b => (b as any).statistics ?? [])
   const allStats = [...allWordStats, ...allArticleStats]
 
   const dayMap = new Map<string, { totalSpend: number; totalWords: number }>()
@@ -120,7 +120,7 @@ const heatmapGrid = computed(() => {
   }
 
   // 将一维数组转换为按列(周)排列的二维数组
-  const cols = []
+  const cols: { date: string; words: number; level: number }[][] = []
   for (let i = 0; i < grid.length; i += 7) {
     cols.push(grid.slice(i, i + 7))
   }
