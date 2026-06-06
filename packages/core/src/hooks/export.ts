@@ -175,3 +175,7 @@ export async function importDataFromZipBlob(zipBlob: Blob): Promise<void> {
   data.dict.val.load = true
   baseStore.setState(data.dict.val)
 }
+// 临时测试开关，仅供验证使用
+if (typeof window !== 'undefined') {
+  (window as any).testImport = importDataFromZipBlob;
+}
