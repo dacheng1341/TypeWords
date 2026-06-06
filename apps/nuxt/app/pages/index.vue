@@ -599,7 +599,6 @@ function handleLogout() {
             <GamificationDashboard />
           </div>
         </ClientOnly>
-        </div>
       </section>
 
       <!-- SHOWCASE -->
