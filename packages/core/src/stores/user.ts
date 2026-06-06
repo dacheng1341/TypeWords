@@ -4,12 +4,13 @@ import { getUserInfo } from '../apis/user'
 import type { User } from '../apis/user'
 import { AppEnv, SAVE_DICT_KEY } from '../config/env'
 import { Toast } from '@typewords/base'
-import { useExport } from '../hooks/export'
+
 import { get } from 'idb-keyval'
-import { checkAndUpgradeSaveDict, checkAndUpgradeSaveSetting } from '../utils'
+import { getZipBlobForCloud, importDataFromZipBlob } from '../hooks/export'
 import { useDataSyncPersistence } from '../composables/useDataSyncPersistence'
 import { getDefaultSettingState, useBaseStore } from './base'
 import { useSettingStore } from './setting'
+
 import type { BackupData } from '../types'
 
 export const useUserStore = defineStore('user', () => {
@@ -112,43 +113,50 @@ export const useUserStore = defineStore('user', () => {
     return true
   }
 
+
+  // ── 工具函数：Blob → Base64 字符串 ────────────────────────────────────────────
+  function blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        // result 格式为 "data:application/zip;base64,XXXX..."，取逗号后面的纯 Base64 部分
+        const result = reader.result as string
+        resolve(result.split(',')[1])
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
+  }
+  // ── 工具函数：Base64 字符串 → Blob ────────────────────────────────────────────
+  function base64ToBlob(base64: string, mimeType = 'application/zip'): Blob {
+    const byteCharacters = atob(base64)
+    const byteNumbers = new Uint8Array(byteCharacters.length)
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i)
+    }
+    return new Blob([byteNumbers], { type: mimeType })
+  }
+
   // 同步全量学习数据到云端（WordPress 后端）
   async function syncAllDataToCloud() {
     try {
-      // 1. 打包全量数据（设置 + 词书/进度/FSRS遗忘曲线 + 单词练习缓存 + 文章练习缓存）
-      const { getExportedData } = useExport()
-      const backupData = await getExportedData()
-
-      // 2. 空数据校验：dict 未初始化说明用户还未开始使用
-      if (!backupData?.val?.dict?.val) {
-        Toast.warning('暂无可同步的数据，请先开始练习')
-        return
-      }
-
-      // 【🔥核心修复 1】：强制同步当前活跃的选书状态（studyIndex），防止导出陈旧的 -1
-      const baseStore = useBaseStore()
-      if (backupData.val.dict.val.word && baseStore.word?.studyIndex !== undefined) {
-        backupData.val.dict.val.word.studyIndex = baseStore.word.studyIndex
-      }
-      if (backupData.val.dict.val.article && baseStore.article?.studyIndex !== undefined) {
-        backupData.val.dict.val.article.studyIndex = baseStore.article.studyIndex
-      }
-
-      // 3. 读取 WordPress JWT Token
+      // 1. 读取 WordPress JWT Token
       const token = localStorage.getItem('dacbbox_token')
       if (!token) {
         Toast.warning('请先登录后再同步')
         return
       }
-
-      // 4. POST 全量数据到 WordPress 新端点
+      // 2. 调用共享函数，打包轻量级 ZIP（仅含 data.json，绝不含 mp3）
+      const zipBlob = await getZipBlobForCloud()
+      // 3. ZIP Blob → Base64 字符串
+      const base64 = await blobToBase64(zipBlob)
+      // 4. 携带 Bearer Token，将 Base64 字符串作为 backup_data 字段上传
       await $fetch('https://dacbbox.com/wp-json/dacbbox/v1/save-learning-data', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
-        body: { backup_data: backupData },
+        body: { backup_data: base64 },
       })
-
-      // 5. 成功：清理废弃的游客记录垃圾数据
+      // 5. 清理废弃的游客缓存，提示成功
       localStorage.removeItem('dacbbox_guest_records')
       Toast.success('全量学习数据已成功同步至云端 ✓')
     } catch (error: any) {
@@ -156,6 +164,7 @@ export const useUserStore = defineStore('user', () => {
       Toast.error(`同步失败：${error?.message ?? '网络错误，请稍后重试'}`)
     }
   }
+
 
   // ── 私有辅助：判断本地是否存在有效学习进度（直接读 IndexedDB，避免 Pinia 时序问题）──
   async function hasLocalLearningData(): Promise<boolean> {
@@ -180,33 +189,6 @@ export const useUserStore = defineStore('user', () => {
 
   // 从云端拉取全量数据并恢复至本地
   async function fetchAndRestoreDataFromCloud() {
-    // ── 递归深度解包：剥除所有嵌套字符串包裹 ──────────────────────────────
-    function deepUnwrap(val: any): any {
-      if (typeof val === 'string') {
-        const trimmed = val.trim()
-        if (
-          (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-          (trimmed.startsWith('[') && trimmed.endsWith(']'))
-        ) {
-          try {
-            return deepUnwrap(JSON.parse(trimmed))
-          } catch {
-            return val
-          }
-        }
-        return val
-      }
-      if (Array.isArray(val)) return val.map((item) => deepUnwrap(item))
-      if (val !== null && typeof val === 'object') {
-        const result: Record<string, any> = {}
-        for (const key of Object.keys(val)) {
-          result[key] = deepUnwrap(val[key])
-        }
-        return result
-      }
-      return val
-    }
-    // ──────────────────────────────────────────────────────────────────────
     try {
       // 1. 读取 WordPress JWT Token（强制鉴权）
       const token = localStorage.getItem('dacbbox_token')
@@ -214,73 +196,23 @@ export const useUserStore = defineStore('user', () => {
         Toast.warning('请先登录后再拉取数据')
         return
       }
-      // 2. GET 云端数据，显式注入 Bearer Token
-      const res = await $fetch<{ success: boolean; backup_data: any }>(
+      // 2. 携带 Bearer Token，请求云端数据
+      const res = await $fetch<{ success: boolean; backup_data: string }>(
         'https://dacbbox.com/wp-json/dacbbox/v1/get-learning-data',
-        {
-          headers: { Authorization: 'Bearer ' + token },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       )
-      console.group('%c[DIAG] fetchAndRestoreDataFromCloud - HTTP 原始响应', 'color:#0af;font-weight:bold')
-      console.log('res (完整):', JSON.parse(JSON.stringify(res ?? null)))
-      console.log('typeof res.backup_data:', typeof res?.backup_data)
-      console.groupEnd()
-      // 3. 用 deepUnwrap 对整个响应做彻底递归清洗，一次搞定所有嵌套
-      const cleanedRes = deepUnwrap(res)
-      const rawBackup = cleanedRes?.backup_data
-      console.group('%c[DIAG] deepUnwrap 清洗后 rawBackup 结构', 'color:#0f9;font-weight:bold')
-      console.log('rawBackup:', rawBackup)
-      console.log('rawBackup.val keys:', rawBackup?.val ? Object.keys(rawBackup.val) : 'null')
-      console.groupEnd()
-      // 4. 校验：dict 是核心数据，必须存在
-      const backupVal = rawBackup?.val
-      const dictSaveData = backupVal?.dict
-      const settingSaveData = backupVal?.setting
-      if (!dictSaveData?.val) {
+      // 3. 校验：云端必须有数据
+      if (!res?.backup_data) {
         Toast.warning('云端暂无学习数据，请先在其他设备同步一次')
         return
       }
-      // 5. 版本升级兼容处理（数据已是纯净对象，直接传入）
-      const dictState = await checkAndUpgradeSaveDict(dictSaveData)
-      const settingState = settingSaveData?.val
-        ? await checkAndUpgradeSaveSetting(settingSaveData)
-        : getDefaultSettingState()
-      // 6. 构造完整恢复对象，直接使用 deepUnwrap 清洗后的数据，无需任何额外猜测
-      const dataToRestore = {
-        ...backupVal,
-        PracticeSaveArticle: backupVal?.PracticeSaveArticle,
-        PracticeSaveWord: backupVal?.PracticeSaveWord,
-        dict: { ...dictSaveData, val: dictState },
-        setting: { ...(settingSaveData ?? {}), val: settingState },
-      }
-      console.group('%c[DIAG] dataToRestore - 即将写入 IndexedDB', 'color:#f55;font-weight:bold')
-      console.log('dataToRestore keys:', Object.keys(dataToRestore))
-      console.log('PracticeSaveArticle:', dataToRestore.PracticeSaveArticle)
-      console.log('PracticeSaveWord:', dataToRestore.PracticeSaveWord)
-      console.log(
-        'PracticeSaveArticle?.val:',
-        (dataToRestore as any)?.PracticeSaveArticle?.val ?? '⚠️ undefined'
-      )
-      console.groupEnd()
-      // 7. 写入 IndexedDB（通过 dataSyncPersistence）
-      const dataSyncPersistence = useDataSyncPersistence()
-      await dataSyncPersistence.forcePushLocalDataToRemote(dataToRestore as any)
-      // 8. 更新 Pinia 内存状态
-      const baseStore = useBaseStore()
-      const settingStore = useSettingStore()
-      // 防御性合并：防止云端 -1 清空本地已选中的书本
-      const localWordIndex = baseStore.word?.studyIndex ?? -1
-      const localArticleIndex = baseStore.article?.studyIndex ?? -1
-      if (dictState.word && dictState.word.studyIndex === -1 && localWordIndex !== -1) {
-        dictState.word.studyIndex = localWordIndex
-      }
-      if (dictState.article && dictState.article.studyIndex === -1 && localArticleIndex !== -1) {
-        dictState.article.studyIndex = localArticleIndex
-      }
-      settingStore.setState({ ...settingState, load: true })
-      baseStore.setState({ ...dictState, load: true })
+      // 4. Base64 字符串 → ZIP Blob
+      const zipBlob = base64ToBlob(res.backup_data, 'application/zip')
+      // 5. 调用共享函数，解包 ZIP 并完整恢复数据（版本升级 + IndexedDB + Pinia 全部由该函数负责）
+      //    绝对不在此处进行任何 JSON.parse、deepUnwrap 或字段猜测
+      await importDataFromZipBlob(zipBlob)
+      // 6. 刷新页面，确保 UI 完全基于新数据重新初始化
       Toast.success('云端数据已成功恢复至本地 ✓ 即将刷新…')
-      // 延迟 1 秒刷新，确保底层数据覆盖完成
       setTimeout(() => window.location.reload(), 1000)
     } catch (error: any) {
       console.error('[fetchAndRestoreDataFromCloud] 恢复失败详情:', error)
