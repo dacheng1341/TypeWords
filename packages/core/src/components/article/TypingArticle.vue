@@ -22,6 +22,7 @@ import { inject, onMounted, onUnmounted, watch } from 'vue'
 import { usePracticeArticlePersistence } from '../../composables/usePracticePersistence'
 import { PracticeArticleWordType, ShortcutKey } from '../../types'
 import type { PracticeArticleCache } from '../../utils/cache'
+import { getPracticeArticleCacheLocal } from '../../utils/cache'
 
 interface IProps {
   article: Article
@@ -151,30 +152,50 @@ watch(
 
 async function init() {
   if (!props.article.id) return
+  console.log('开始加载进度...')
   isSpace = isEnd = false
-  const d = await articlePersistence.load()
-  if (d) {
-    sectionIndex = d.practiceData.sectionIndex
-    sentenceIndex = d.practiceData.sentenceIndex
-    wordIndex = d.practiceData.wordIndex
+
+  // 优先读取本地 IndexedDB 数据，确保即使 Supabase 未登录或网络延迟也能快速恢复进度
+  const localCache = await getPracticeArticleCacheLocal()
+  console.log('[TypingArticle] 本地缓存读取结果:', localCache?.practiceData ?? 'null')
+
+  // 如果本地有数据，先应用本地缓存以快速恢复进度
+  if (localCache) {
+    sectionIndex = localCache.practiceData.sectionIndex
+    sentenceIndex = localCache.practiceData.sentenceIndex
+    wordIndex = localCache.practiceData.wordIndex
     jump(sectionIndex, sentenceIndex, wordIndex)
-    statStore.$patch(d.statStoreData)
+    statStore.$patch(localCache.statStoreData)
+    console.log('[TypingArticle] 已从本地缓存恢复进度', { sectionIndex, sentenceIndex, wordIndex })
   } else {
-    wrong = input = ''
-    sectionIndex = 0
-    sentenceIndex = 0
-    wordIndex = 0
-    stringIndex = 0
-    //todo 这在直接修改不太合理
-    props.article.sections.map(v => {
-      v.map(w => {
-        w.words.map(s => {
-          s.input = ''
+    // 尝试从远程拉取（如有 Supabase 登录）
+    console.log('[TypingArticle] 本地无缓存，尝试远程拉取...')
+    const d = await articlePersistence.load()
+    if (d) {
+      sectionIndex = d.practiceData.sectionIndex
+      sentenceIndex = d.practiceData.sentenceIndex
+      wordIndex = d.practiceData.wordIndex
+      jump(sectionIndex, sentenceIndex, wordIndex)
+      statStore.$patch(d.statStoreData)
+      console.log('[TypingArticle] 已从远程数据恢复进度', { sectionIndex, sentenceIndex, wordIndex })
+    } else {
+      wrong = input = ''
+      sectionIndex = 0
+      sentenceIndex = 0
+      wordIndex = 0
+      stringIndex = 0
+      //todo 这在直接修改不太合理
+      props.article.sections.map(v => {
+        v.map(w => {
+          w.words.map(s => {
+            s.input = ''
+          })
         })
       })
-    })
-    window.scrollTo({ top: 0 })
+      window.scrollTo({ top: 0 })
+    }
   }
+
   _nextTick(() => {
     emit('play', { sentence: props.article.sections[sectionIndex][sentenceIndex], handle: false })
     if (isNameWord()) next()

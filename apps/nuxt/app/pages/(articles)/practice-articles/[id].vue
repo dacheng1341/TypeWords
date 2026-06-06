@@ -56,6 +56,8 @@ let isFocus = true
 let isTyped = $ref(false)
 //用于解决 手动改文章时改了lastLearnIndex，同时又监听了store.sbook.lastLearnIndex，会冲突
 let lock = false
+// 标记是否有待执行的 init，等 typingArticleRef 就绪后触发
+let pendingInit = false
 
 function write() {
   // console.log('write')
@@ -178,6 +180,17 @@ watch(
 onActivated(() => {
   console.log('onActivated')
 })
+// 监听 typingArticleRef 的挂载：一旦子组件就绪且有待执行的 init，立即触发
+watch(
+  () => typingArticleRef,
+  (ref) => {
+    if (ref && pendingInit) {
+      pendingInit = false
+      ref.init()
+    }
+  }
+)
+
 onMounted(async () => {
   document.removeEventListener('visibilitychange', onvisibilitychange)
   document.addEventListener('visibilitychange', onvisibilitychange)
@@ -186,14 +199,6 @@ onMounted(async () => {
   if (store.sbook?.articles?.length) {
     articleData.list = cloneDeep(store.sbook.articles)
     getCurrentPractice()
-    // 初始化后从 IndexedDB 恢复练习进度（sectionIndex / sentenceIndex / wordIndex）
-    _nextTick(async () => {
-      const cache = await articlePersistence.load()
-      if (cache) {
-        console.log('[practice-articles] 恢复缓存进度', cache.practiceData)
-        typingArticleRef?.applyPracticeCache?.(cache)
-      }
-    })
   } else {
     loading = true
   }
@@ -272,7 +277,12 @@ function setArticle(val: Article) {
     }
   }, 1000)
 
-  _nextTick(typingArticleRef?.init)
+  // 如果 typingArticleRef 已经就绪，直接调用 init；否则设置 pendingInit 标记
+  if (typingArticleRef) {
+    typingArticleRef.init()
+  } else {
+    pendingInit = true
+  }
 }
 
 async function complete() {
