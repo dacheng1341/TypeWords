@@ -249,6 +249,10 @@ export function useGetDict() {
             if (res.data.articles.length) {
               runtimeStore.editDict.articles = res.data.articles
             }
+            // 强制触发保存，将旧接口拿到的热力图数据落库到本地 IndexedDB 和新的云同步
+            const { useDataSyncPersistence } = await import('../composables/useDataSyncPersistence.ts')
+            const dataSync = useDataSyncPersistence()
+            await dataSync.saveDictState(store.$state)
           }
         }
       }
