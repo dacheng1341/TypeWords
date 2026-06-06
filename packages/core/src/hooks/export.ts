@@ -107,6 +107,9 @@ export async function getZipBlobForCloud(): Promise<Blob> {
   const { getExportedData } = useExport()
   const data = await getExportedData()
 
+  // 【取证】打印出来看看，上传前数据到底有没有！
+  console.log("【上传取证】准备打包的数据:", data);
+
   const JSZip = await loadJsLib('JSZip', LIB_JS_URL.JSZIP)
   const zip = new JSZip()
   // 仅打包纯文本数据，绝不包含 mp3/ 目录
@@ -184,10 +187,20 @@ if (typeof window !== 'undefined') {
  * 稳妥的导入函数：直接接收 Blob，完全模拟手工导入行为
  */
 export async function safeImportBlob(blob: Blob): Promise<void> {
-  // 这里直接复用你已经跑通的那个 importDataFromZipBlob 逻辑
-  // 确保它执行完所有的 Pinia setState 和 IndexedDB 写入
+  // 【取证】看看下载下来的 blob 是不是空的，或者能不能被 JSZip 读取
+  console.log("【下载取证】接收到的 Blob 大小:", blob.size);
+
+  const JSZip = await loadJsLib('JSZip', LIB_JS_URL.JSZIP)
+  const zip = await JSZip.loadAsync(blob)
+
+  const dataFile = zip.file('data.json')
+  const str = await dataFile?.async('string')
+
+  // 【取证】看看解压出来的 JSON 字符串到底长什么样！
+  console.log("【下载取证】解压出的 JSON 内容:", str);
+
+  if (!str) throw new Error("无法读取 data.json");
+
   await importDataFromZipBlob(blob);
-  console.log("✅ 逻辑执行成功，等待数据库写入...");
-  // 增加一个微小的延迟，给 IndexedDB 留出写入时间
   await new Promise(resolve => setTimeout(resolve, 500));
 }
