@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { APP_NAME, GITHUB, Origin } from '@typewords/core/config/env.ts'
 import { SAVE_DICT_KEY } from '@typewords/core/config/env.ts'
 import { BaseIcon, Toast } from '@typewords/base'
@@ -17,13 +18,13 @@ const baseStore = useBaseStore()
 let theme = $ref('light')
 
 // 判断用户是否有学习记录
-const hasGamificationData = $computed(() => {
+const hasGamificationData = computed(() => {
   if (!baseStore.load) return false
   // @ts-ignore
-  const wordStats = baseStore.word.bookList.flatMap(b => b.statistics ?? [])
+  const hasWord = baseStore.word.bookList.some(b => b.statistics && b.statistics.length > 0)
   // @ts-ignore
-  const articleStats = baseStore.article.bookList.flatMap(b => b.statistics ?? [])
-  return wordStats.length > 0 || articleStats.length > 0
+  const hasArticle = baseStore.article.bookList.some(b => b.statistics && b.statistics.length > 0)
+  return hasWord || hasArticle
 })
 
 onMounted(() => {
@@ -509,10 +510,7 @@ function handleLogout() {
           <!-- Right: 动态展示区 (数据看板 或 Demo 卡片，PC端可见) -->
           <div class="hidden lg:flex flex-col w-[440px] shrink-0">
             <ClientOnly>
-              <GamificationDashboard v-if="hasGamificationData" />
-              
               <div
-                v-else
                 class="bg-[var(--hw-bg-card)] border border-[var(--hw-border)] rounded-2xl shadow-[var(--hw-shadow-lg)] overflow-hidden outline-none"
                 tabindex="0"
                 @focus="demoFocused = true"
@@ -588,18 +586,20 @@ function handleLogout() {
                   </div>
                 </div>
               </div>
-              <p v-if="!hasGamificationData" class="text-center text-sm text-blue-5 mt-3">↑ 点击并用键盘输入，体验核心打字功能</p>
+              <p class="text-center text-sm text-blue-5 mt-3">↑ 点击并用键盘输入，体验核心打字功能</p>
             </ClientOnly>
           </div>
         </div>
+      </section>
 
-        <!-- Mobile 端独立落位: 数据看板 (仅在有数据且在小屏幕显示) -->
-        <ClientOnly>
-          <div v-if="hasGamificationData" class="lg:hidden relative z-1 max-w-[1200px] mx-auto w-full mt-12 px-2">
+      <!-- 独立数据看板 (PC 与 Mobile 通用全宽横条) -->
+      <ClientOnly>
+        <section v-if="hasGamificationData" class="py-12 sm:py-16 px-4 sm:px-8 bg-[var(--hw-bg)]">
+          <div class="max-w-[1200px] mx-auto w-full">
             <GamificationDashboard />
           </div>
-        </ClientOnly>
-      </section>
+        </section>
+      </ClientOnly>
 
       <!-- SHOWCASE -->
       <section class="py-20 sm:py-24 px-4 sm:px-8 bg-[var(--hw-bg-card)] border-t border-b border-[var(--hw-border)]">
