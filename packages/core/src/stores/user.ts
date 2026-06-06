@@ -8,7 +8,7 @@ import { useExport } from '../hooks/export'
 import { get } from 'idb-keyval'
 import { checkAndUpgradeSaveDict, checkAndUpgradeSaveSetting } from '../utils'
 import { useDataSyncPersistence } from '../composables/useDataSyncPersistence'
-import { useBaseStore } from './base'
+import { getDefaultSettingState, useBaseStore } from './base'
 import { useSettingStore } from './setting'
 import type { BackupData } from '../types'
 
@@ -180,57 +180,71 @@ export const useUserStore = defineStore('user', () => {
       }
 
       // 2. GET 云端数据
-      // 后端实际返回: { success: true, backup_data: { version, val: { dict: SaveData, setting: SaveData } } }
-      const res = await $fetch<{ success: boolean; backup_data: BackupData }>(
+      const res = await $fetch<{ success: boolean; backup_data: any }>(
         'https://dacbbox.com/wp-json/dacbbox/v1/get-learning-data',
         { headers: { Authorization: `Bearer ${token}` } }
       )
 
-      // 3. 严格校验响应层级，防止后端结构异常时解析到 undefined 后覆盖本地数据
-      const backupData = res?.backup_data
-      const dictSaveData = backupData?.val?.dict
-      const settingSaveData = backupData?.val?.setting
+      // 3. 容错解析：WordPress 后端可能对 backup_data 做了双重 json_encode
+      //    $fetch 只解析最外层 Response body，内层字段若仍是字符串则需手动 parse
+      let rawBackup = res?.backup_data
+      if (typeof rawBackup === 'string') {
+        rawBackup = JSON.parse(rawBackup)
+      }
+      // val 层也可能是字符串（三重编码极端情况）
+      let backupVal = rawBackup?.val
+      if (typeof backupVal === 'string') {
+        backupVal = JSON.parse(backupVal)
+      }
+
+      // 输出调试日志，便于排查数据结构问题
+      console.log('[云端恢复] 解析后数据结构:', {
+        version: rawBackup?.version,
+        hasDictVal: !!backupVal?.dict?.val,
+        hasSettingVal: !!backupVal?.setting?.val,
+        keys: backupVal ? Object.keys(backupVal) : [],
+      })
+
+      // 4. 校验：dict 是核心数据，必须存在；setting/cache 缺失时降级，不中止
+      const dictSaveData    = backupVal?.dict
+      const settingSaveData = backupVal?.setting
 
       if (!dictSaveData?.val) {
         Toast.warning('云端暂无学习数据，请先在其他设备同步一次')
         return
       }
-      if (!settingSaveData?.val) {
-        throw new Error('云端数据结构解析失败：setting 层级缺失')
-      }
 
-      // 4. 版本升级兼容处理（importJson 管线的步骤 ②③）
+      // 5. 版本升级兼容处理（importJson 管线步骤 ②③）
+      //    checkAndUpgradeSaveDict 接受完整 SaveData（含 version + val 字段）
       const dictState    = await checkAndUpgradeSaveDict(dictSaveData)
-      const settingState = await checkAndUpgradeSaveSetting(settingSaveData)
+      // setting 缺失时降级为默认值，不 throw，保证 dict 数据仍能恢复
+      const settingState = settingSaveData?.val
+        ? await checkAndUpgradeSaveSetting(settingSaveData)
+        : getDefaultSettingState()
 
-      // ── 强制防御：upgrade 失败时返回的空对象不得写入 IndexedDB ──
-      if (!dictState) {
-        throw new Error('云端数据结构解析失败：dict checkAndUpgrade 返回空值')
-      }
-      if (!settingState) {
-        throw new Error('云端数据结构解析失败：setting checkAndUpgrade 返回空值')
-      }
-
-      // 5. 构造 BackupData['val'] 结构，写入 IndexedDB（importJson 管线的步骤 ④）
-      //    注意：forcePushLocalDataToRemote 内部会取 data.dict.val / data.setting.val
+      // 6. 构造完整 BackupData['val']，透传 practice-word / practice-article 字段
+      //    forcePushLocalDataToRemote 内部会取 data[PRACTICE_WORD_CACHE.key]?.val
+      //    和 data[PRACTICE_ARTICLE_CACHE.key]?.val，全量 4 模块一并写入 IndexedDB
       const dataToRestore: BackupData['val'] = {
-        ...backupData.val,
+        ...backupVal,                                        // 透传 practice cache 等字段
         dict:    { ...dictSaveData,    val: dictState },
-        setting: { ...settingSaveData, val: settingState },
+        setting: { ...(settingSaveData ?? {}), val: settingState },
       }
 
       const dataSyncPersistence = useDataSyncPersistence()
       await dataSyncPersistence.forcePushLocalDataToRemote(dataToRestore)
 
-      // 6. 更新 Pinia 内存状态，界面立即响应（importJson 管线的步骤 ⑤⑥）
+      // 7. 更新 Pinia 内存状态，界面立即响应
       const baseStore    = useBaseStore()
       const settingStore = useSettingStore()
       settingStore.setState({ ...settingState, load: true })
       baseStore.setState({ ...dictState, load: true })
 
-      Toast.success('云端数据已成功恢复至本地 ✓')
+      Toast.success('云端数据已成功恢复至本地 ✓ 即将刷新…')
+      // 延迟 1 秒刷新，确保 IndexedDB 写入完成且 Toast 用户可见
+      setTimeout(() => window.location.reload(), 1000)
     } catch (error: any) {
-      console.error('[fetchAndRestoreDataFromCloud] 拉取失败', error)
+      console.error('[fetchAndRestoreDataFromCloud] 恢复失败详情:', error)
       Toast.error(`拉取失败：${error?.message ?? '网络错误，请稍后重试'}`)
     }
   }
