@@ -5,13 +5,23 @@ import { BaseIcon, Toast } from '@typewords/base'
 import { getSystemTheme, listenToSystemThemeChange, setTheme, swapTheme } from '@typewords/core/hooks/theme.ts'
 import { usePlayBeep, usePlayCorrect, usePlayKeyboardAudio } from '@typewords/core/hooks/sound.ts'
 import { useUserStore } from '@typewords/core/stores/user.ts'
+import { useBaseStore } from '@typewords/core/stores/base.ts'
+import GamificationDashboard from '@typewords/core/components/GamificationDashboard.vue'
 import { get } from 'idb-keyval'
 
 definePageMeta({ layout: 'empty' })
 
 const userStore = useUserStore()
+const baseStore = useBaseStore()
 
 let theme = $ref('light')
+
+// 判断用户是否有学习记录
+const hasGamificationData = $computed(() => {
+  const wordStats = baseStore.word.bookList.flatMap(b => b.statistics ?? [])
+  const articleStats = baseStore.article.bookList.flatMap(b => b.statistics ?? [])
+  return wordStats.length > 0 || articleStats.length > 0
+})
 
 onMounted(() => {
   listenToSystemThemeChange(val => {
@@ -493,9 +503,12 @@ function handleLogout() {
               </button>
             </div>
           </div>
-          <!-- Right: 打字 Demo 卡片（PC 端可见） -->
+          <!-- Right: 动态展示区 (数据看板 或 Demo 卡片，PC端可见) -->
           <div class="hidden lg:flex flex-col w-[440px] shrink-0">
+            <GamificationDashboard v-if="hasGamificationData" />
+            
             <div
+              v-else
               class="bg-[var(--hw-bg-card)] border border-[var(--hw-border)] rounded-2xl shadow-[var(--hw-shadow-lg)] overflow-hidden outline-none"
               tabindex="0"
               @focus="demoFocused = true"
@@ -571,8 +584,14 @@ function handleLogout() {
                 </div>
               </div>
             </div>
-            <p class="text-center text-sm text-blue-5 mt-3">↑ 点击并用键盘输入，体验核心打字功能</p>
+            <p v-if="!hasGamificationData" class="text-center text-sm text-blue-5 mt-3">↑ 点击并用键盘输入，体验核心打字功能</p>
           </div>
+        </div>
+
+        <!-- Mobile 端独立落位: 数据看板 (仅在有数据且在小屏幕显示) -->
+        <div v-if="hasGamificationData" class="lg:hidden relative z-1 max-w-[1200px] mx-auto w-full mt-12 px-2">
+           <GamificationDashboard />
+        </div>
         </div>
       </section>
 
