@@ -564,8 +564,8 @@ function removeSbConfig() {
   <BasePage>
     <div class="setting text-md card flex flex-col" style="height: calc(100vh - 3rem)">
       <div class="page-title text-align-center">{{ $t('setting') }}</div>
-      <div class="flex flex-1 overflow-hidden gap-4">
-        <div class="left">
+      <div class="flex flex-col lg:flex-row flex-1 overflow-hidden gap-4">
+        <div class="left shrink-0">
           <div class="tabs">
             <div class="tab" :class="tabIndex === 0 && 'active'" @click="tabIndex = 0">
               <IconFluentSettings20Regular />
@@ -631,8 +631,8 @@ function removeSbConfig() {
             </div>
           </div>
         </div>
-        <div class="col-line"></div>
-        <div class="flex-1 overflow-y-auto overflow-x-hidden pr-4 content">
+        <div class="col-line hidden lg:block"></div>
+        <div class="flex-1 overflow-y-auto overflow-x-hidden lg:pr-4 content">
           <CommonSetting v-if="tabIndex === 0" />
           <FsrsSetting v-if="tabIndex === 1" />
           <WordSetting v-if="tabIndex === 2" />
@@ -683,20 +683,26 @@ function removeSbConfig() {
               title="网站云端同步"
               desc="将全量学习数据（词典进度、文章进度、打字记录、FSRS状态、偏好设置等）同步至您的账户云端，实现多设备无缝学习。"
             >
-              <div class="flex gap-space mt-2">
-                <BaseButton @click="userStore.syncAllDataToCloud()" class="!bg-[#7c3aed] !text-white hover:opacity-90">☁️ 同步数据到云端</BaseButton>
-                <BaseButton @click="userStore.fetchAndRestoreDataFromCloud()" class="!bg-[#2563eb] !text-white hover:opacity-90">⬇️ 从云端恢复</BaseButton>
+              <div class="flex flex-col sm:flex-row gap-space mt-2">
+                <BaseButton @click="userStore.syncAllDataToCloud()" class="!bg-[#7c3aed] !text-white hover:opacity-90 w-full sm:w-auto">☁️ 同步数据到云端</BaseButton>
+                <BaseButton @click="userStore.fetchAndRestoreDataFromCloud()" class="!bg-[#2563eb] !text-white hover:opacity-90 w-full sm:w-auto">⬇️ 从云端恢复</BaseButton>
               </div>
             </SettingItem>
 
             <div class="mt-4 p-3 rounded-lg bg-[var(--hw-bg-card)] border border-[var(--hw-border)]">
-              <div class="text-[.85rem] text-[var(--hw-text-2)] mb-2 flex items-center gap-2">
-                <span v-if="userStore.user?.username || userStore.user?.email">
+              <div class="text-[.85rem] text-[var(--hw-text-2)] mb-2 flex flex-col gap-2">
+                <span v-if="userStore.user?.username || userStore.user?.email" class="flex items-center gap-2">
                   <span class="text-[#7c3aed]">●</span> 当前登录账户：<b>{{ userStore.user?.username || userStore.user?.email }}</b>
                 </span>
-                <span v-else class="text-red">
-                  ⚠️ 您尚未登录，无法使用云端同步功能。请先在右上角登录。
-                </span>
+                <div v-else class="flex flex-col gap-3">
+                  <span class="text-red">⚠️ 您尚未登录，无法使用云端同步功能。</span>
+                  <button
+                    @click="userStore.showGlobalLoginModal = true"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 h-9 rounded-lg text-[.85rem] font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-[#2563eb] border-none cursor-pointer hover:opacity-90 transition-all duration-150"
+                  >
+                    立即登录 / 注册
+                  </button>
+                </div>
               </div>
               <div class="text-[.8rem] text-gray mt-1">
                 <span class="text-red font-bold">【警告】</span> 从云端恢复数据将 <b>完全覆盖</b> 您当前浏览器中的所有本地学习进度，请谨慎操作。
@@ -831,13 +837,28 @@ function removeSbConfig() {
     .tabs {
       padding: 0.6rem 0;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 0.6rem;
+      overflow-x: auto;
+      max-width: 100%;
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+      
+      /* Hide scrollbar for cleaner look */
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      @media (min-width: 1024px) {
+        flex-direction: column;
+        overflow-x: visible;
+      }
 
       .tab {
-        @apply cursor-pointer flex items-center relative;
+        @apply cursor-pointer flex items-center justify-center lg:justify-start relative whitespace-nowrap shrink-0;
         border-radius: 0.5rem;
-        @apply w-auto p-1 lg:w-40 lg:p-2;
+        @apply w-auto p-2 lg:w-40 lg:p-2;
         gap: 0.6rem;
         transition: all 0.5s;
 

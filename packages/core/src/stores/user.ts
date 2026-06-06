@@ -16,6 +16,7 @@ import type { BackupData } from '../types'
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
   const isLogin = ref<boolean>(false)
+  const showGlobalLoginModal = ref<boolean>(false)
 
   // 设置token
   const setToken = (newToken: string) => {
@@ -249,6 +250,7 @@ export const useUserStore = defineStore('user', () => {
   return {
     user,
     isLogin,
+    showGlobalLoginModal,
     setToken,
     clearToken,
     setUser,
