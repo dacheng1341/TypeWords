@@ -169,7 +169,7 @@ function getVoicesAsync() {
 export function useTTsPlayAudio() {
   const settingStore = useSettingStore()
 
-  function play(text: string) {
+  function playLocal(text: string) {
     speechSynthesis.cancel() // 防止 Chrome 队列卡死
     let msg = new SpeechSynthesisUtterance(text)
     msg.rate = settingStore.wordSoundSpeed
@@ -195,6 +195,33 @@ export function useTTsPlayAudio() {
       }
       speechSynthesis.speak(msg)
     })
+  }
+
+  function play(text: string) {
+    if (settingStore.useNetworkTts && settingStore.networkTtsUrl && !settingStore.networkTtsUrl.includes('[你的worker域名]')) {
+      const baseUrl = settingStore.networkTtsUrl.endsWith('/') ? settingStore.networkTtsUrl : settingStore.networkTtsUrl + '/'
+      const url = `${baseUrl}?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(settingStore.networkTtsVoice)}`
+      const audio = new Audio(url)
+      audio.volume = settingStore.wordSoundVolume / 100
+      audio.playbackRate = settingStore.wordSoundSpeed
+
+      let isPlaying = false
+      audio.play().then(() => {
+        isPlaying = true
+      }).catch(e => {
+        console.warn('Network TTS failed, fallback to local', e)
+        playLocal(text)
+      })
+
+      audio.onerror = () => {
+        if (!isPlaying) {
+          console.warn('Network TTS audio error, fallback to local')
+          playLocal(text)
+        }
+      }
+    } else {
+      playLocal(text)
+    }
   }
 
   return play

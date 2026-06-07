@@ -106,6 +106,25 @@ function previewTtsVoice(voiceName: string) {
     </div>
     
 
+    <!-- 网络超清 TTS -->
+    <div class="line"></div>
+    <SettingItem mainTitle="网络超清 TTS (推荐)" />
+    <div class="text-sm text-gray-500 mb-4">通过 Cloudflare Worker 代理获取微软 Azure Neural 级别原声发音。若请求失败会自动无缝降级使用上方本地 TTS。</div>
+    
+    <SettingItem title="开启超清发音" desc="使用网络接口，有极低延迟，但音质像真人。">
+      <Switch v-model="settingStore.useNetworkTts" />
+    </SettingItem>
+    <template v-if="settingStore.useNetworkTts">
+      <SettingItem title="发音人">
+        <Select v-model="settingStore.networkTtsVoice" class="w-80!">
+          <Option label="美音 (女) - Aria" value="en-US-AriaNeural" />
+          <Option label="美音 (男) - Guy" value="en-US-GuyNeural" />
+          <Option label="英音 (女) - Sonia" value="en-GB-SoniaNeural" />
+          <Option label="英音 (男) - Ryan" value="en-GB-RyanNeural" />
+        </Select>
+      </SettingItem>
+    </template>
+
     <!-- 文章音效 -->
     <div class="line"></div>
     <SettingItem mainTitle="文章音效" />

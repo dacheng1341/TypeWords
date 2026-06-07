@@ -70,6 +70,9 @@ export interface SettingState {
   identifyMethod: IdentifyMethod
   _ignoreWatch: boolean //忽略监听，避免重复保存和上传
   ttsVoiceMap: { key: string; voice: string }[] // 浏览器 TTS 声色映射，key 为 OS+浏览器组合（如 mac+chrome）
+  useNetworkTts: boolean // 是否使用网络 TTS 代理 (Edge)
+  networkTtsVoice: string // 网络 TTS 发音人
+  networkTtsUrl: string // CF Worker 代理地址
 }
 
 export const getDefaultSettingState = (): SettingState => ({
@@ -148,6 +151,9 @@ export const getDefaultSettingState = (): SettingState => ({
   identifyMethod: IdentifyMethod.SelfAssessment,
   _ignoreWatch: false,
   ttsVoiceMap: [],
+  useNetworkTts: true,
+  networkTtsVoice: 'en-US-AriaNeural',
+  networkTtsUrl: 'https://qiaoqiao-tts.dacbbox.com/',
 })
 
 export const useSettingStore = defineStore('setting', {
