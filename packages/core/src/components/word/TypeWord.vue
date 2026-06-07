@@ -78,11 +78,11 @@ function playTtsWithGuide(text: string) {
       let ins = Toast.warning(
         '例句默认使用浏览器内置 TTS 发音，若无声请前往「设置 → 音效设置 → TTS 声色」选择可用声色',
         {
-          duration: 15000000,
+          duration: 3000,
           action: {
             text: '设置',
             onClick: () => {
-              router.push('/setting?index=4')
+              window.open('/setting?index=4', '_blank')
               ins.close()
             },
           },
