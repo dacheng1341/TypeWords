@@ -100,6 +100,7 @@ export interface Statistics {
   review: number //复习单词数量
   wrong: number //错误数
   title?: string //文章标题
+  inputWordNumber?: number // 实际键盘输入的单词累计数（用于准确计算WPM）
   /** 本日实际学习的时间片段列表，每项为 [startMs, endMs] */
   segments?: [number, number][]
   /**

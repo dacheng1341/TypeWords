@@ -11,9 +11,9 @@ import isBetween from 'dayjs/plugin/isBetween'
 import { defineAsyncComponent, inject, watch } from 'vue'
 import isoWeek from 'dayjs/plugin/isoWeek'
 import { msToHourMinute } from '../../utils'
-import ChannelIcons from '../channel-icons/ChannelIcons.vue'
 import { useI18n } from 'vue-i18n'
 import { AppEnv } from '../../config/env.ts'
+import { useUserStore } from '../../stores/user.ts'
 
 dayjs.extend(isoWeek)
 dayjs.extend(isBetween)
@@ -26,6 +26,7 @@ const props = defineProps({
 const store = useBaseStore()
 const settingStore = useSettingStore()
 const statStore = usePracticeStore()
+const userStore = useUserStore()
 const model = defineModel({ default: false })
 let list = $ref([])
 let practiceData = inject<PracticeData>('practiceData')
@@ -192,7 +193,6 @@ const encouragementText = $computed(() => {
                 </div>
               </div>
             </div>
-            <ChannelIcons />
           </div>
           <!-- Action Buttons -->
           <div class="flex min-w-130 justify-center">
@@ -225,13 +225,12 @@ const encouragementText = $computed(() => {
         </div>
 
         <!-- 游客模式弱提示：未登录时成绩仅暂存本地 -->
-        <div v-if="!AppEnv.CAN_REQUEST" class="text-center text-xs text-gray-400 mt-3 leading-[1.7] px-2">
+        <div v-if="!userStore.user" class="text-center text-xs text-gray-400 mt-3 leading-[1.7] px-2">
           当前为游客模式，成绩已暂存本地。
-          <a
-            href="https://dacbbox.com/wp-login.php?redirect_to=https://type.dacbbox.com"
-            target="_blank"
-            class="text-purple-400 hover:text-purple-600 underline"
-          >登录大程账号</a>
+          <span
+            @click="$router.push('/setting?index=6'); close()"
+            class="text-purple-400 hover:text-purple-600 underline cursor-pointer"
+          >登陆大程开源百宝箱账号</span>
           后可永久保存至云端。
         </div>
 

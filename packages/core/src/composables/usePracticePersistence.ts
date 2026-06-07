@@ -27,6 +27,7 @@ export function flushStatToStore(st: PracticeState | null | undefined): void {
     wrong: st.wrong,
     new: st.newWordNumber,
     review: st.reviewWordNumber,
+    inputWordNumber: st.inputWordNumber,
   }
 
   if (Array.isArray(st.segments) && st.segments.length > 0) {

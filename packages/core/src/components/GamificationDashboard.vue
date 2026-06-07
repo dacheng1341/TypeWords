@@ -37,25 +37,27 @@ const aggregatedData = computed(() => {
     
     let spendMs = s.spend
     let words = s.total || 0
+    let typedWords = s.inputWordNumber || words // 新版使用实际按键输入的单词数计算打字速度
     
     // 如果有 segment 数据，精确到分片（可选处理，为了简单这里直接按 startDate 归类整条记录）
     if (s.segments && s.segments.length > 0) {
       for (const [segStart, segEnd] of s.segments) {
          const segDateStr = formatDate(new Date(segStart))
          const ms = segEnd - segStart
-         const prev = dayMap.get(segDateStr) || { totalSpend: 0, totalWords: 0 }
+         const prev = dayMap.get(segDateStr) || { totalSpend: 0, totalWords: 0, totalTyped: 0 }
          dayMap.set(segDateStr, {
            totalSpend: prev.totalSpend + ms,
-           // 对于跨天 segments，单词数很难平摊，这里简单起见，把字数全算在 startDate 那天
-           totalWords: prev.totalWords + (segDateStr === dateStr ? words : 0)
+           totalWords: prev.totalWords + (segDateStr === dateStr ? words : 0),
+           totalTyped: prev.totalTyped + (segDateStr === dateStr ? typedWords : 0)
          })
-         if (segDateStr === dateStr) words = 0 // 避免重复计算字数
+         if (segDateStr === dateStr) { words = 0; typedWords = 0 } // 避免重复计算
       }
     } else {
-      const prev = dayMap.get(dateStr) || { totalSpend: 0, totalWords: 0 }
+      const prev = dayMap.get(dateStr) || { totalSpend: 0, totalWords: 0, totalTyped: 0 }
       dayMap.set(dateStr, {
         totalSpend: prev.totalSpend + spendMs,
-        totalWords: prev.totalWords + words
+        totalWords: prev.totalWords + words,
+        totalTyped: (prev.totalTyped || 0) + typedWords
       })
     }
   }
@@ -64,7 +66,7 @@ const aggregatedData = computed(() => {
   const result: { date: string; wpm: number; words: number; spendMin: number }[] = []
   dayMap.forEach((val, date) => {
     const spendMin = val.totalSpend / 1000 / 60
-    const wpm = spendMin > 0 ? Math.round(val.totalWords / spendMin) : 0
+    const wpm = spendMin > 0 ? Math.round(val.totalTyped / spendMin) : 0
     result.push({ date, wpm, words: val.totalWords, spendMin })
   })
 
@@ -164,8 +166,9 @@ const maxWpm = computed(() => {
   filteredData.value.forEach(d => {
     if (d.wpm > m) m = d.wpm
   })
-  // 最少给一个 100 的高度，好看点
-  return Math.max(m, 100)
+  // 动态调整最高刻度，不再写死 100
+  // 给曲线留出一点顶部空间 (20%)，如果全为 0，则默认刻度为 10
+  return m === 0 ? 10 : Math.round(m * 1.2)
 })
 
 // 计算 SVG Path，将 WPM 映射到坐标系
