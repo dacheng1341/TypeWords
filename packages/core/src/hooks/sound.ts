@@ -198,8 +198,9 @@ export function useTTsPlayAudio() {
   }
 
   function play(text: string) {
-    if (settingStore.useNetworkTts && settingStore.networkTtsUrl && !settingStore.networkTtsUrl.includes('[你的worker域名]')) {
-      const baseUrl = settingStore.networkTtsUrl.endsWith('/') ? settingStore.networkTtsUrl : settingStore.networkTtsUrl + '/'
+    if (settingStore.useNetworkTts) {
+      // 忽略 localStorage 中的旧缓存，直接使用固定新域名
+      const baseUrl = 'https://qiaoqiao-tts.dacbbox.com/'
       const url = `${baseUrl}?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(settingStore.networkTtsVoice)}`
       const audio = new Audio(url)
       audio.volume = settingStore.wordSoundVolume / 100
