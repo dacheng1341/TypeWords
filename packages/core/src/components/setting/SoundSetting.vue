@@ -56,6 +56,11 @@ function previewTtsVoice(voiceName: string) {
   if (voice) msg.voice = voice
   speechSynthesis.speak(msg)
 }
+
+function previewNetworkTts() {
+  const ttsPlay = useTTsPlayAudio()
+  ttsPlay(exampleText)
+}
 </script>
 
 <template>
@@ -82,7 +87,10 @@ function previewTtsVoice(voiceName: string) {
     <!-- TTS 声色 -->
     <div class="line"></div>
     <SettingItem mainTitle="TTS 声色" />
-    <div>试听句子：{{ exampleText }}</div>
+    <div class="flex items-center gap-2 mb-2">
+      <div>试听句子：{{ exampleText }}</div>
+      <VolumeIcon :time="100" @click="currentTtsVoice ? previewTtsVoice(currentTtsVoice) : previewTtsVoice('')" title="试听本地 TTS" />
+    </div>
     <SettingItem
       title="TTS 声色"
       desc="例句使用浏览器内置 TTS 发音。若例句无声，请在此选择一个可用声色并点击右侧喇叭试听，选到有声音的即可。不同浏览器/设备支持的声色不同，此设置仅对当前浏览器生效。"
@@ -115,6 +123,10 @@ function previewTtsVoice(voiceName: string) {
       <Switch v-model="settingStore.useNetworkTts" />
     </SettingItem>
     <template v-if="settingStore.useNetworkTts">
+      <div class="flex items-center gap-2 mb-2 ml-4">
+        <div>试听句子：{{ exampleText }}</div>
+        <VolumeIcon :time="100" @click="previewNetworkTts" title="试听网络 TTS" />
+      </div>
       <SettingItem title="发音人">
         <Select v-model="settingStore.networkTtsVoice" class="w-80!">
           <Option label="美音 (女) - Aria" value="en-US-AriaNeural" />
