@@ -628,13 +628,21 @@ useEventsByWatch(
   () => isWordTest
 )
 
+const sentenceRef0 = $ref<any>()
+const sentenceRef1 = $ref<any>()
+const sentenceRef2 = $ref<any>()
+const sentenceRef3 = $ref<any>()
+const sentenceRef4 = $ref<any>()
+
 function playSentence(index: number) {
-  console.log('[DEBUG-Alt+1] playSentence called with index:', index)
-  Toast.success('播放例句 ' + (index + 1))
   if (word?.sentences?.[index]) {
-    if (sentenceVolumeIconsRefs[index]) {
-      sentenceVolumeIconsRefs[index]?.play()
+    const refs = [sentenceRef0, sentenceRef1, sentenceRef2, sentenceRef3, sentenceRef4]
+    const iconRef = refs[index]
+    
+    if (iconRef && typeof iconRef.play === 'function') {
+      iconRef.play(undefined, true) // Force reset state to prevent stuck count
     } else {
+      // Fallback: Just play audio directly if component binding fails
       playTtsWithGuide(word.sentences[index].c)
     }
   }
@@ -886,7 +894,13 @@ const isCollect = $computed(() => isWordCollect(props.word))
                 :title="`发音(${settingStore.shortcutKeyMap[[ShortcutKey.PlayExample1, ShortcutKey.PlayExample2, ShortcutKey.PlayExample3, ShortcutKey.PlayExample4, ShortcutKey.PlayExample5][index]] || ''})`"
                 :simple="false"
                 :cb="() => playTtsWithGuide(item.c)"
-                :ref="(el: any) => { if(el) sentenceVolumeIconsRefs[index] = el }"
+                :ref="(el: any) => { 
+                  if (index === 0) sentenceRef0 = el
+                  if (index === 1) sentenceRef1 = el
+                  if (index === 2) sentenceRef2 = el
+                  if (index === 3) sentenceRef3 = el
+                  if (index === 4) sentenceRef4 = el
+                }"
               />
             </div>
             <div class="text-base anim" v-opacity="settingStore.translate || showFullWord || showWordResult">
