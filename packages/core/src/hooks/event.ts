@@ -171,7 +171,7 @@ export function useEventListener(type: string, listener: EventListenerOrEventLis
       const handleFocusRequest = (event: MouseEvent | TouchEvent) => {
         const target = event.target as HTMLElement | null
         if (!shouldFocusInput(target)) return
-        window.setTimeout(() => hiddenInput.focus(), 60)
+        hiddenInput.focus()
       }
 
       const windowListener = (event: KeyboardEvent) => {
