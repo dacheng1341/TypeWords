@@ -638,8 +638,10 @@ function playSentence(index: number) {
     const iconRef = refs[index]
     
     if (iconRef && typeof iconRef.play === 'function') {
+      console.log('[DEBUG-Alt+1] SUCCESS! Found VolumeIcon and calling .play()')
       iconRef.play(undefined, true) // Force reset state to prevent stuck count
     } else {
+      console.log('[DEBUG-Alt+1] FAILURE! VolumeIcon not found or has no play method. iconRef:', iconRef)
       // Fallback: Just play audio directly if component binding fails
       playTtsWithGuide(word.sentences[index].c)
     }

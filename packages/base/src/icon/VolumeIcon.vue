@@ -16,12 +16,16 @@ let step = $ref(2)
 let count = $ref(0)
 
 function play(time = props.time, reset = false) {
+  console.log('[DEBUG-VolumeIcon] play called! time:', time, 'reset:', reset)
   if (reset) {
     step = 2
     count = 0
   }
   if (count === 0) {
+    console.log('[DEBUG-VolumeIcon] executing props.cb')
     props?.cb?.()
+  } else {
+    console.log('[DEBUG-VolumeIcon] skip cb, count is:', count)
   }
   count++
   setTimeout(() => {
