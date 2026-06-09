@@ -628,6 +628,23 @@ useEventsByWatch(
   () => isWordTest
 )
 
+function playSentence(index: number) {
+  if (word?.sentences?.[index]) {
+    sentenceVolumeIconsRefs[index]?.play()
+  }
+}
+
+useEventsByWatch(
+  [
+    [ShortcutKey.PlayExample1, () => playSentence(0)],
+    [ShortcutKey.PlayExample2, () => playSentence(1)],
+    [ShortcutKey.PlayExample3, () => playSentence(2)],
+    [ShortcutKey.PlayExample4, () => playSentence(3)],
+    [ShortcutKey.PlayExample5, () => playSentence(4)],
+  ],
+  () => !!word?.sentences?.length
+)
+
 const notice = $computed(() => {
   let text =
     settingStore.wordPracticeType === WordPracticeType.Identify
@@ -871,7 +888,7 @@ const isCollect = $computed(() => isWordCollect(props.word))
                 <span class="letter">{{ displaySentence }}</span>
               </div>
               <VolumeIcon
-                :title="`发音`"
+                :title="`发音(${settingStore.shortcutKeyMap[[ShortcutKey.PlayExample1, ShortcutKey.PlayExample2, ShortcutKey.PlayExample3, ShortcutKey.PlayExample4, ShortcutKey.PlayExample5][index]] || ''})`"
                 :simple="false"
                 :cb="() => playTtsWithGuide(item.c)"
                 ref="sentenceVolumeIconsRefs"

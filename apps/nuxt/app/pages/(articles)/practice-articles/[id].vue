@@ -54,6 +54,8 @@ let audioRef = $ref<HTMLAudioElement>()
 let timer = $ref<ReturnType<typeof setInterval> | number>(0)
 let isFocus = true
 let isTyped = $ref(false)
+let lastKeyActivity = Date.now()
+const IDLE_MS = 3 * 60 * 1000
 //用于解决 手动改文章时改了lastLearnIndex，同时又监听了store.sbook.lastLearnIndex，会冲突
 let lock = false
 // 标记是否有待执行的 init，等 typingArticleRef 就绪后触发
@@ -250,6 +252,18 @@ const onvisibilitychange = async () => {
   }
 }
 
+const onKeydown = () => {
+  lastKeyActivity = Date.now()
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeydown)
+})
+
 function setArticle(val: Article) {
   statStore.wrong = 0
   statStore.total = 0
@@ -272,9 +286,14 @@ function setArticle(val: Article) {
   isTyped = false
   clearInterval(timer)
   timer = setInterval(() => {
-    if (isFocus) {
-      statStore.spend += 1000
+    if (!isFocus) return
+    if (statStore.timerPaused) return
+
+    const now = Date.now()
+    if (now - lastKeyActivity >= IDLE_MS) {
+      return statStore.pauseTimer('auto_idle')
     }
+    statStore.spend += 1000
   }, 1000)
 
   // 如果 typingArticleRef 已经就绪，直接调用 init；否则设置 pendingInit 标记

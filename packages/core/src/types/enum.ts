@@ -51,6 +51,11 @@ export enum ShortcutKey {
   ChooseB = 'ChooseB',
   ChooseC = 'ChooseC',
   ChooseD = 'ChooseD',
+  PlayExample1 = 'PlayExample1',
+  PlayExample2 = 'PlayExample2',
+  PlayExample3 = 'PlayExample3',
+  PlayExample4 = 'PlayExample4',
+  PlayExample5 = 'PlayExample5',
 }
 
 export enum TranslateEngine {

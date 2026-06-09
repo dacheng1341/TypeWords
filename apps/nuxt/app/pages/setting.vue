@@ -194,11 +194,16 @@ function getShortcutKeyName(key: string): string {
     KnowWord: '认识单词',
     UnknownWord: '不认识单词',
     MasteredWord: '已掌握单词',
-    ChooseA: '选A',
-    ChooseB: '选B',
-    ChooseC: '选C',
-    ChooseD: '选D',
-  }
+    ChooseA: '选项A',
+    ChooseB: '选项B',
+    ChooseC: '选项C',
+    ChooseD: '选项D',
+    PlayExample1: '播放例句1',
+    PlayExample2: '播放例句2',
+    PlayExample3: '播放例句3',
+    PlayExample4: '播放例句4',
+    PlayExample5: '播放例句5',
+  } as any
 
   return shortcutKeyNameMap[key] || key
 }

@@ -141,6 +141,11 @@ export const DefaultShortcutKeyMap = {
   [ShortcutKey.ChooseB]: '2',
   [ShortcutKey.ChooseC]: '3',
   [ShortcutKey.ChooseD]: '4',
+  [ShortcutKey.PlayExample1]: 'Alt+1',
+  [ShortcutKey.PlayExample2]: 'Alt+2',
+  [ShortcutKey.PlayExample3]: 'Alt+3',
+  [ShortcutKey.PlayExample4]: 'Alt+4',
+  [ShortcutKey.PlayExample5]: 'Alt+5',
 }
 export const SlideType = {
   HORIZONTAL: 0,
