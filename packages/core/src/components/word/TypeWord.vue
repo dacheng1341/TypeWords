@@ -633,7 +633,7 @@ const sentenceRef4 = $ref<any>()
 
 function playSentence(index: number) {
   console.log('[DEBUG-Alt+1] SUPER DEBUG: playSentence ACTUALLY entered with index:', index)
-  if (word?.sentences?.[index]) {
+  if (props.word?.sentences?.[index]) {
     const refs = [sentenceRef0, sentenceRef1, sentenceRef2, sentenceRef3, sentenceRef4]
     const iconRef = refs[index]
     
@@ -643,7 +643,7 @@ function playSentence(index: number) {
     } else {
       console.log('[DEBUG-Alt+1] FAILURE! VolumeIcon not found or has no play method. iconRef:', iconRef)
       // Fallback: Just play audio directly if component binding fails
-      playTtsWithGuide(word.sentences[index].c)
+      playTtsWithGuide(props.word.sentences[index].c)
     }
   }
 }
