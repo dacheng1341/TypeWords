@@ -1016,6 +1016,11 @@ useEvents([
   [ShortcutKey.ToggleCollect, collect],
   [ShortcutKey.ToggleSimple, toggleWordSimpleWrapper],
   [ShortcutKey.PlayWordPronunciation, play],
+  [ShortcutKey.PlayExample1, () => typeWordRef?.playSentence?.(0)],
+  [ShortcutKey.PlayExample2, () => typeWordRef?.playSentence?.(1)],
+  [ShortcutKey.PlayExample3, () => typeWordRef?.playSentence?.(2)],
+  [ShortcutKey.PlayExample4, () => typeWordRef?.playSentence?.(3)],
+  [ShortcutKey.PlayExample5, () => typeWordRef?.playSentence?.(4)],
 
   [ShortcutKey.RepeatChapter, repeat],
   [ShortcutKey.NextChapter, continueStudy],

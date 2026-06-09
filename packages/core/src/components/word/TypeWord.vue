@@ -561,7 +561,7 @@ function play() {
   volumeIconRef?.play()
 }
 
-defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes })
+defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes, playSentence })
 
 function mouseleave() {
   setTimeout(() => {
@@ -637,16 +637,6 @@ function playSentence(index: number) {
     }
   }
 }
-
-useEvents(
-  [
-    [ShortcutKey.PlayExample1, () => playSentence(0)],
-    [ShortcutKey.PlayExample2, () => playSentence(1)],
-    [ShortcutKey.PlayExample3, () => playSentence(2)],
-    [ShortcutKey.PlayExample4, () => playSentence(3)],
-    [ShortcutKey.PlayExample5, () => playSentence(4)],
-  ]
-)
 
 const notice = $computed(() => {
   let text =
