@@ -243,7 +243,9 @@ export function shakeCommonDict(n: BaseState): BaseState {
 export function isMobile(): boolean {
   //@ts-ignore
   if (import.meta.server) return false
-  return /Mobi|iPhone|Android|ipad|tablet/i.test(window.navigator.userAgent)
+  const ua = window.navigator.userAgent
+  const isAppleTouch = /Macintosh/i.test(ua) && navigator.maxTouchPoints > 1
+  return /Mobi|iPhone|Android|ipad|tablet/i.test(ua) || isAppleTouch
 }
 
 export function useNav() {

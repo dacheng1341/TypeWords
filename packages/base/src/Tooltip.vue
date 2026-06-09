@@ -30,6 +30,7 @@ export default {
     showPop(e) {
       if (this.disabled) return
       if (!this.title && !this.$slots?.reference) return;
+      if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
       e.stopPropagation()
       let rect = e.target.getBoundingClientRect()
       this.show = true
