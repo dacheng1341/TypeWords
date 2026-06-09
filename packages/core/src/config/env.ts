@@ -20,9 +20,9 @@ const map = {
     // 这是原作者的静态资源服务器
     // RESOURCE_URL: 'https://files.typewords.cc/',
     // 这是你部署在 Cloudflare Pages 的专属资源域名（需换成你自己的实际域名）
-    RESOURCE_URL: 'https://qiaoqiao-media.dacbbox.com/',
+    RESOURCE_URL: 'https://qiaoqiao-assets.dacbbox.com/',
     // LIBS_URL: 'https://libs.typewords.cc/',
-    LIBS_URL: 'https://qiaoqiao-media.dacbbox.com/libs/',
+    LIBS_URL: 'https://qiaoqiao-assets.dacbbox.com/libs/',
   },
 }
 
