@@ -630,7 +630,11 @@ useEventsByWatch(
 
 function playSentence(index: number) {
   if (word?.sentences?.[index]) {
-    sentenceVolumeIconsRefs[index]?.play()
+    if (sentenceVolumeIconsRefs[index]) {
+      sentenceVolumeIconsRefs[index]?.play()
+    } else {
+      playTtsWithGuide(word.sentences[index].c)
+    }
   }
 }
 
@@ -890,7 +894,7 @@ const isCollect = $computed(() => isWordCollect(props.word))
                 :title="`发音(${settingStore.shortcutKeyMap[[ShortcutKey.PlayExample1, ShortcutKey.PlayExample2, ShortcutKey.PlayExample3, ShortcutKey.PlayExample4, ShortcutKey.PlayExample5][index]] || ''})`"
                 :simple="false"
                 :cb="() => playTtsWithGuide(item.c)"
-                ref="sentenceVolumeIconsRefs"
+                :ref="(el: any) => { if(el) sentenceVolumeIconsRefs[index] = el }"
               />
             </div>
             <div class="text-base anim" v-opacity="settingStore.translate || showFullWord || showWordResult">
