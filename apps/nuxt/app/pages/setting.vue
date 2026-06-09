@@ -611,21 +611,7 @@ function removeSbConfig() {
               <IconFluentKeyboardLayoutFloat20Regular />
               <span>{{ $t('shortcut_settings') }}</span>
             </div>
-            <div
-              class="tab"
-              :class="tabIndex === 8 && 'active'"
-              @click="
-                () => {
-                  tabIndex = 8
-                  // runtimeStore.isNew = false
-                  // settingStore.webAppVersion = APP_VERSION.version
-                }
-              "
-            >
-              <IconFluentTextBulletListSquare20Regular />
-              <span>{{ $t('update_log') }}</span>
-              <!--              <div class="red-point" v-if="runtimeStore.isNew"></div>-->
-            </div>
+
             <div class="tab" :class="tabIndex === 9 && 'active'" @click="tabIndex = 9">
               <IconFluentPerson20Regular />
               <span>{{ $t('about') }}</span>
@@ -756,9 +742,6 @@ function removeSbConfig() {
               </div>
             </div>
           </div>
-
-          <!--          日志-->
-          <Log v-if="tabIndex === 8" />
 
           <div v-if="tabIndex === 9" class="center flex-col">
             <About />

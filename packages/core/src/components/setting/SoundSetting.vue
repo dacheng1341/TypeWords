@@ -128,7 +128,7 @@ function previewNetworkTtsVoice(voiceName: string) {
     <div class="line"></div>
     <SettingItem mainTitle="网络超清 TTS (推荐)" />
     
-    <SettingItem title="开启超清发音" desc="使用网络接口，有极低延迟，但音质像真人。">
+    <SettingItem title="开启超清发音" desc="使用超低延迟的网络接口，发音无限接近真人。">
       <Switch v-model="settingStore.useNetworkTts" />
     </SettingItem>
     <template v-if="settingStore.useNetworkTts">
@@ -138,28 +138,28 @@ function previewNetworkTtsVoice(voiceName: string) {
       </div>
       <SettingItem title="发音人">
         <Select v-model="settingStore.networkTtsVoice" class="w-80!">
-          <Option value="en-US-AriaNeural" label="美音 (女) - Aria">
+          <Option value="en-US-Journey-F" label="美音 (女) - 艾米丽">
             <div class="flex justify-between items-center w-full">
-              <span>美音 (女) - Aria</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-US-AriaNeural')" title="试听 Aria" />
+              <span>美音 (女) - 艾米丽</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-US-Journey-F')" title="试听 艾米丽" />
             </div>
           </Option>
-          <Option value="en-US-GuyNeural" label="美音 (男) - Guy">
+          <Option value="en-US-Journey-D" label="美音 (男) - 迈克">
             <div class="flex justify-between items-center w-full">
-              <span>美音 (男) - Guy</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-US-GuyNeural')" title="试听 Guy" />
+              <span>美音 (男) - 迈克</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-US-Journey-D')" title="试听 迈克" />
             </div>
           </Option>
-          <Option value="en-GB-SoniaNeural" label="英音 (女) - Sonia">
+          <Option value="en-GB-Neural2-A" label="英音 (女) - 索菲亚">
             <div class="flex justify-between items-center w-full">
-              <span>英音 (女) - Sonia</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-GB-SoniaNeural')" title="试听 Sonia" />
+              <span>英音 (女) - 索菲亚</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-GB-Neural2-A')" title="试听 索菲亚" />
             </div>
           </Option>
-          <Option value="en-GB-RyanNeural" label="英音 (男) - Ryan">
+          <Option value="en-GB-Neural2-B" label="英音 (男) - 威廉">
             <div class="flex justify-between items-center w-full">
-              <span>英音 (男) - Ryan</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-GB-RyanNeural')" title="试听 Ryan" />
+              <span>英音 (男) - 威廉</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-GB-Neural2-B')" title="试听 威廉" />
             </div>
           </Option>
         </Select>

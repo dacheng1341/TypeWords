@@ -152,7 +152,7 @@ export const getDefaultSettingState = (): SettingState => ({
   _ignoreWatch: false,
   ttsVoiceMap: [],
   useNetworkTts: true,
-  networkTtsVoice: 'en-US-AriaNeural',
+  networkTtsVoice: 'en-US-Journey-F',
   networkTtsUrl: 'https://qiaoqiao-tts.dacbbox.com/',
 })
 
