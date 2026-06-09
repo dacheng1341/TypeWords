@@ -1000,7 +1000,7 @@ useEvents([
   [ShortcutKey.ToggleCollect, collect],
   [ShortcutKey.ToggleSimple, toggleWordSimpleWrapper],
   [ShortcutKey.PlayWordPronunciation, play],
-  [ShortcutKey.PlayExample1, () => typeWordRef?.playSentence?.(0)],
+  [ShortcutKey.PlayExample1, () => { console.log('[DEBUG-Alt+1] PlayExample1 event received in practice-words!'); typeWordRef?.playSentence?.(0) }],
   [ShortcutKey.PlayExample2, () => typeWordRef?.playSentence?.(1)],
   [ShortcutKey.PlayExample3, () => typeWordRef?.playSentence?.(2)],
   [ShortcutKey.PlayExample4, () => typeWordRef?.playSentence?.(3)],

@@ -629,6 +629,8 @@ useEventsByWatch(
 )
 
 function playSentence(index: number) {
+  console.log('[DEBUG-Alt+1] playSentence called with index:', index)
+  Toast.success('播放例句 ' + (index + 1))
   if (word?.sentences?.[index]) {
     if (sentenceVolumeIconsRefs[index]) {
       sentenceVolumeIconsRefs[index]?.play()

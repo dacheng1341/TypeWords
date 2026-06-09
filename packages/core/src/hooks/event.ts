@@ -280,22 +280,33 @@ export function useStartKeyboardEventListener() {
       }
 
       let shortcutKey = getShortcutKey(e)
-      // console.log('shortcutKey', shortcutKey)
+      if (shortcutKey.includes('Alt+1')) {
+        console.log('[DEBUG-Alt+1] shortcutKey:', shortcutKey, 'e.key:', e.key, 'e.code:', e.code)
+      }
 
       let shortcutEvent = []
       for (let [k, v] of Object.entries(settingStore.shortcutKeyMap)) {
         if (v === shortcutKey) {
-          // console.log('快捷键', k)
-          //必须是已监听的事件，才拦截并触发
-          //因为在自测时，才会监听 1234 四个键，平时如果也拦截会导致无法输入1234
+          if (shortcutKey.includes('Alt+1')) {
+            console.log('[DEBUG-Alt+1] found matching value in settings for key:', k)
+            console.log('[DEBUG-Alt+1] emitter.all.has(k):', emitter.all.has(k))
+            console.log('[DEBUG-Alt+1] emitter.all.get(k)?.length:', emitter.all.get(k)?.length)
+          }
           if (emitter.all.has(k) && emitter.all.get(k)?.length) {
             shortcutEvent.push(k)
           }
         }
       }
+      if (shortcutKey.includes('Alt+1')) {
+        console.log('[DEBUG-Alt+1] shortcutEvent array:', shortcutEvent)
+      }
+
       if (shortcutEvent.length > 0) {
         e.preventDefault()
         shortcutEvent.map(s => emitter.emit(s, e))
+        if (shortcutKey.includes('Alt+1')) {
+          console.log('[DEBUG-Alt+1] emitted events:', shortcutEvent)
+        }
       } else {
         //非英文模式下，输入区域的 keyCode 均为 229时，
         // 空格键始终应该被转发到onTyping函数，由它来决定是作为输入还是切换单词
