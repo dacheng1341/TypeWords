@@ -10,7 +10,7 @@ import {
   usePlayWordAudio,
   useTTsPlayAudio,
 } from '../../hooks/sound'
-import { emitter, EventKey, useEventsByWatch } from '../../utils/eventBus'
+import { emitter, EventKey, useEventsByWatch, useEvents } from '../../utils/eventBus'
 import { onMounted, onUnmounted, watch } from 'vue'
 import SentenceHightLightWord from './SentenceHightLightWord.vue'
 import { _nextTick, last, normalizeWord, useNav } from '../../utils'
@@ -634,15 +634,14 @@ function playSentence(index: number) {
   }
 }
 
-useEventsByWatch(
+useEvents(
   [
     [ShortcutKey.PlayExample1, () => playSentence(0)],
     [ShortcutKey.PlayExample2, () => playSentence(1)],
     [ShortcutKey.PlayExample3, () => playSentence(2)],
     [ShortcutKey.PlayExample4, () => playSentence(3)],
     [ShortcutKey.PlayExample5, () => playSentence(4)],
-  ],
-  () => !!word?.sentences?.length
+  ]
 )
 
 const notice = $computed(() => {
