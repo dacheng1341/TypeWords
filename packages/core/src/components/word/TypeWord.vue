@@ -13,7 +13,7 @@ import {
 import { emitter, EventKey, useEventsByWatch, useEvents } from '../../utils/eventBus'
 import { onMounted, onUnmounted, watch } from 'vue'
 import SentenceHightLightWord from './SentenceHightLightWord.vue'
-import { _nextTick, last, normalizeWord, useNav } from '../../utils'
+import { _nextTick, last, normalizeWord, useNav, isMobile } from '../../utils'
 import { BaseButton, BaseIcon, Toast, ToastComponent, Tooltip, VolumeIcon } from '@typewords/base'
 import Space from '../article/Space.vue'
 import { useI18n } from 'vue-i18n'
@@ -673,10 +673,18 @@ const { isWordCollect, toggleWordCollect, isWordSimple, toggleWordSimple } = use
 
 const isSimple = $computed(() => isWordSimple(props.word))
 const isCollect = $computed(() => isWordCollect(props.word))
+
+const isMob = isMobile()
+
+function focusMobileInput() {
+  if (!isMob) return
+  const input = document.querySelector('#typing-listener') as HTMLInputElement
+  if (input) input.focus()
+}
 </script>
 
 <template>
-  <div class="typing-word" ref="typingWordRef" v-if="word.word.length">
+  <div class="typing-word" ref="typingWordRef" v-if="word.word.length" @click="focusMobileInput">
     <div class="flex flex-col items-center">
       <div class="flex gap-1 mt-10 md:mt-30">
         <div
