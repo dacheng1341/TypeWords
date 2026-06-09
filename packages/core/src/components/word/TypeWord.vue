@@ -560,9 +560,6 @@ function play() {
   }
   volumeIconRef?.play()
 }
-
-defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes, playSentence })
-
 function mouseleave() {
   setTimeout(() => {
     showFullWord = false
@@ -635,6 +632,7 @@ const sentenceRef3 = $ref<any>()
 const sentenceRef4 = $ref<any>()
 
 function playSentence(index: number) {
+  console.log('[DEBUG-Alt+1] SUPER DEBUG: playSentence ACTUALLY entered with index:', index)
   if (word?.sentences?.[index]) {
     const refs = [sentenceRef0, sentenceRef1, sentenceRef2, sentenceRef3, sentenceRef4]
     const iconRef = refs[index]
@@ -647,6 +645,8 @@ function playSentence(index: number) {
     }
   }
 }
+
+defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes, playSentence })
 
 const notice = $computed(() => {
   let text =
