@@ -223,17 +223,18 @@ function previewNetworkTtsVoice(voiceName: string) {
         <div class="flex items-center gap-3 mt-2">
           <span class="text-sm w-[4rem]">环境音:</span>
           <Select v-model="settingStore.whiteNoiseType" placeholder="选择环境音" class="w-[15rem]">
-            <Option label="下雨声" value="rain" />
-            <Option label="海浪声" value="ocean" />
-            <Option label="咖啡馆" value="cafe" />
-            <Option label="森林白噪音" value="forest" />
-            <Option label="篝火燃烧" value="fire" />
+            <Option label="大雨" value="heavy-rain" />
+            <Option label="溪流" value="stream" />
+            <Option label="风声" value="wind" />
+            <Option label="森林雨声" value="forest-rain" />
+            <Option label="篝火燃烧" value="fireplace" />
+            <Option label="雷阵雨" value="thunderstorm" />
           </Select>
         </div>
         <div class="flex items-center gap-3 mt-2">
           <span class="text-sm w-[4rem]">音量:</span>
           <div class="w-[15rem]">
-            <el-slider v-model="settingStore.whiteNoiseVolume" :min="0" :max="100" />
+            <Slider v-model="settingStore.whiteNoiseVolume" :min="0" :max="100" />
           </div>
         </div>
       </div>

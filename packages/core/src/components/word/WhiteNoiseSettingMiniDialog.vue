@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BaseIcon, MiniDialog, Option, Select, Switch } from '@typewords/base'
+import { BaseIcon, MiniDialog, Option, Select, Switch, Slider } from '@typewords/base'
 import { useWindowClick } from '../../hooks/event.ts'
 import { useSettingStore } from '../../stores/setting.ts'
 import { emitter, EventKey } from '../../utils/eventBus'
@@ -15,11 +15,12 @@ let show = $ref(false)
 const audioRef = ref<HTMLAudioElement>()
 
 const whiteNoiseOptions = [
-  { value: 'rain', label: '下雨声' },
-  { value: 'ocean', label: '海浪声' },
-  { value: 'cafe', label: '咖啡馆' },
-  { value: 'forest', label: '森林白噪音' },
-  { value: 'fire', label: '篝火燃烧' }
+  { value: 'heavy-rain', label: '大雨' },
+  { value: 'stream', label: '溪流' },
+  { value: 'wind', label: '风声' },
+  { value: 'forest-rain', label: '森林雨声' },
+  { value: 'fireplace', label: '篝火燃烧' },
+  { value: 'thunderstorm', label: '雷阵雨' }
 ]
 
 useWindowClick(() => {
@@ -115,8 +116,8 @@ onMounted(() => {
       </div>
       <div class="mini-row">
         <label class="item-title">独立音量</label>
-        <div class="wrapper volume-slider">
-          <el-slider v-model="settingStore.whiteNoiseVolume" :min="0" :max="100" size="small" />
+        <div class="wrapper">
+          <Slider v-model="settingStore.whiteNoiseVolume" :min="0" :max="100" />
         </div>
       </div>
     </MiniDialog>
