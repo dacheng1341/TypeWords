@@ -212,6 +212,32 @@ function previewNetworkTtsVoice(voiceName: string) {
       <Slider v-model="settingStore.effectSoundVolume" showText showValue unit="%" />
     </SettingItem>
 
+    <!-- 心流白噪音 -->
+    <div class="row items-center !items-start">
+      <div class="title">心流白噪音</div>
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+          <Switch v-model="settingStore.whiteNoise" active-text="开启" inactive-text="关闭" />
+          <span class="text-sm color-gray">(提升专注力，打造沉浸式学习体验)</span>
+        </div>
+        <div class="flex items-center gap-3 mt-2">
+          <span class="text-sm w-[4rem]">环境音:</span>
+          <Select v-model="settingStore.whiteNoiseType" placeholder="选择环境音" class="w-[15rem]">
+            <Option label="下雨声" value="rain" />
+            <Option label="海浪声" value="ocean" />
+            <Option label="咖啡馆" value="cafe" />
+            <Option label="森林白噪音" value="forest" />
+            <Option label="篝火燃烧" value="fire" />
+          </Select>
+        </div>
+        <div class="flex items-center gap-3 mt-2">
+          <span class="text-sm w-[4rem]">音量:</span>
+          <div class="w-[15rem]">
+            <el-slider v-model="settingStore.whiteNoiseVolume" :min="0" :max="100" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

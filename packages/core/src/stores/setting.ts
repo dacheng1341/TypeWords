@@ -26,6 +26,10 @@ export interface SettingState {
   effectSound: boolean
   effectSoundVolume: number
 
+  whiteNoise: boolean
+  whiteNoiseVolume: number
+  whiteNoiseType: string
+
   repeatCount: number // 重复次数
   repeatCustomCount?: number // 自定义重复次数
   dictation: boolean // 显示默写
@@ -90,10 +94,14 @@ export const getDefaultSettingState = (): SettingState => ({
 
   keyboardSound: true,
   keyboardSoundVolume: 100,
-  keyboardSoundFile: '笔记本键盘',
+  keyboardSoundFile: 'jixie',
 
   effectSound: true,
   effectSoundVolume: 100,
+
+  whiteNoise: false,
+  whiteNoiseVolume: 20,
+  whiteNoiseType: 'rain',
 
   repeatCount: 1,
   repeatCustomCount: null,

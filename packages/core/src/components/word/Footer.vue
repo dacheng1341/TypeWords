@@ -6,6 +6,7 @@ import { ShortcutKey, WordPracticeMode, WordPracticeStage } from '../../types'
 import { BaseIcon, Tooltip } from '@typewords/base'
 import SettingDialog from '../setting/SettingDialog.vue'
 import VolumeSettingMiniDialog from './VolumeSettingMiniDialog.vue'
+import WhiteNoiseSettingMiniDialog from './WhiteNoiseSettingMiniDialog.vue'
 import StageProgress from '../StageProgress.vue'
 import { WordPracticeModeNameMap, WordPracticeStageNameMap } from '../../config/env'
 import { useI18n } from 'vue-i18n'
@@ -250,6 +251,7 @@ const stages = $computed(() => {
           <SettingDialog type="word" />
 
           <VolumeSettingMiniDialog />
+          <WhiteNoiseSettingMiniDialog />
 
           <BaseIcon
             v-if="settingStore.wordPracticeMode !== WordPracticeMode.Free"
