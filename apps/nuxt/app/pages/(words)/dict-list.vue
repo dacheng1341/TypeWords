@@ -22,6 +22,9 @@ const languageOptions = [
   { label: '日语', value: 'ja' },
   { label: '韩语', value: 'ko' },
   { label: '西班牙语', value: 'es' },
+  { label: '德语', value: 'de' },
+  { label: '哈萨克语', value: 'kk' },
+  { label: '印尼语', value: 'id' },
   { label: '代码', value: 'code' },
 ]
 
