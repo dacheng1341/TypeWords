@@ -1,0 +1,1741 @@
+[
+  {
+    "id": "archVocabulary",
+    "name": "建筑专业英语",
+    "description": "大学建筑专业英语词汇",
+    "category": "中国考试",
+    "tags": [
+      "专业英语"
+    ],
+    "url": "archVocabulary.json",
+    "length": 630,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "coca_20000",
+    "name": "COCA20000词",
+    "description": "COCA20000词",
+    "category": "中国考试",
+    "tags": [
+      "其他"
+    ],
+    "url": "coca20000.json",
+    "length": 20199,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "4000_Essential_English_Words2",
+    "name": "Essential Words",
+    "description": "4000 Essential English Words sentence",
+    "category": "中国考试",
+    "tags": [
+      "其他"
+    ],
+    "url": "4000_Essential_English_Words-sentence.json",
+    "length": 3600,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "suffix word",
+    "name": "suffix word",
+    "description": "common suffix",
+    "category": "中国考试",
+    "tags": [
+      "其他"
+    ],
+    "url": "suffix_word.json",
+    "length": 126,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "word roots1",
+    "name": "word roots1",
+    "description": "common roots",
+    "category": "中国考试",
+    "tags": [
+      "其他"
+    ],
+    "url": "word_roots1.json",
+    "length": 369,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "roger",
+    "name": "Roger's Words",
+    "description": "学习、工作常用英语",
+    "category": "英语词典",
+    "tags": [
+      "课外词汇"
+    ],
+    "url": "RogersWords.json",
+    "length": 4174,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "biomedical-terms",
+    "name": "生物医学专业英语词汇",
+    "description": "生物医学专业英语词汇",
+    "category": "专业词汇",
+    "tags": [
+      "生物"
+    ],
+    "url": "BIOmedical.json",
+    "length": 560,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "ielts_order",
+    "name": "IELTS顺序完整版",
+    "description": "IELTS顺序完整版",
+    "category": "国际考试",
+    "tags": [
+      "IELTS"
+    ],
+    "url": "IELTS_order.json",
+    "length": 9389,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "IELTS9988wangyong",
+    "name": "雅思9988wangyong",
+    "description": "雅思9988wangyong",
+    "category": "国际考试",
+    "tags": [
+      "IELTS"
+    ],
+    "url": "IELTS9988wangyong.json",
+    "length": 3698,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "IELTS-oral-900",
+    "name": "雅思口语 900 beta版",
+    "description": "雅思口语 900 句, 需在 qwerty 设置中调小英语字体",
+    "category": "国际考试",
+    "tags": [
+      "IELTS"
+    ],
+    "url": "IELTS-oral-900.json",
+    "length": 900,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "SATen",
+    "name": "SAT en-en",
+    "description": "SAT英英",
+    "category": "国际考试",
+    "tags": [
+      "SAT"
+    ],
+    "url": "SATen.json",
+    "length": 2681,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "PTE_WFDgaopinci.json",
+    "name": "PTE WFD高频词汇",
+    "description": "WFD高频词汇从高到低，最低掌握350个",
+    "category": "国际考试",
+    "tags": [
+      "PTE"
+    ],
+    "url": "PTE_WFDgaopinci.json",
+    "length": 1175,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "Common-Phrases-PTE-Unofficial",
+    "name": "PTE 常用短语 (非官方)",
+    "description": "PTE 常用短语",
+    "category": "国际考试",
+    "tags": [
+      "PTE"
+    ],
+    "url": "Common-Phrases-PTE-Unofficial.json",
+    "length": 274,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "Common-Phrases-FCE-Unofficial",
+    "name": "FCE 常用短语 (非官方)",
+    "description": "FCE 常用短语",
+    "category": "国际考试",
+    "tags": [
+      "FCE"
+    ],
+    "url": "Common-Phrases-FCE-Unofficial.json",
+    "length": 438,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "Categorized_TOEFL_Vocabulary_by_Zhanghongyan",
+    "name": "Categorized Vocab.",
+    "description": "词以类记 TOEFL 2021 by ZhangHongYan (原书释义和助记; 单词序号)",
+    "category": "国际考试",
+    "tags": [
+      "TOEFL"
+    ],
+    "url": "Categorized_TOEFL_Vocabulary_by_Zhanghongyan.json",
+    "length": 4123,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "nce1",
+    "name": "新概念英语-1",
+    "description": "新概念英语第一册",
+    "category": "青少年英语",
+    "tags": [
+      "新概念英语"
+    ],
+    "url": "NCE_1.json",
+    "length": 900,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "nce2",
+    "name": "新概念英语-2",
+    "description": "新概念英语第二册",
+    "category": "青少年英语",
+    "tags": [
+      "新概念英语"
+    ],
+    "url": "NCE_2.json",
+    "length": 858,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "nce3",
+    "name": "新概念英语-3",
+    "description": "新概念英语第三册",
+    "category": "青少年英语",
+    "tags": [
+      "新概念英语"
+    ],
+    "url": "NCE_3.json",
+    "length": 1052,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "nce4",
+    "name": "新概念英语-4",
+    "description": "新概念英语第四册",
+    "category": "青少年英语",
+    "tags": [
+      "新概念英语"
+    ],
+    "url": "NCE_4.json",
+    "length": 784,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel1",
+    "name": "EF-LEVEL-1",
+    "description": "EF等级1",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_1.json",
+    "length": 297,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel2",
+    "name": "EF-LEVEL-2",
+    "description": "EF等级2",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_2.json",
+    "length": 353,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel3",
+    "name": "EF-LEVEL-3",
+    "description": "EF等级3",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_3.json",
+    "length": 172,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel4",
+    "name": "EF-LEVEL-4",
+    "description": "EF等级4",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_4.json",
+    "length": 178,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel5",
+    "name": "EF-LEVEL-5",
+    "description": "EF等级5",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_5.json",
+    "length": 172,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel6",
+    "name": "EF-LEVEL-6",
+    "description": "EF等级6",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_6.json",
+    "length": 172,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel7",
+    "name": "EF-LEVEL-7",
+    "description": "EF等级7",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_7.json",
+    "length": 171,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel8",
+    "name": "EF-LEVEL-8",
+    "description": "EF等级8",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_8.json",
+    "length": 172,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel9",
+    "name": "EF-LEVEL-9",
+    "description": "EF等级9",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_9.json",
+    "length": 165,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel10",
+    "name": "EF-LEVEL-10",
+    "description": "EF等级10",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_10.json",
+    "length": 174,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel11",
+    "name": "EF-LEVEL-11",
+    "description": "EF等级11",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_11.json",
+    "length": 176,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel12",
+    "name": "EF-LEVEL-12",
+    "description": "EF等级12",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_12.json",
+    "length": 170,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel13",
+    "name": "EF-LEVEL-13",
+    "description": "EF等级13",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_13.json",
+    "length": 172,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel14",
+    "name": "EF-LEVEL-14",
+    "description": "EF等级14",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_14.json",
+    "length": 171,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel15",
+    "name": "EF-LEVEL-15",
+    "description": "EF等级15",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_15.json",
+    "length": 168,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "eflevel16",
+    "name": "EF-LEVEL-16",
+    "description": "EF等级16",
+    "category": "青少年英语",
+    "tags": [
+      "EF"
+    ],
+    "url": "EF_LEVEL_16.json",
+    "length": 170,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-AA",
+    "name": "RAZ 分级阅读 AA",
+    "description": "RAZ 分级阅读 AA",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-AA.json",
+    "length": 422,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-A",
+    "name": "RAZ 分级阅读 A",
+    "description": "RAZ 分级阅读 A",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-A.json",
+    "length": 487,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-B",
+    "name": "RAZ 分级阅读 B",
+    "description": "RAZ 分级阅读 B",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-B.json",
+    "length": 465,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-C",
+    "name": "RAZ 分级阅读 C",
+    "description": "RAZ 分级阅读 C",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-C.json",
+    "length": 480,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-D",
+    "name": "RAZ 分级阅读 D",
+    "description": "RAZ 分级阅读 D",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-D.json",
+    "length": 436,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-E",
+    "name": "RAZ 分级阅读 E",
+    "description": "RAZ 分级阅读 E",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-E.json",
+    "length": 427,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-F",
+    "name": "RAZ 分级阅读 F",
+    "description": "RAZ 分级阅读 F",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-F.json",
+    "length": 437,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-G",
+    "name": "RAZ 分级阅读 G",
+    "description": "RAZ 分级阅读 G",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-G.json",
+    "length": 435,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-H",
+    "name": "RAZ 分级阅读 H",
+    "description": "RAZ 分级阅读 H",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-H.json",
+    "length": 385,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-I",
+    "name": "RAZ 分级阅读 I",
+    "description": "RAZ 分级阅读 I",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-I.json",
+    "length": 408,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-J",
+    "name": "RAZ 分级阅读 J",
+    "description": "RAZ 分级阅读 J",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-J.json",
+    "length": 434,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-K",
+    "name": "RAZ 分级阅读 K",
+    "description": "RAZ 分级阅读 K",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-K.json",
+    "length": 397,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-L",
+    "name": "RAZ 分级阅读 L",
+    "description": "RAZ 分级阅读 L",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-L.json",
+    "length": 402,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-M",
+    "name": "RAZ 分级阅读 M",
+    "description": "RAZ 分级阅读 M",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-M.json",
+    "length": 403,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-N",
+    "name": "RAZ 分级阅读 N",
+    "description": "RAZ 分级阅读 N",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-N.json",
+    "length": 376,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-O",
+    "name": "RAZ 分级阅读 O",
+    "description": "RAZ 分级阅读 O",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-O.json",
+    "length": 429,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-P",
+    "name": "RAZ 分级阅读 P",
+    "description": "RAZ 分级阅读 P",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-P.json",
+    "length": 379,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-Q",
+    "name": "RAZ 分级阅读 Q",
+    "description": "RAZ 分级阅读 Q",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-Q.json",
+    "length": 442,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-R",
+    "name": "RAZ 分级阅读 R",
+    "description": "RAZ 分级阅读 R",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-R.json",
+    "length": 422,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-S",
+    "name": "RAZ 分级阅读 S",
+    "description": "RAZ 分级阅读 S",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-S.json",
+    "length": 434,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-T",
+    "name": "RAZ 分级阅读 T",
+    "description": "RAZ 分级阅读 T",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-T.json",
+    "length": 427,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-U",
+    "name": "RAZ 分级阅读 U",
+    "description": "RAZ 分级阅读 U",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-U.json",
+    "length": 418,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-V",
+    "name": "RAZ 分级阅读 V",
+    "description": "RAZ 分级阅读 V",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-V.json",
+    "length": 409,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-W",
+    "name": "RAZ 分级阅读 W",
+    "description": "RAZ 分级阅读 W",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-W.json",
+    "length": 392,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-X",
+    "name": "RAZ 分级阅读 X",
+    "description": "RAZ 分级阅读 X",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-X.json",
+    "length": 546,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-Y",
+    "name": "RAZ 分级阅读 Y",
+    "description": "RAZ 分级阅读 Y",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-Y.json",
+    "length": 461,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-Z",
+    "name": "RAZ 分级阅读 Z",
+    "description": "RAZ 分级阅读 Z",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-Z.json",
+    "length": 414,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-Z1",
+    "name": "RAZ 分级阅读 Z1",
+    "description": "RAZ 分级阅读 Z1",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-Z1.json",
+    "length": 467,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-Z2",
+    "name": "RAZ 分级阅读 Z2",
+    "description": "RAZ 分级阅读 Z2",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-Z2.json",
+    "length": 492,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "raz-all",
+    "name": "RAZ 分级阅读 所有词汇",
+    "description": "RAZ 分级阅读 所有词汇",
+    "category": "青少年英语",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "raz-all.json",
+    "length": 5831,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "childCode",
+    "name": "少儿 Python",
+    "description": "少儿 Python 常见词",
+    "category": "代码练习",
+    "tags": [
+      "少儿编程",
+      "Python"
+    ],
+    "url": "Child_python_code.json",
+    "length": 19,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "childCode002",
+    "name": "少儿 Python Turtle",
+    "description": "少儿 Python Turtle 常见词",
+    "category": "代码练习",
+    "tags": [
+      "少儿编程",
+      "Python"
+    ],
+    "url": "Child_python_turtle_code.json",
+    "length": 27,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "childCode003",
+    "name": "少儿 C++",
+    "description": "少儿 C++ 常见词",
+    "category": "代码练习",
+    "tags": [
+      "少儿编程",
+      "C++"
+    ],
+    "url": "Child_cpp.json",
+    "length": 39,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "oi-xcpc",
+    "name": "OI / XCPC 竞赛词汇",
+    "description": "OI / XCPC 竞赛词汇",
+    "category": "代码练习",
+    "tags": [
+      "C++"
+    ],
+    "url": "OI_XCPC.json",
+    "length": 195,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "childCode004",
+    "name": "Arduino",
+    "description": "Arduino常见词",
+    "category": "代码练习",
+    "tags": [
+      "少儿编程",
+      "Arduino"
+    ],
+    "url": "arduino_keywords.json",
+    "length": 78,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsArray",
+    "name": "JS: Array",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-array.json",
+    "length": 36,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsDate",
+    "name": "JS: Date",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-date.json",
+    "length": 34,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsGlobal",
+    "name": "JS: Global",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-global.json",
+    "length": 9,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsMapSet",
+    "name": "JS: Map & Set",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-map-set.json",
+    "length": 16,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsMath",
+    "name": "JS: Math",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-math.json",
+    "length": 38,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsNumber",
+    "name": "JS: Number",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-number.json",
+    "length": 22,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsObject",
+    "name": "JS: Object",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-object.json",
+    "length": 37,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsPromise",
+    "name": "JS: Promise",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-promise.json",
+    "length": 9,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "jsString",
+    "name": "JS: String",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "JavaScript"
+    ],
+    "url": "js-string.json",
+    "length": 32,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-builtin",
+    "name": "Python: Built-in",
+    "description": "Python Built-in API",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-builtin.json",
+    "length": 65,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-array",
+    "name": "Python: array",
+    "description": "Python array API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-array.json",
+    "length": 11,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-date",
+    "name": "Python: date",
+    "description": "Python date API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-date.json",
+    "length": 39,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-file",
+    "name": "Python: file",
+    "description": "Python file API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-file.json",
+    "length": 21,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-class",
+    "name": "Python: class",
+    "description": "Python class API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-class.json",
+    "length": 13,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-set",
+    "name": "Python: set",
+    "description": "Python set API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-set.json",
+    "length": 29,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-math",
+    "name": "Python: math",
+    "description": "Python math API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-math.json",
+    "length": 37,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-string",
+    "name": "Python: string",
+    "description": "Python string API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-string.json",
+    "length": 40,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "python-system",
+    "name": "Python: system",
+    "description": "Python system API ",
+    "category": "代码练习",
+    "tags": [
+      "Python"
+    ],
+    "url": "python-sys.json",
+    "length": 24,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "javeArrayList",
+    "name": "Java: ArrayList",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "Java"
+    ],
+    "url": "java-arraylist.json",
+    "length": 25,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "javaCharacter",
+    "name": "Java: Character",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "Java"
+    ],
+    "url": "java-character.json",
+    "length": 8,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "javaHashmap",
+    "name": "Java: Hashmap",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "Java"
+    ],
+    "url": "java-hashmap.json",
+    "length": 22,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "javaLinkedList",
+    "name": "Java: LinkedList",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "Java"
+    ],
+    "url": "java-linkedlist.json",
+    "length": 25,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "javaString",
+    "name": "Java: String",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "Java"
+    ],
+    "url": "java-string.json",
+    "length": 48,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "javaStringBuffer",
+    "name": "Java: StringBuffer",
+    "description": "JavaScript API 词典",
+    "category": "代码练习",
+    "tags": [
+      "Java"
+    ],
+    "url": "java-stringBuffer.json",
+    "length": 20,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "linuxCommand",
+    "name": "Linux",
+    "description": "Linux Command",
+    "category": "代码练习",
+    "tags": [
+      "Linux"
+    ],
+    "url": "linux-command.json",
+    "length": 575,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "csharpKeywords",
+    "name": "C#关键字",
+    "description": "C#关键字以及用途",
+    "category": "代码练习",
+    "tags": [
+      "C#"
+    ],
+    "url": "csharp-keywords.json",
+    "length": 78,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "csharpString",
+    "name": "C#: String API",
+    "description": "C# String API",
+    "category": "代码练习",
+    "tags": [
+      "C#"
+    ],
+    "url": "csharp-string.json",
+    "length": 79,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "csharpList",
+    "name": "C#: List API",
+    "description": "C# List API",
+    "category": "代码练习",
+    "tags": [
+      "C#"
+    ],
+    "url": "csharp-list.json",
+    "length": 36,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "sql-lower-case",
+    "name": "SQL: 常用语句 lower case",
+    "description": "SQL 常用语句 小写",
+    "category": "代码练习",
+    "tags": [
+      "SQL"
+    ],
+    "url": "SQL_statement_lower-case.json",
+    "length": 12,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "sql-upper-case",
+    "name": "SQL: 常用语句 upper case",
+    "description": "SQL 常用语句 大写",
+    "category": "代码练习",
+    "tags": [
+      "SQL"
+    ],
+    "url": "SQL_statement_upper-case.json",
+    "length": 12,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "ai-machine-learning",
+    "name": "人工智能: 机器学习",
+    "description": "AI机器学习 常用英语词汇",
+    "category": "代码练习",
+    "tags": [
+      "AI"
+    ],
+    "url": "ai_machine_learning.json",
+    "length": 726,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "ai-ai-for-science",
+    "name": "人工智能: AI for Science",
+    "description": "AI for Science 常用英语词汇",
+    "category": "代码练习",
+    "tags": [
+      "AI"
+    ],
+    "url": "ai_for_science.json",
+    "length": 491,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "go_keyword",
+    "name": "golang-keyword",
+    "description": "go语言关键字,",
+    "category": "代码练习",
+    "tags": [
+      "golang"
+    ],
+    "url": "go_keyword.json",
+    "length": 25,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "go_builtin",
+    "name": "golang-builtin",
+    "description": "go语言内建函数和类型",
+    "category": "代码练习",
+    "tags": [
+      "golang"
+    ],
+    "url": "go_builtin.json",
+    "length": 46,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "rustKeyword",
+    "name": "Rust: Keyword",
+    "description": "Rust 关键字",
+    "category": "代码练习",
+    "tags": [
+      "Rust"
+    ],
+    "url": "rust-keyword.json",
+    "length": 35,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "rustString",
+    "name": "Rust: String",
+    "description": "Rust 标准库字符串类型常用方法",
+    "category": "代码练习",
+    "tags": [
+      "Rust"
+    ],
+    "url": "rust-string.json",
+    "length": 24,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "rustVector",
+    "name": "Rust: Vector",
+    "description": "Rust 集合类型动态数组Vector常用方法",
+    "category": "代码练习",
+    "tags": [
+      "Rust"
+    ],
+    "url": "rust-vector.json",
+    "length": 28,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "rustHashMap",
+    "name": "Rust: HashMap",
+    "description": "Rust 集合类型HashMap常用方法",
+    "category": "代码练习",
+    "tags": [
+      "Rust"
+    ],
+    "url": "rust-hashmap.json",
+    "length": 23,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "SoundSfxKey",
+    "name": "AudioKey_UCS-SubCategory",
+    "description": "游戏音效常用单词-UCS-SubCategory",
+    "category": "代码练习",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "AudioKey_SubCategory.json",
+    "length": 436,
+    "language": "en",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "SoundSfxKey2",
+    "name": "AudioKey_UCS-Category",
+    "description": "游戏音效常用单词-UCS-Category",
+    "category": "代码练习",
+    "tags": [
+      "RAZ"
+    ],
+    "url": "AudioKey_Category.json",
+    "length": 82,
+    "language": "code",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese-hiragana",
+    "name": "平假名",
+    "description": "平假名练习",
+    "category": "日语学习",
+    "tags": [
+      "基础",
+      "五十音",
+      "平假名"
+    ],
+    "url": "JapaneseHiragana.json",
+    "length": 280,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese-katakana",
+    "name": "片假名",
+    "description": "片假名练习",
+    "category": "日语学习",
+    "tags": [
+      "基础",
+      "五十音",
+      "片假名"
+    ],
+    "url": "JapaneseKatakana.json",
+    "length": 280,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese001",
+    "name": "日语常见词",
+    "description": "英语翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "Japanesebasicword.json",
+    "length": 100,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese001-zh",
+    "name": "日语常见词",
+    "description": "中文翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "Japanesebasicword_zh.json",
+    "length": 100,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese002",
+    "name": "N5",
+    "description": "英语翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N5.json",
+    "length": 670,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese002-zh",
+    "name": "N5",
+    "description": "中文翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N5_zh.json",
+    "length": 670,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese003",
+    "name": "N4",
+    "description": "英语翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N4.json",
+    "length": 635,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese003-zh",
+    "name": "N4",
+    "description": "中文翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N4_zh.json",
+    "length": 635,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese004",
+    "name": "N3",
+    "description": "英语翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N3.json",
+    "length": 1830,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese004-zh",
+    "name": "N3",
+    "description": "中文翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N3_zh.json",
+    "length": 1830,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese005",
+    "name": "N2",
+    "description": "英语翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N2.json",
+    "length": 1836,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese005-zh",
+    "name": "N2",
+    "description": "中文翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N2_zh.json",
+    "length": 1836,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese006",
+    "name": "N1",
+    "description": "英语翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N1.json",
+    "length": 3477,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese006-zh",
+    "name": "N1",
+    "description": "中文翻译",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "JapVocabList.N1_zh.json",
+    "length": 3477,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese007",
+    "name": "高频单词_N1",
+    "description": "高频单词_日语N1",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "Jap_High-Frequency_N1.json",
+    "length": 3000,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese008",
+    "name": "高频单词_N2",
+    "description": "高频单词_日语N2",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "Jap_High-Frequency_N2.json",
+    "length": 2500,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese009",
+    "name": "高频单词_N3",
+    "description": "高频单词_日语N3",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "Jap_High-Frequency_N3.json",
+    "length": 1999,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "japanese0010",
+    "name": "高频单词_N4N5",
+    "description": "高频单词_日语N4N5",
+    "category": "日语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "Jap_High-Frequency_N4N5.json",
+    "length": 2000,
+    "language": "ja",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "german2en",
+    "name": "德语 英译",
+    "description": "德语词汇, 英语翻译",
+    "category": "德语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "german2en.json",
+    "length": 5892,
+    "language": "de",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "en2german",
+    "name": "英语 德译",
+    "description": "英语词汇，德语翻译",
+    "category": "德语学习",
+    "tags": [
+      "基础"
+    ],
+    "url": "en2german.json",
+    "length": 5025,
+    "language": "de",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "kazakh_basic_3000_arabic_hapin",
+    "name": "基础3000词(老文字版)",
+    "description": "哈萨克语基础3000词(哈拼老文字版)",
+    "category": "哈萨克语",
+    "tags": [
+      "老文字",
+      "哈拼"
+    ],
+    "url": "kazakh_basic_3000_arabic_hapin.json",
+    "length": 3002,
+    "language": "kk",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "kazakh_basic_3000_cyrillic_hapin",
+    "name": "基础3000词(西里尔字母版)",
+    "description": "哈萨克语基础3000词(哈拼西里尔字母版)",
+    "category": "哈萨克语",
+    "tags": [
+      "西里尔字母",
+      "哈拼"
+    ],
+    "url": "kazakh_basic_3000_cyrillic_hapin.json",
+    "length": 3002,
+    "language": "kk",
+    "translateLanguage": "zh-CN"
+  },
+  {
+    "id": "indonesian_highFrequency_3043",
+    "name": "印尼语高频词汇",
+    "description": "印尼语常用单词及中文解释",
+    "category": "印尼语",
+    "tags": [
+      "基础"
+    ],
+    "url": "Indonesian.json",
+    "length": 3037,
+    "language": "id",
+    "translateLanguage": "zh-CN"
+  }
+]
