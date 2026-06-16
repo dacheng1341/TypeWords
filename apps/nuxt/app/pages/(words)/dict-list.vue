@@ -13,6 +13,17 @@ import { getDefaultDict } from '@typewords/core/types/func.ts'
 import { useFetch } from '@vueuse/core'
 import { DICT_LIST, LIB_JS_URL, TourConfig } from '@typewords/core/config/env.ts'
 import { useSettingStore } from '@typewords/core/stores/setting.ts'
+import { useLocalStorage } from '@vueuse/core'
+
+const currentLanguage = useLocalStorage('typewords_dict_language', 'en')
+
+const languageOptions = [
+  { label: '英语', value: 'en' },
+  { label: '日语', value: 'ja' },
+  { label: '韩语', value: 'ko' },
+  { label: '西班牙语', value: 'es' },
+  { label: '代码', value: 'code' },
+]
 
 const { nav } = useNav()
 const runtimeStore = useRuntimeStore()
@@ -48,7 +59,8 @@ const { data: dict_list, isFetching } = useFetch(resourceWrap(DICT_LIST.WORD.ALL
 const groupedByCategoryAndTag = $computed(() => {
   let data = []
   if (!dict_list.value) return data
-  const groupByCategory = groupBy(dict_list.value, 'category')
+  const filteredList = dict_list.value.filter(dict => (dict.language || 'en') === currentLanguage.value)
+  const groupByCategory = groupBy(filteredList, 'category')
   for (const [key, value] of Object.entries(groupByCategory)) {
     data.push([key, groupByDictTags(value)])
   }
@@ -125,6 +137,18 @@ watch(dict_list, val => {
           </BaseIcon>
         </div>
       </div>
+      <!-- Language Tabs -->
+      <div class="language-tabs flex gap-2 overflow-x-auto mt-4 mb-2 pb-2" v-show="!searchKey">
+        <div
+          v-for="lang in languageOptions"
+          :key="lang.value"
+          class="lang-tab px-4 py-1.5 rounded-full cursor-pointer whitespace-nowrap transition-colors"
+          :class="currentLanguage === lang.value ? 'bg-primary text-white dark:text-black' : 'bg-gray-100 hover:bg-gray-200 dark:bg-dark-300 dark:hover:bg-dark-200 text-gray-600 dark:text-gray-300'"
+          @click="currentLanguage = lang.value"
+        >
+          {{ lang.label }}
+        </div>
+      </div>
       <div class="mt-4" v-if="searchKey">
         <DictList
           v-if="searchList.length"
@@ -136,14 +160,17 @@ watch(dict_list, val => {
         <Empty v-else text="没有相关词典" />
       </div>
       <div class="w-full" v-else>
-        <DictGroup
-          v-for="item in groupedByCategoryAndTag"
-          :select-id="store.sdict.id"
-          @selectDict="selectDict"
-          quantifier="词"
-          :groupByTag="item[1]"
-          :category="item[0]"
-        />
+        <template v-if="groupedByCategoryAndTag.length > 0">
+          <DictGroup
+            v-for="item in groupedByCategoryAndTag"
+            :select-id="store.sdict.id"
+            @selectDict="selectDict"
+            quantifier="词"
+            :groupByTag="item[1]"
+            :category="item[0]"
+          />
+        </template>
+        <Empty v-else text="该语种词典正在建设中..." class="mt-10" />
       </div>
     </div>
   </BasePage>

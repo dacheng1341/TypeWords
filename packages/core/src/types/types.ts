@@ -44,7 +44,7 @@ export type Word = {
 }
 
 export type TranslateLanguageType = 'en' | 'zh-CN' | 'ja' | 'de' | 'common' | ''
-export type LanguageType = 'en' | 'ja' | 'de' | 'code'
+export type LanguageType = 'en' | 'ja' | 'ko' | 'es' | 'bo' | 'de' | 'code' | 'other'
 
 export interface ArticleWord extends Word {
   nextSpace: boolean
