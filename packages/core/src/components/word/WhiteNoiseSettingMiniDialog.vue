@@ -9,10 +9,10 @@ import { watch, ref, onMounted } from 'vue'
 
 const settingStore = useSettingStore()
 let timer = 0
+let currentAudio: HTMLAudioElement | null = null
 //停止切换事件，因为hover到select时会跳出mini-dialog
 let selectIsOpen = false
 let show = $ref(false)
-const audioRef = ref<HTMLAudioElement>()
 
 const whiteNoiseOptions = [
   { value: 'heavy-rain', label: '大雨' },
@@ -49,7 +49,7 @@ function selectToggle(e: boolean) {
   setTimeout(() => (selectIsOpen = e))
 }
 
-function eventCheck(e) {
+function eventCheck(e: any) {
   const isSelfOrChild = e.currentTarget.contains(e.target)
   if (isSelfOrChild) {
     //如果下拉框打开的情况就不拦截
@@ -61,40 +61,41 @@ function eventCheck(e) {
 watch(
   () => [settingStore.whiteNoise, settingStore.whiteNoiseType, settingStore.whiteNoiseVolume],
   () => {
-    if (!audioRef.value) return
-    
-    // 音量调节
-    audioRef.value.volume = settingStore.whiteNoiseVolume / 100
+    // 暂停并清理旧音频
+    if (currentAudio) {
+      currentAudio.pause()
+    }
     
     if (settingStore.whiteNoise) {
-      // 如果开启且暂停状态，或者换了音频，就重新加载播放
-      const currentSrc = audioRef.value.getAttribute('src')
-      const targetSrc = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.ogg?v=2`
+      const targetSrc = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.ogg?v=3`
       
-      if (currentSrc !== targetSrc) {
-        audioRef.value.src = targetSrc
+      // 如果不存在或者 src 变了，重新创建
+      if (!currentAudio || !currentAudio.src.includes(settingStore.whiteNoiseType)) {
+        currentAudio = new Audio(targetSrc)
+        currentAudio.loop = true
       }
-      audioRef.value.play().catch(e => console.error('Play white noise failed:', e))
-    } else {
-      audioRef.value.pause()
+      
+      currentAudio.volume = settingStore.whiteNoiseVolume / 100
+      currentAudio.play().catch(e => console.error('Play white noise failed:', e))
     }
   },
   { deep: true }
 )
 
 onMounted(() => {
-  if (settingStore.whiteNoise && audioRef.value) {
-    audioRef.value.volume = settingStore.whiteNoiseVolume / 100
-    audioRef.value.src = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.ogg?v=2`
+  if (settingStore.whiteNoise) {
+    const targetSrc = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.ogg?v=3`
+    currentAudio = new Audio(targetSrc)
+    currentAudio.loop = true
+    currentAudio.volume = settingStore.whiteNoiseVolume / 100
     // 自动播放可能会被浏览器策略拦截，需要用户发生交互，这里尽力而为
-    audioRef.value.play().catch(e => console.error('Auto play white noise failed:', e))
+    currentAudio.play().catch(e => console.error('Auto play white noise failed:', e))
   }
 })
 </script>
 
 <template>
   <div class="setting" @click="eventCheck">
-    <audio ref="audioRef" loop style="display: none;"></audio>
     <BaseIcon @mouseenter="toggle(true)" @mouseleave="toggle(false)" title="心流白噪音">
       <IconPhHeadphones />
     </BaseIcon>
