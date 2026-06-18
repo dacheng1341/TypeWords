@@ -69,7 +69,7 @@ watch(
     if (settingStore.whiteNoise) {
       // 如果开启且暂停状态，或者换了音频，就重新加载播放
       const currentSrc = audioRef.value.getAttribute('src')
-      const targetSrc = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.ogg`
+      const targetSrc = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.mp3`
       
       if (currentSrc !== targetSrc) {
         audioRef.value.src = targetSrc
@@ -85,7 +85,7 @@ watch(
 onMounted(() => {
   if (settingStore.whiteNoise && audioRef.value) {
     audioRef.value.volume = settingStore.whiteNoiseVolume / 100
-    audioRef.value.src = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.ogg`
+    audioRef.value.src = ENV.RESOURCE_URL + `/sound/white-noise/${settingStore.whiteNoiseType}.mp3`
     // 自动播放可能会被浏览器策略拦截，需要用户发生交互，这里尽力而为
     audioRef.value.play().catch(e => console.error('Auto play white noise failed:', e))
   }
