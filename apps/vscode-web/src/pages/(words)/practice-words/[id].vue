@@ -1021,6 +1021,12 @@ useEvents([
   [ShortcutKey.PlayExample3, () => typingRef?.playSentence?.(2)],
   [ShortcutKey.PlayExample4, () => typingRef?.playSentence?.(3)],
   [ShortcutKey.PlayExample5, () => typingRef?.playSentence?.(4)],
+  [ShortcutKey.PlayWordTranslation, () => typingRef?.playTranslation?.()],
+  [ShortcutKey.PlayExampleTranslation1, () => typingRef?.playSentenceTranslation?.(0)],
+  [ShortcutKey.PlayExampleTranslation2, () => typingRef?.playSentenceTranslation?.(1)],
+  [ShortcutKey.PlayExampleTranslation3, () => typingRef?.playSentenceTranslation?.(2)],
+  [ShortcutKey.PlayExampleTranslation4, () => typingRef?.playSentenceTranslation?.(3)],
+  [ShortcutKey.PlayExampleTranslation5, () => typingRef?.playSentenceTranslation?.(4)],
 
   [ShortcutKey.RepeatChapter, repeat],
   [ShortcutKey.NextChapter, continueStudy],

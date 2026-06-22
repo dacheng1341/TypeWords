@@ -203,6 +203,12 @@ function getShortcutKeyName(key: string): string {
     PlayExample3: '播放例句3',
     PlayExample4: '播放例句4',
     PlayExample5: '播放例句5',
+    PlayWordTranslation: '播放单词中文翻译',
+    PlayExampleTranslation1: '播放例句1中文翻译',
+    PlayExampleTranslation2: '播放例句2中文翻译',
+    PlayExampleTranslation3: '播放例句3中文翻译',
+    PlayExampleTranslation4: '播放例句4中文翻译',
+    PlayExampleTranslation5: '播放例句5中文翻译',
   } as any
 
   return shortcutKeyNameMap[key] || key

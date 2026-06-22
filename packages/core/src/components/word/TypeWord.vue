@@ -648,7 +648,20 @@ function playSentence(index: number) {
   }
 }
 
-defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes, playSentence })
+function playTranslation() {
+  if (props.word?.trans?.length) {
+    const text = props.word.trans.map(t => t.cn).join('，')
+    playTtsWithGuide(text)
+  }
+}
+
+function playSentenceTranslation(index: number) {
+  if (props.word?.sentences?.[index]?.cn) {
+    playTtsWithGuide(props.word.sentences[index].cn)
+  }
+}
+
+defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes, playSentence, playTranslation, playSentenceTranslation })
 
 const notice = $computed(() => {
   let text =

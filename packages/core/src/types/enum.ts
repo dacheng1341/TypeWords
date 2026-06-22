@@ -56,6 +56,12 @@ export enum ShortcutKey {
   PlayExample3 = 'PlayExample3',
   PlayExample4 = 'PlayExample4',
   PlayExample5 = 'PlayExample5',
+  PlayWordTranslation = 'PlayWordTranslation',
+  PlayExampleTranslation1 = 'PlayExampleTranslation1',
+  PlayExampleTranslation2 = 'PlayExampleTranslation2',
+  PlayExampleTranslation3 = 'PlayExampleTranslation3',
+  PlayExampleTranslation4 = 'PlayExampleTranslation4',
+  PlayExampleTranslation5 = 'PlayExampleTranslation5',
 }
 
 export enum TranslateEngine {

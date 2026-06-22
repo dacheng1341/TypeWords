@@ -146,6 +146,12 @@ export const DefaultShortcutKeyMap = {
   [ShortcutKey.PlayExample3]: 'Alt+3',
   [ShortcutKey.PlayExample4]: 'Alt+4',
   [ShortcutKey.PlayExample5]: 'Alt+5',
+  [ShortcutKey.PlayWordTranslation]: 'Ctrl+O',
+  [ShortcutKey.PlayExampleTranslation1]: 'Alt+Q',
+  [ShortcutKey.PlayExampleTranslation2]: 'Alt+W',
+  [ShortcutKey.PlayExampleTranslation3]: 'Alt+E',
+  [ShortcutKey.PlayExampleTranslation4]: 'Alt+R',
+  [ShortcutKey.PlayExampleTranslation5]: 'Alt+T',
 }
 export const SlideType = {
   HORIZONTAL: 0,

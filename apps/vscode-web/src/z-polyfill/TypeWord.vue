@@ -526,7 +526,26 @@ function play() {
   volumeIconRef?.play()
 }
 
-defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes })
+function playSentence(index: number) {
+  if (props.word?.sentences?.[index]) {
+    ttsPlayAudio(props.word.sentences[index].c)
+  }
+}
+
+function playTranslation() {
+  if (props.word?.trans?.length) {
+    const text = props.word.trans.map(t => t.cn).join('，')
+    ttsPlayAudio(text)
+  }
+}
+
+function playSentenceTranslation(index: number) {
+  if (props.word?.sentences?.[index]?.cn) {
+    ttsPlayAudio(props.word.sentences[index].cn)
+  }
+}
+
+defineExpose({ del, showWord, hideWord, play, showWordResult, wrongTimes, playSentence, playTranslation, playSentenceTranslation })
 
 function mouseleave() {
   setTimeout(() => {
