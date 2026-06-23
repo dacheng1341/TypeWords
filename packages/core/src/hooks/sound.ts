@@ -200,8 +200,8 @@ export function useTTsPlayAudio() {
   function play(text: string) {
     if (settingStore.useNetworkTts) {
       // 忽略 localStorage 中的旧缓存，直接使用固定新域名
-      const baseUrl = 'https://qiaoqiao-tts.dacbbox.com/'
-      const url = `${baseUrl}?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(settingStore.networkTtsVoice)}`
+      const baseUrl = 'https://book-tts.dacbbox.com/api/text-to-speech'
+      const url = `${baseUrl}?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(settingStore.networkTtsVoice)}&volume=0&rate=0&pitch=0`
       const audio = new Audio(url)
       audio.volume = settingStore.wordSoundVolume / 100
       audio.playbackRate = settingStore.wordSoundSpeed

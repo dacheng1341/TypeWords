@@ -138,28 +138,28 @@ function previewNetworkTtsVoice(voiceName: string) {
       </div>
       <SettingItem title="发音人">
         <Select v-model="settingStore.networkTtsVoice" class="w-80!">
-          <Option value="en-US-Journey-F" label="美音 (女) - 艾米丽">
+          <Option value="Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoNeural)" label="中英双语 (女) - 晓晓">
             <div class="flex justify-between items-center w-full">
-              <span>美音 (女) - 艾米丽</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-US-Journey-F')" title="试听 艾米丽" />
+              <span>中英双语 (女) - 晓晓</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoNeural)')" title="试听 晓晓" />
             </div>
           </Option>
-          <Option value="en-US-Journey-D" label="美音 (男) - 迈克">
+          <Option value="Microsoft Server Speech Text to Speech Voice (zh-CN, YunyangNeural)" label="中英双语 (男) - 云扬">
             <div class="flex justify-between items-center w-full">
-              <span>美音 (男) - 迈克</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-US-Journey-D')" title="试听 迈克" />
+              <span>中英双语 (男) - 云扬</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('Microsoft Server Speech Text to Speech Voice (zh-CN, YunyangNeural)')" title="试听 云扬" />
             </div>
           </Option>
-          <Option value="en-GB-Neural2-A" label="英音 (女) - 索菲亚">
+          <Option value="Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)" label="美音 (女) - Aria">
             <div class="flex justify-between items-center w-full">
-              <span>英音 (女) - 索菲亚</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-GB-Neural2-A')" title="试听 索菲亚" />
+              <span>美音 (女) - Aria</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)')" title="试听 Aria" />
             </div>
           </Option>
-          <Option value="en-GB-Neural2-B" label="英音 (男) - 威廉">
+          <Option value="Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)" label="美音 (男) - Guy">
             <div class="flex justify-between items-center w-full">
-              <span>英音 (男) - 威廉</span>
-              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('en-GB-Neural2-B')" title="试听 威廉" />
+              <span>美音 (男) - Guy</span>
+              <VolumeIcon :time="100" @click.stop="previewNetworkTtsVoice('Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)')" title="试听 Guy" />
             </div>
           </Option>
         </Select>
