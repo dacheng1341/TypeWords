@@ -742,7 +742,7 @@ const isCollect = $computed(() => isWordCollect(props.word))
         </BaseButton>
       </div>
 
-      <div class="translate text-base" v-opacity="settingStore.translate || showWordResult || showFullWord">
+      <div class="translate text-base relative pr-6" v-opacity="settingStore.translate || showWordResult || showFullWord">
         <div class="flex" v-for="v in word.trans">
           <span class="shrink-0 mr-1" :class="v.pos ? 'en-article-family' : ''">
             {{ v.pos }}
@@ -750,6 +750,12 @@ const isCollect = $computed(() => isWordCollect(props.word))
           <span v-if="!settingStore.dictation || showWordResult || showFullWord">{{ v.cn }}</span>
           <SentenceHightLightWord v-else :text="v.cn" :word="word.word" :dictation="true" :high-light="false" />
         </div>
+        <VolumeIcon
+          class="absolute right-0 top-0"
+          :title="`中文发音(${settingStore.shortcutKeyMap[ShortcutKey.PlayWordTranslation] || ''})`"
+          :simple="false"
+          @click="playTranslation"
+        />
       </div>
     </div>
 
@@ -778,8 +784,14 @@ const isCollect = $computed(() => isWordCollect(props.word))
                 <VolumeIcon :title="`发音`" :simple="false" @click="ttsPlayAudio(item.c)" />
               </template>
             </HoverReveal>
-            <div class="anim text-sm" v-opacity="settingStore.translate || showFullWord || showWordResult">
-              {{ item.cn }}
+            <div class="anim text-sm flex items-center gap-1" v-opacity="settingStore.translate || showFullWord || showWordResult">
+              <span class="flex-1">{{ item.cn }}</span>
+              <VolumeIcon
+                v-if="item.cn"
+                :title="`中文发音`"
+                :simple="false"
+                @click="playSentenceTranslation(index)"
+              />
             </div>
           </div>
         </div>

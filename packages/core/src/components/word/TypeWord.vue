@@ -872,13 +872,19 @@ function focusMobileInput() {
       </div>
 
       <div
-        class="translate flex flex-col gap-2 my-3"
+        class="translate flex gap-2 my-3 items-start relative pr-8"
         v-opacity="settingStore.translate || showWordResult || showFullWord"
         :style="{
           fontSize: settingStore.fontSize.wordTranslateFontSize + 'px',
         }"
       >
-        <TranslationList :word="word" :showFull="!settingStore.dictation || showWordResult || showFullWord" />
+        <TranslationList class="flex-1" :word="word" :showFull="!settingStore.dictation || showWordResult || showFullWord" />
+        <VolumeIcon
+          class="absolute right-0 top-0"
+          :title="`中文发音(${settingStore.shortcutKeyMap[ShortcutKey.PlayWordTranslation] || ''})`"
+          :simple="false"
+          @click="playTranslation"
+        />
       </div>
     </div>
 
@@ -926,8 +932,14 @@ function focusMobileInput() {
                 }"
               />
             </div>
-            <div class="text-base anim" v-opacity="settingStore.translate || showFullWord || showWordResult">
-              {{ item.cn }}
+            <div class="text-base anim flex items-center gap-space" v-opacity="settingStore.translate || showFullWord || showWordResult">
+              <span class="flex-1">{{ item.cn }}</span>
+              <VolumeIcon
+                v-if="item.cn"
+                :title="`中文发音(${settingStore.shortcutKeyMap[[ShortcutKey.PlayExampleTranslation1, ShortcutKey.PlayExampleTranslation2, ShortcutKey.PlayExampleTranslation3, ShortcutKey.PlayExampleTranslation4, ShortcutKey.PlayExampleTranslation5][index]] || ''})`"
+                :simple="false"
+                @click="playSentenceTranslation(index)"
+              />
             </div>
           </div>
         </div>
