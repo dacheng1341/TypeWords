@@ -160,7 +160,7 @@ export const getDefaultSettingState = (): SettingState => ({
   _ignoreWatch: false,
   ttsVoiceMap: [],
   useNetworkTts: true,
-  networkTtsVoice: 'Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoNeural)',
+  networkTtsVoice: 'Microsoft Server Speech Text to Speech Voice (zh-CN, YunyangNeural)',
   networkTtsUrl: 'https://qiaoqiao-tts.dacbbox.com/',
 })
 
