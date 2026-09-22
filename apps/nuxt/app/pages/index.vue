@@ -15,6 +15,7 @@ const userStore = useUserStore()
 const baseStore = useBaseStore()
 
 let theme = $ref('light')
+let showTopBanner = $ref(true)
 
 // (Removed GamificationData logic)
 
@@ -252,6 +253,44 @@ function handleLogout() {
 
 <template>
   <div class="hw min-h-screen overflow-x-hidden font-sans" :class="theme" id="wrapper">
+    <!-- TOP PROMO BANNER (最顶部强引流通栏横幅) -->
+    <div
+      v-if="showTopBanner"
+      class="relative z-110 bg-gradient-to-r from-[#7c3aed] via-[#5b21b6] to-[#2563eb] text-white py-2 px-3 sm:px-6 shadow-md flex items-center justify-between text-[.82rem] sm:text-[.86rem]"
+    >
+      <div class="max-w-[1200px] mx-auto flex items-center justify-center gap-2 sm:gap-4 flex-wrap text-center flex-1">
+        <span class="inline-flex items-center gap-1 bg-white/20 backdrop-blur-xs px-2 py-0.5 rounded-full text-[.72rem] font-bold tracking-wide shrink-0">
+          🔥 站长推荐
+        </span>
+        <span class="font-medium text-white/95">
+          【大程沉浸阅读】原著精读与播音级听书：微软 Edge 神经语音超清伴读 · 120Hz 压感批注 · EPUB/PDF 原版教材
+        </span>
+        <div class="inline-flex items-center gap-2">
+          <a
+            href="https://book.dacbbox.com"
+            target="_blank"
+            class="inline-flex items-center gap-1 font-bold text-[#4338ca] bg-white hover:bg-white/90 px-3 py-0.5 rounded-full transition-all duration-150 no-underline text-[.76rem] whitespace-nowrap shadow-xs hover:-translate-y-px"
+          >
+            免费在线体验 ➔
+          </a>
+          <a
+            href="https://bookapp.dacbbox.com"
+            target="_blank"
+            class="hidden sm:inline-flex items-center gap-1 font-semibold text-white/90 hover:text-white bg-white/15 hover:bg-white/25 px-2.5 py-0.5 rounded-full transition-all duration-150 no-underline text-[.76rem] whitespace-nowrap"
+          >
+            全平台客户端
+          </a>
+        </div>
+      </div>
+      <button
+        @click="showTopBanner = false"
+        class="text-white/70 hover:text-white bg-transparent border-none cursor-pointer text-sm p-1 ml-2 leading-none shrink-0"
+        title="关闭横幅"
+      >
+        ✕
+      </button>
+    </div>
+
     <!-- NAV -->
     <header class="sticky top-0 z-100 backdrop-blur-md border-b border-[var(--hw-border)] bg-[var(--hw-bg-nav)]">
       <div class="max-w-[1200px] mx-auto px-4 sm:px-8 h-15 flex items-center gap-8">
@@ -262,7 +301,7 @@ function handleLogout() {
           {{ APP_NAME }}
         </div>
         <!-- Desktop nav links -->
-        <nav class="hidden md:flex items-center gap-7">
+        <nav class="hidden md:flex items-center gap-6">
           <NuxtLink
             to="/words"
             class="text-[.88rem] font-medium text-[var(--hw-text-2)] no-underline hover:text-[var(--hw-text)] transition-colors duration-150"
@@ -286,13 +325,10 @@ function handleLogout() {
           <a
             href="https://bookapp.dacbbox.com"
             target="_blank"
-            class="inline-flex items-center gap-1.5 text-[.88rem] font-medium text-[var(--hw-text-2)] no-underline hover:text-[#7c3aed] transition-colors duration-150"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[.82rem] font-bold text-white bg-gradient-to-r from-[#bd34fe] to-[#7c3aed] shadow-[0_2px_8px_rgba(124,58,237,.35)] hover:shadow-[0_4px_12px_rgba(124,58,237,.5)] hover:-translate-y-px transition-all duration-150 whitespace-nowrap no-underline ml-1"
           >
             <span>📚 沉浸阅读</span>
-            <span
-              class="px-1.5 py-0.2 text-[.68rem] font-bold text-white bg-gradient-to-r from-[#bd34fe] to-[#7c3aed] rounded-full leading-tight shadow-sm scale-95"
-              >推荐</span
-            >
+            <span class="bg-white/25 text-white text-[.65rem] px-1.5 py-0.2 rounded-full font-bold leading-none">推荐</span>
           </a>
         </nav>
         <!-- Actions -->
@@ -366,6 +402,25 @@ function handleLogout() {
         v-show="mobileMenuOpen"
         class="md:hidden border-t border-[var(--hw-border)] bg-[var(--hw-bg-card)] px-4 py-3 flex flex-col gap-3"
       >
+        <!-- Mobile Featured Card -->
+        <a
+          href="https://bookapp.dacbbox.com"
+          target="_blank"
+          class="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-[rgba(124,58,237,.1)] to-[rgba(37,99,235,.1)] border border-[rgba(124,58,237,.25)] text-[var(--hw-text)] no-underline mb-1"
+          @click="mobileMenuOpen = false"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-[1.2rem]">📚</span>
+            <div class="flex flex-col text-left">
+              <span class="text-[.88rem] font-bold text-[#7c3aed]">大程沉浸阅读</span>
+              <span class="text-[.72rem] text-[var(--hw-text-3)]">原著精读 · 播音级听书</span>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 text-[.72rem] font-bold text-white bg-gradient-to-r from-[#bd34fe] to-[#7c3aed] rounded-full leading-none shadow-xs">
+            推荐 ➔
+          </span>
+        </a>
+
         <NuxtLink
           to="/words"
           class="text-[.95rem] font-medium text-[var(--hw-text-2)] no-underline py-1"
@@ -390,18 +445,6 @@ function handleLogout() {
           @click="mobileMenuOpen = false"
           >帮助</NuxtLink
         >
-        <a
-          href="https://bookapp.dacbbox.com"
-          target="_blank"
-          class="flex items-center justify-between text-[.95rem] font-medium text-[var(--hw-text-2)] no-underline py-1 hover:text-[#7c3aed]"
-          @click="mobileMenuOpen = false"
-        >
-          <span class="flex items-center gap-2">📚 沉浸阅读</span>
-          <span
-            class="px-1.5 py-0.5 text-[.68rem] font-bold text-white bg-gradient-to-r from-[#bd34fe] to-[#7c3aed] rounded-full leading-none"
-            >推荐</span
-          >
-        </a>
         
         <!-- Mobile Login/Logout -->
         <div class="mt-2 pt-3 border-t border-[var(--hw-border)] flex flex-col items-center">
