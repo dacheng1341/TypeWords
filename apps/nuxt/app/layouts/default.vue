@@ -85,6 +85,18 @@ onMounted(() => {
           <IconFluentBookLetter20Regular />
           <span>{{ $t('articles') }}</span>
         </NuxtLink>
+        <a
+          href="https://bookapp.dacbbox.com"
+          target="_blank"
+          class="row"
+          title="大程沉浸阅读：原著精读与播音级听书"
+        >
+          <IconFluentBook20Regular />
+          <span class="flex items-center gap-1.5 whitespace-nowrap">
+            沉浸阅读
+            <span class="px-1.5 py-0.2 text-[.6rem] font-bold text-white bg-gradient-to-r from-[#bd34fe] to-[#7c3aed] rounded-full leading-tight shadow-sm">新</span>
+          </span>
+        </a>
         <NuxtLink to="/setting" class="row">
           <IconFluentSettings20Regular />
           <span>{{ $t('setting') }}</span>

@@ -262,7 +262,7 @@ function handleLogout() {
           {{ APP_NAME }}
         </div>
         <!-- Desktop nav links -->
-        <nav class="hidden md:flex gap-7">
+        <nav class="hidden md:flex items-center gap-7">
           <NuxtLink
             to="/words"
             class="text-[.88rem] font-medium text-[var(--hw-text-2)] no-underline hover:text-[var(--hw-text)] transition-colors duration-150"
@@ -283,6 +283,17 @@ function handleLogout() {
             class="text-[.88rem] font-medium text-[var(--hw-text-2)] no-underline hover:text-[var(--hw-text)] transition-colors duration-150"
             >帮助</NuxtLink
           >
+          <a
+            href="https://bookapp.dacbbox.com"
+            target="_blank"
+            class="inline-flex items-center gap-1.5 text-[.88rem] font-medium text-[var(--hw-text-2)] no-underline hover:text-[#7c3aed] transition-colors duration-150"
+          >
+            <span>📚 沉浸阅读</span>
+            <span
+              class="px-1.5 py-0.2 text-[.68rem] font-bold text-white bg-gradient-to-r from-[#bd34fe] to-[#7c3aed] rounded-full leading-tight shadow-sm scale-95"
+              >推荐</span
+            >
+          </a>
         </nav>
         <!-- Actions -->
         <div class="ml-auto flex items-center gap-2 text-[var(--hw-text-2)]">
@@ -379,6 +390,18 @@ function handleLogout() {
           @click="mobileMenuOpen = false"
           >帮助</NuxtLink
         >
+        <a
+          href="https://bookapp.dacbbox.com"
+          target="_blank"
+          class="flex items-center justify-between text-[.95rem] font-medium text-[var(--hw-text-2)] no-underline py-1 hover:text-[#7c3aed]"
+          @click="mobileMenuOpen = false"
+        >
+          <span class="flex items-center gap-2">📚 沉浸阅读</span>
+          <span
+            class="px-1.5 py-0.5 text-[.68rem] font-bold text-white bg-gradient-to-r from-[#bd34fe] to-[#7c3aed] rounded-full leading-none"
+            >推荐</span
+          >
+        </a>
         
         <!-- Mobile Login/Logout -->
         <div class="mt-2 pt-3 border-t border-[var(--hw-border)] flex flex-col items-center">
@@ -660,6 +683,113 @@ function handleLogout() {
               </button>
             </div>
           </div>
+
+          <!-- ImmerseReader (沉浸阅读) -->
+          <div class="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-10 md:gap-16 items-center">
+            <div>
+              <div class="section-label mb-4">考研与原著伴读</div>
+              <h2 class="text-[clamp(1.4rem,3vw,1.8rem)] font-bold mb-3 text-[var(--hw-text)]">
+                大程沉浸阅读：原著精读与播音级听书
+              </h2>
+              <p class="text-[var(--hw-text-2)] text-[1rem] leading-[1.75] mb-6">
+                导入英文名著、EPUB 原版书与 PDF 考研真题教材，微软 Edge 神经语音超清伴读，支持 120Hz 压感批注与生词研读。
+              </p>
+              <ul class="list-none p-0 m-0 mb-7 flex flex-col gap-2.5">
+                <li class="flex items-start gap-2 text-[.95rem] text-[var(--hw-text-2)] leading-[1.6]">
+                  <span class="text-[#7c3aed] font-bold shrink-0 mt-[.05rem]">✓</span> 微软超清神经语音流式朗读，边听边读强化听力
+                </li>
+                <li class="flex items-start gap-2 text-[.95rem] text-[var(--hw-text-2)] leading-[1.6]">
+                  <span class="text-[#7c3aed] font-bold shrink-0 mt-[.05rem]">✓</span> 支持 EPUB 双页精排与 PDF 原版教材高保真呈现
+                </li>
+                <li class="flex items-start gap-2 text-[.95rem] text-[var(--hw-text-2)] leading-[1.6]">
+                  <span class="text-[#7c3aed] font-bold shrink-0 mt-[.05rem]">✓</span> iPad / 触屏原生级矢量手写批注，缩放不移位
+                </li>
+                <li class="flex items-start gap-2 text-[.95rem] text-[var(--hw-text-2)] leading-[1.6]">
+                  <span class="text-[#7c3aed] font-bold shrink-0 mt-[.05rem]">✓</span> Local-First 本地优先，完全免费，无隐私泄露风险
+                </li>
+              </ul>
+              <div class="flex flex-wrap items-center gap-3">
+                <a
+                  href="https://book.dacbbox.com"
+                  target="_blank"
+                  class="inline-flex items-center justify-center px-5 h-10 rounded-lg font-semibold text-[.9rem] text-white bg-gradient-to-r from-[#7c3aed] to-[#2563eb] border-none shadow-[0_4px_16px_rgba(124,58,237,.28)] cursor-pointer hover:-translate-y-px hover:opacity-95 transition-all duration-150 no-underline"
+                >
+                  体验沉浸阅读 ➔
+                </a>
+                <a
+                  href="https://bookapp.dacbbox.com"
+                  target="_blank"
+                  class="inline-flex items-center justify-center px-5 h-10 rounded-lg font-semibold text-[.9rem] text-[var(--hw-text)] bg-transparent border border-solid border-[var(--hw-border)] cursor-pointer hover:border-[#7c3aed] hover:text-[#7c3aed] hover:bg-[rgba(124,58,237,.06)] transition-all duration-150 no-underline"
+                >
+                  下载全平台客户端
+                </a>
+              </div>
+            </div>
+            <div
+              class="rounded-2xl overflow-hidden shadow-[var(--hw-shadow-lg)] border border-[var(--hw-border)] bg-[var(--hw-bg)] md:order-last order-first flex flex-col"
+            >
+              <!-- Window header -->
+              <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--hw-border)] bg-[var(--hw-bg-card)]">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+                  <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
+                  <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
+                  <span class="ml-2 text-[.78rem] font-medium text-[var(--hw-text-3)] truncate max-w-[190px] sm:max-w-[280px]">DacBBox ImmerseReader</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center gap-1 text-[.7rem] px-2 py-0.5 rounded-full bg-[#10b981]/10 text-[#059669] font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse"></span>
+                    播音伴读中
+                  </span>
+                  <span class="hidden sm:inline-flex text-[.7rem] px-2 py-0.5 rounded-full bg-[#2563eb]/10 text-[#2563eb] font-medium">120Hz 压感批注</span>
+                </div>
+              </div>
+
+              <!-- Reader Preview Body -->
+              <div class="p-5 sm:p-6 flex flex-col gap-4 bg-[var(--hw-bg-card)] select-none">
+                <!-- Book & Chapter bar -->
+                <div class="flex items-center justify-between text-[.75rem] text-[var(--hw-text-3)] border-b border-[var(--hw-border)] pb-2.5">
+                  <span class="font-medium tracking-wide">📖 The Great Gatsby · Chapter 1</span>
+                  <span class="font-mono text-[.72rem]">EPUB 双页精排</span>
+                </div>
+
+                <!-- Text with annotations and TTS highlight -->
+                <div class="space-y-3 font-serif text-[.92rem] sm:text-[.98rem] leading-[1.8] text-[var(--hw-text-2)]">
+                  <p class="m-0">
+                    In my younger and more vulnerable years my father gave me some advice that I've been turning over in my mind ever since.
+                  </p>
+                  <div class="relative p-3.5 rounded-xl bg-gradient-to-r from-[rgba(124,58,237,.08)] to-[rgba(37,99,235,.08)] border-l-4 border-[#7c3aed]">
+                    <p class="font-medium text-[var(--hw-text)] m-0">
+                      <span class="bg-[rgba(254,188,46,.25)] px-1 py-0.5 rounded">"Whenever you feel like criticizing any one,"</span> he told me, 
+                      <span class="border-b-2 border-dashed border-[#7c3aed] text-[#7c3aed] font-semibold">"just remember that all the people in this world haven't had the advantages that you've had."</span>
+                    </p>
+                    <div class="mt-2.5 flex flex-wrap items-center gap-2 text-[.75rem] font-sans">
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[rgba(124,58,237,.1)] text-[#7c3aed] font-medium">
+                        ✏️ 手写批注：考研核心长难句
+                      </span>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[rgba(37,99,235,.1)] text-[#2563eb] font-medium">
+                        🎙️ 微软 Edge 云希 (Neural) 1.25x
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Audio Player Toolbar -->
+                <div class="mt-1 pt-3 border-t border-[var(--hw-border)] flex items-center justify-between text-[.75rem] text-[var(--hw-text-3)]">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[#7c3aed] to-[#2563eb] text-white flex items-center justify-center text-[.65rem] shadow-sm font-bold">
+                      ▶
+                    </span>
+                    <span class="font-mono font-semibold text-[var(--hw-text)]">03:42 / 18:25</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-[var(--hw-bg)] border border-[var(--hw-border)] font-mono text-[.72rem]">1.25x</span>
+                    <span class="px-2 py-0.5 rounded bg-[var(--hw-bg)] border border-[var(--hw-border)] font-medium text-[.72rem]">Local-First 本地存储</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -880,6 +1010,7 @@ function handleLogout() {
           <div class="flex flex-col gap-2.5">
             <div class="text-[.8rem] font-bold tracking-[.06em] uppercase text-[var(--hw-text-3)] mb-1">项目</div>
             <a href="https://dacbbox.com" target="_blank" class="footer-link">大程开源百宝箱</a>
+            <a href="https://bookapp.dacbbox.com" target="_blank" class="footer-link">沉浸阅读 (bookapp.dacbbox.com)</a>
             <NuxtLink to="/setting" class="footer-link">设置</NuxtLink>
           </div>
         </div>
